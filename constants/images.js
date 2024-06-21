@@ -10,8 +10,11 @@ import ru_flag from "../assets/s7/images/ru_flag.png"
 import arrow from '../assets/s7/images/arrow.png'
 import user from '../assets/s7/images/profile/user.png'
 import stationGun from '../assets/s7/images/stationGun.png'
+import popupBatery from '../assets/s7/images/popupBatery.png'
+import chargesEnd from '../assets/s7/images/chargesEnd.png'
 
-export default { image1, image2, image3, image4, image5, uz_flag, us_flag, ru_flag, arrow, user, stationGun };
+
+export default { image1, image2, image3, image4, image5, uz_flag, us_flag, ru_flag, arrow, user, stationGun, popupBatery, chargesEnd };
 
 
 

@@ -17,6 +17,12 @@ const UserMenuLayout = () => {
             headerShown: false
           }}
         />
+        <Stack.Screen 
+          name="Charge_end"
+          options={{
+            headerShown: false
+          }}
+        />
       </Stack>
       <StatusBar 
         backgroundColor="#161622"
