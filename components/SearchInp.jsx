@@ -7,6 +7,7 @@ import { focus } from "../values/atom/myAtoms";
 const SearchInput = ({ placeholder, map }) => {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useAtom(focus);
+  const [editable, setEditable] = useState(false);
   useEffect(() => {
     // console.log(isFocused)
   }, [isFocused])
@@ -26,6 +27,7 @@ const SearchInput = ({ placeholder, map }) => {
     }
     // console.log(focus)
   };
+
  
   const handleBlur = () => {
     setIsFocused((prevUserState) => ({
@@ -52,6 +54,7 @@ const SearchInput = ({ placeholder, map }) => {
         onChangeText={(text) => setValue(text)}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        editable={!map ? map : true}
       />
     </View>
   );

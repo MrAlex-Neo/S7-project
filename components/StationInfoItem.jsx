@@ -17,7 +17,7 @@ const StationInfoItem = () => {
             </Text>
           </View>
           <View className="">
-            <Text className="text-xs p-[1vw] bg-secondary color-white rounded-sm">
+            <Text className="text-xs p-[2vw] bg-secondary color-white rounded-lg">
               {t("station_info_item_2")}
             </Text>
           </View>

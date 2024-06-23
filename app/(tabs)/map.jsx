@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { StyleSheet, View, SafeAreaView, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import * as Location from "expo-location";
 import SearchInp from "../../components/SearchInp";
 import { useTranslation } from "react-i18next";
@@ -11,10 +17,12 @@ import SearchMap from "../../components/SearchMap";
 
 const Map = () => {
   const { t } = useTranslation();
-  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
+  const [locationPermissionGranted, setLocationPermissionGranted] =
+    useState(false);
   const [currentRegion, setCurrentRegion] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [isFocused, setIsFocused] = useAtom(focus);
+  const [searchMap, setSearchMap] = useState(false);
   const initialRegion = {
     latitude: 41.2995,
     longitude: 69.2401,
@@ -54,6 +62,13 @@ const Map = () => {
       search: false,
     }));
   }, []);
+  useEffect(() => {
+    if (!isFocused.map) {
+      setSearchMap(false);
+    } else {
+      setSearchMap(true);
+    }
+  }, [isFocused.map]);
 
   const requestLocationPermission = async () => {
     setLocationPermissionGranted(true);
@@ -149,14 +164,16 @@ const Map = () => {
       );
     });
 
-    setMarkers(visible.map((point, index) => ({
-      key: index.toString(),
-      coordinate: {
-        latitude: point.latitude,
-        longitude: point.longitude,
-      },
-      title: `Point ${index + 1}`,
-    })));
+    setMarkers(
+      visible.map((point, index) => ({
+        key: index.toString(),
+        coordinate: {
+          latitude: point.latitude,
+          longitude: point.longitude,
+        },
+        title: `Point ${index + 1}`,
+      }))
+    );
   };
 
   useEffect(() => {
@@ -164,6 +181,13 @@ const Map = () => {
       filterVisiblePoints(currentRegion);
     }
   }, [currentRegion]);
+
+  const handlePress = () => {
+    setIsFocused((prevUserState) => ({
+      ...prevUserState,
+      map: true,
+    }));
+  };
 
   return (
     <SafeAreaView className="bg-white h-full">
@@ -174,11 +198,13 @@ const Map = () => {
           <SearchMap />
         ) : (
           <View className="absolute z-20 w-[93vw] bottom-[2vh] mx-[3.5vw] rounded-md p-[2vw] bg-white">
-            <SearchInp placeholder={t("searchText")} map={true} />
+            <TouchableOpacity onPress={handlePress}>
+              <SearchInp placeholder={t("searchText")} map={searchMap} />
+            </TouchableOpacity>
           </View>
         )}
         <View className="absolute b-0 w-[100vw] h-[100vh] z-1">
-        <MapView
+          <MapView
             ref={mapRef}
             style={styles.map}
             initialRegion={initialRegion}
@@ -221,5 +247,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-

@@ -14,12 +14,12 @@ const Charge_page = () => {
   const [step, setStep] = useState(0);
   const [popup, setPopup] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStep((prevStep) => (prevStep === 2 ? 0 : prevStep + 1));
-    }, 2000);
-    return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setStep((prevStep) => (prevStep === 2 ? 0 : prevStep + 1));
+  //   }, 2000);
+  //   return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
+  // }, []);
   const resetStack = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -93,14 +93,14 @@ const Charge_page = () => {
             <View className="w-full flex-row justify-between mx-4">
               <PrimaryButton
                 title={t('cancel')}
-                containerStyles="bg-white border-red border-2 w-[38vw] px-[0] py-[1.4vh] mr-[1vw]"
-                textStyles="text-red text-center font-robotoRegular text-sm"
+                containerStyles="bg-secondary w-[38vw] px-[0] py-[1.4vh] mr-[1vw]"
+                textStyles="text-white text-center font-robotoRegular text-sm"
                 handlePress={() => setPopup(false)}
               />
               <PrimaryButton
                 title={t('charge_page_3')}
-                containerStyles="bg-secondary w-[38vw] px-[0] py-[1.4vh] ml-[1vw]"
-                textStyles="text-white text-center font-robotoRegular text-sm"
+                containerStyles="bg-white border-red border-2 w-[38vw] px-[0] py-[1.4vh] ml-[1vw]"
+                textStyles="text-red text-center font-robotoRegular text-sm"
                 handlePress={resetStack}
               />
             </View>

@@ -76,7 +76,12 @@ const Settings = () => {
     try {
       await AsyncStorage.removeItem("token");
       console.log("Token removed");
-      navigation.popToTop();
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "index", params: { screen: "/" } }], // Сброс стека и переход на вкладку "map"
+        })
+      );
     } catch (error) {
       console.error("Error removing token:", error);
     }
