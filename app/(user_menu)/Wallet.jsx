@@ -25,7 +25,7 @@ const Wallet = () => {
   const { t, i18 } = useTranslation();
   const [activeButton, setActiveButton] = useState(null); // Индекс активной кнопки
   const [part, setPart] = useState(0);
-  const [sum, setSum] = useState("");
+  const [sum, setSum] = useState("30000");
   const [inputValue, setInputValue] = useState("");
 
   const handlePress = (index) => {
