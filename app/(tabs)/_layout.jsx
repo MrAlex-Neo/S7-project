@@ -106,7 +106,7 @@ const TabsLayout = () => {
               borderTopColor: "#A2A2A2",
               paddingBottom: 5,
               height: 80,
-              display: `${visible.search || visible.map ? "none" : ""}`,
+              display: `${visible.search || visible.map || visible.camera? "none" : ""}`,
             },
             isKeyboardVisible && styles.hidden,
           ],

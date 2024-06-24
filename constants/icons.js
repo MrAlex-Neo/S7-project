@@ -37,6 +37,7 @@ import stateClock from "../assets/s7/icons/stateClock.png"
 import chat from "../assets/s7/icons/chat.png"
 import locationBtn from "../assets/s7/icons/locationBtn.png"
 import screenBtn from "../assets/s7/icons/screenBtn.png"
+import backBtnWhite from "../assets/s7/icons/backBtnWhite.png"
 
 
 
@@ -94,5 +95,6 @@ export default {
   marker_notWorking_busy,
   marker_notWorking_notWorking,
   locationBtn,
-  screenBtn
+  screenBtn,
+  backBtnWhite
 };

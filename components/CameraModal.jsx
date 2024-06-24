@@ -1,67 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, StyleSheet, View, Button, Platform } from 'react-native';
-import { Camera } from 'expo-camera';
-import * as Permissions from 'expo-permissions'; // Импортируем expo-permissions для запроса разрешений
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { useState } from "react";
+import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const CameraModal = ({ modalVisible, onClose }) => {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+export default function App() {
+  const [facing, setFacing] = useState("back");
+  const [permission, requestPermission] = useCameraPermissions();
 
-  useEffect(() => {
-    const getPermissions = async () => {
-      if (Platform.OS === 'web') {
-        setHasPermission(true); // Веб-платформа не требует разрешений
-      } else {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        setHasPermission(status === 'granted');
-      }
-    };
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
 
-    getPermissions();
-  }, []);
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
-  const handleBarCodeScanned = ({ data }) => {
-    setScanned(true);
-    onClose(data);
-  };
+  function toggleCameraFacing() {
+    setFacing((current) => (current === "back" ? "front" : "back"));
+  }
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => onClose(null)}
-    >
-      <View style={styles.modalContainer}>
-        {hasPermission && (
-          <Camera
-            style={styles.camera}
-            type={Camera.Constants.Type.back}
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          />
-        )}
-        {scanned && (
-          <Button
-            title={"Tap to Scan Again"}
-            onPress={() => setScanned(false)}
-          />
-        )}
-      </View>
-    </Modal>
+    <View style={styles.container}>
+      <CameraView
+        style={styles.camera}
+        facing={facing}
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr"],
+        }}
+              >
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <Text style={styles.text}>Flip Camera</Text>
+          </TouchableOpacity>
+        </View>
+      </CameraView>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
   },
   camera: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "transparent",
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
   },
 });
-
-export default CameraModal;

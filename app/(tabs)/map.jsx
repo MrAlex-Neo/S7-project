@@ -202,6 +202,19 @@ const Map = () => {
     }));
   };
 
+  useEffect(() => {
+    if (modalVisible) {
+      setIsFocused((prevUserState) => ({
+        ...prevUserState,
+        camera: true,
+      }));
+    } else {
+      setIsFocused((prevUserState) => ({
+        ...prevUserState,
+        camera: false,
+      }));
+    }
+  }, [modalVisible]);
 
   return (
     <SafeAreaView className="bg-white h-full">
@@ -282,10 +295,19 @@ const Map = () => {
           </MapView>
         </View>
         {modalVisible && (
-          <CameraModal // Используем CameraModal для сканирования
-            modalVisible={modalVisible}
-            onClose={() => setModalVisible(false)}
-          />
+          <View style={styles.container}>
+            <TouchableOpacity
+              className="bg-grayColor-300 w-[15vw] h-[15vw] my-[8vh] mx-[5vw] rounded-full justify-center items-center"
+              style={{ zIndex: 1 }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Image source={icons.backBtnWhite} className="w-[6vw] h-[5vw]" />
+            </TouchableOpacity>
+
+            <CameraModal // Используем CameraModal для сканирования
+              modalVisible={modalVisible}
+            />
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -297,6 +319,14 @@ export default Map;
 const styles = StyleSheet.create({
   map: {
     flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "start",
+    zIndex: 99,
+    position: "absolute",
+    width: "100%",
+    height: "100%",
   },
   followButton: {
     position: "absolute",
