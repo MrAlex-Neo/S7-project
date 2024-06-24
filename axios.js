@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const instance = axios.create({
-    baseURL: 'http://91.228.152.152:8000/api/v1'
+    baseURL: 'http://91.228.152.152'
 });
 
 // Функция для получения токена из AsyncStorage

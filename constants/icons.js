@@ -35,6 +35,20 @@ import som from "../assets/s7/icons/som.png"
 import zip from "../assets/s7/icons/zip.png"
 import stateClock from "../assets/s7/icons/stateClock.png"
 import chat from "../assets/s7/icons/chat.png"
+import locationBtn from "../assets/s7/icons/locationBtn.png"
+import screenBtn from "../assets/s7/icons/screenBtn.png"
+
+
+
+//markers
+import marker_active_active from "../assets/s7/icons/markers/marker_active_active.png"
+import marker_active_busy from "../assets/s7/icons/markers/marker_active_busy.png"
+import marker_active_notWorking from "../assets/s7/icons/markers/marker_active_notWorking.png"
+import marker_busy_busy from "../assets/s7/icons/markers/marker_busy_busy.png"
+import marker_notWorking_busy from "../assets/s7/icons/markers/marker_notWorking_busy.png"
+import marker_notWorking_notWorking from "../assets/s7/icons/markers/marker_notWorking_notWorking.png"
+
+
 
 export default {
   phone,
@@ -72,5 +86,13 @@ export default {
   som,
   zip,
   stateClock,
-  chat
+  chat,
+  marker_active_active,
+  marker_active_busy,
+  marker_busy_busy,
+  marker_active_notWorking,
+  marker_notWorking_busy,
+  marker_notWorking_notWorking,
+  locationBtn,
+  screenBtn
 };

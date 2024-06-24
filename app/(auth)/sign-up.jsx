@@ -27,6 +27,7 @@ const SignUp = () => {
   const [btnSec, setBtnSec] = useState(true);
   const [badCode, setBadCode] = useState(false);
   const [authData, setAuthData] = useAtom(authAtom);
+  const [mistake, setMistake] = useState('')
 
   useEffect(() => {
     if (number.length === 12) {
@@ -58,7 +59,7 @@ const SignUp = () => {
       const obj = { phone: authData.tel };
       console.log(obj);
       const response = await dispatch(fetchAuth(obj));
-      console.log(response);
+      console.log('part-1', response);
       if (!response || !response.payload) {
         setBadResponse(true);
         return console.log("ответ", response);

@@ -1,18 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from './slices/auth'
+import { stationsReducer } from "./slices/stations";
 // import { videosReducer } from './slices/videos'
 // import { bannersReducer } from "./slices/banners";
 // import { categoriesReducer } from "./slices/categories";
-// import { productsReducer } from "./slices/products";
 // import { offersReducer } from "./slices/offersProducts";
 // import { newsReducer } from "./slices/news";
 const store = configureStore({
     reducer: {
-        // videos: videosReducer,
-        // banners: bannersReducer,
         auth: authReducer,
+        // videos: videosReducer,
+        stations: stationsReducer,
+        // banners: bannersReducer,
         // categories: categoriesReducer,
-        // products: productsReducer,
         // offers: offersReducer,
         // news: newsReducer,
         // categories: categoriesReducer,

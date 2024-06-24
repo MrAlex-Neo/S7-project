@@ -34,6 +34,8 @@ const SignIn = () => {
   const [btnSec, setBtnSec] = useState(true);
   const [btnThird, setBtnThird] = useState(true);
   const [regData, setRegData] = useAtom(regAtom);
+  const [mistake, setMistake] = useState('')
+  const [code, setCode] = useState('')
 
   useEffect(() => {
     if (isChecked && number.length === 12) {
@@ -74,6 +76,9 @@ const SignIn = () => {
       const response = await dispatch(fetchRegister(obj));
       if (!response || !response.payload) {
         setBadResponseOne(true);
+        if (response.error.message) {
+          setMistake(response.error.message)
+        }
         return console.log("ответ", response);
       }
       if (response) {
@@ -114,6 +119,8 @@ const SignIn = () => {
 
   const sendUserInputsHandler = async () => {
     try {
+      console.log(regData.name)
+      console.log(regData.surname)
       const obj = { first_name: regData.name, last_name: regData.surname };
       const response = await dispatch(fetchUpdate(obj));
       if (!response || !response.payload) {
@@ -155,7 +162,8 @@ const SignIn = () => {
                   handleChangeText={setNumber}
                   otherStyles=""
                   badResponse={badResponseOne}
-                  mistake={t("badPhoneInputText")}
+                  mistake={mistake}
+                  // mistake={t("badPhoneInputText")}
                   keyboardType="numeric"
                 />
                 <View className="flex-row items-center mt-[2vh]">
@@ -179,7 +187,7 @@ const SignIn = () => {
               <View>
                 <Text className="font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8">{t("enterTheCode")}</Text>
                 <Text className="font-robotoRegular text-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
-                  {`${t("checkCode")} --- --- --- -${number[10]}${number[11]} ${t("checkCode1")}`}
+                  {`${t("checkCode")} --- --- --- -${number[10]}${number[11]} ${t("checkCode1")} ${regData.response_code}`}
                 </Text>
                 <CodeInput state="reg" startTimer={btnFirst} mistake={badResponseTwo} />
                 {badCode && (

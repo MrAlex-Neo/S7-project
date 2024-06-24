@@ -35,10 +35,12 @@ export default function App() {
 
   useEffect(() => {
     const checkToken = async () => {
+      console.log("token")
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
           router.push("/map");
+          setLoading(false)
         } else {
           setLoading(false);
         }
