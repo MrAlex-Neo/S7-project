@@ -25,6 +25,7 @@ module.exports = {
           600: "#DADADA",
           700: "#ADADAD",
           800: "#F2F2F2",
+          900: '#C4C4C4',
         },
         blue: {
           DEFAULT: '#4083fe',
@@ -51,7 +52,7 @@ module.exports = {
         robotoThinItalic: ["RobotoThinItalic", "sans-serif"],
         sfText: ["SF-Pro-Text", "sans-serif"],
         sfDisplay: ["SF-Pro-Display", "sans-serif"],
-        
+
       }
     },
   },

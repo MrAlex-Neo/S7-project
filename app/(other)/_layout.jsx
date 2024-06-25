@@ -23,6 +23,12 @@ const UserMenuLayout = () => {
             headerShown: false
           }}
         />
+        <Stack.Screen 
+          name="DownloadIMG"
+          options={{
+            headerShown: false
+          }}
+        />
       </Stack>
       <StatusBar backgroundColor="#FFFFFF" style="dark" />
     </>

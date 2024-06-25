@@ -97,6 +97,10 @@ const resources = {
       energy: 'Energy',
       station_port: 'Charging port',
       route_choose: 'Open with',
+      update_user: 'View or edit photo',
+      download_img_1: 'Profile Photo',
+      download_img_2: 'Replace the photo',
+      download_img_3: 'Delete a photo',
     },
   },
   ru: {
@@ -190,6 +194,10 @@ const resources = {
       energy: 'Энергия',
       station_port: 'Зарядный порт',
       route_choose: 'Открыть с помощью',
+      update_user: 'Просмотреть или отредактировать фото',
+      download_img_1: 'Фото профиля',
+      download_img_2: 'Заменить фото',
+      download_img_3: 'Удалить фото',
     },
   },
   uz: {
@@ -282,6 +290,10 @@ const resources = {
       energy: 'Energiya',
       station_port: 'Zaryadlash porti',
       route_choose: 'Bilan oching',
+      update_user: "Fotosuratni ko'rish yoki tahrirlash",
+      download_img_1: 'Profil fotosurati',
+      download_img_2: 'Fotosuratni almashtiring',
+      download_img_3: "Fotosuratni o'chirish",
     },
   },
 };

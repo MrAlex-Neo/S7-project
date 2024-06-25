@@ -39,6 +39,9 @@ import locationBtn from "../assets/s7/icons/locationBtn.png"
 import screenBtn from "../assets/s7/icons/screenBtn.png"
 import backBtnWhite from "../assets/s7/icons/backBtnWhite.png"
 import test_route from "../assets/s7/icons/test_route.png"
+import change_photo from "../assets/s7/icons/change_photo.png"
+import delete_photo from "../assets/s7/icons/delete_photo.png"
+
 
 
 
@@ -98,5 +101,7 @@ export default {
   locationBtn,
   screenBtn,
   backBtnWhite,
-  test_route
+  test_route,
+  change_photo,
+  delete_photo
 };

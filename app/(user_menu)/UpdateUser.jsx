@@ -25,6 +25,7 @@ import {
 } from "react-native-gesture-handler";
 import { useAtom } from "jotai";
 import { userData } from "../../values/atom/myAtoms";
+import { router } from "expo-router";
 
 
 const UpdateUser = () => {
@@ -198,10 +199,10 @@ const UpdateUser = () => {
                 </Animated.View>
               </PanGestureHandler>
               <PrimaryButton
-                title={t("exit")}
+                title={t("update_user")}
                 containerStyles="bg-secondary w-[92vw]"
                 textStyles="text-white"
-                handlePress={() => console.log("next")}
+                handlePress={() => router.push("/DownloadIMG")}
               />
             </Animated.View>
           </Animated.View>

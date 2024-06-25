@@ -20,10 +20,9 @@ import { userData } from "../../values/atom/myAtoms";
 const Profile = () => {
   const { t, i18 } = useTranslation();
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.auth.data);
+  const data = useSelector((state) => state.auth?.data);
   const [toward, setToward] = useAtom(towardPage);
-  const [user, setUser] = useAtom(userData)
-
+  const [user, setUser] = useAtom(userData);
 
   useEffect(() => {
     dispatch(fetchAuthMe());
@@ -31,11 +30,18 @@ const Profile = () => {
 
   useEffect(() => {
     console.log("profile", data?.data);
-    setUser(prev => ({
-      ... prev,
-      name: data.data.first_name,
-      surname: data.data.last_name
-    }))
+    if (data.data.first_name) {
+      setUser((prev) => ({
+        ...prev,
+        name: data.data.first_name,
+      }));
+    }
+    if (data.data.last_name) {
+      setUser((prev) => ({
+        ...prev,
+        surname: data.data.last_name,
+      }));
+    }
   }, [data]);
 
   return (
@@ -53,7 +59,7 @@ const Profile = () => {
                   className="w-[10vh] h-[10vh] rounded-full"
                 />
                 <View>
-                  {data && data?.data?.first_name ? (
+                  {data && data?.data?.first_name && data?.data?.last_name? (
                     <Text className="font-robotoMedium text-xl">
                       {`${data.data.first_name} ${data.data.last_name}`}
                     </Text>
@@ -73,7 +79,10 @@ const Profile = () => {
                 </View>
               </View>
               <TouchableOpacity onPress={() => router.push("/UpdateUser")}>
-                <Image source={icons.pencil} className="w-[3vh] h-[3vh] mr-[2vw]" />
+                <Image
+                  source={icons.pencil}
+                  className="w-[3vh] h-[3vh] mr-[2vw]"
+                />
               </TouchableOpacity>
             </View>
             <View className="bg-secondary px-[6vw] pt-[2vh] pb-[2.5vh] rounded-xl flex-col">

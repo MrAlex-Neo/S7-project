@@ -12,9 +12,10 @@ import user from '../assets/s7/images/profile/user.png'
 import stationGun from '../assets/s7/images/stationGun.png'
 import popupBatery from '../assets/s7/images/popupBatery.png'
 import chargesEnd from '../assets/s7/images/chargesEnd.png'
+import userPhotoDefault from '../assets/s7/images/profile/userPhotoDefault.png'
 
 
-export default { image1, image2, image3, image4, image5, uz_flag, us_flag, ru_flag, arrow, user, stationGun, popupBatery, chargesEnd };
+export default { image1, image2, image3, image4, image5, uz_flag, us_flag, ru_flag, arrow, user, stationGun, popupBatery, chargesEnd, userPhotoDefault };
 
 
 
