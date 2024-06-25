@@ -24,6 +24,7 @@ module.exports = {
           500: "#a2a2a2",
           600: "#DADADA",
           700: "#ADADAD",
+          800: "#F2F2F2",
         },
         blue: {
           DEFAULT: '#4083fe',

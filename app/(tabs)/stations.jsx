@@ -8,7 +8,7 @@ const Stations = () => {
   const { t, i18 } = useTranslation();
   return (
     <SafeAreaView className="bg-white h-full">
-      <View className="w-full flex-1 py-[7vh] px-[5vw] bg-white">
+      <View className="w-full flex-1 py-[7vh] px-[5vw] pb-[0] bg-white">
         <Text className="text-2xl font-robotoMedium mb-[2vh]">
           {t("stations")}
         </Text>

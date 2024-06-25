@@ -41,7 +41,7 @@ const SearchMap = () => {
         // Плавное скрытие контейнера
         Animated.timing(translateY, {
           toValue: 800, // значение, при котором контейнер будет полностью скрыт
-          duration: 300, // Длительность анимации
+          duration: 500, // Длительность анимации
           useNativeDriver: true,
         }).start(() => {
           setIsFocused((prevUserState) => ({

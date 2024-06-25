@@ -142,6 +142,14 @@ const MapComponent = () => {
         coordinate={marker.coordinate}
         title={marker.title}
         image={markerImage}
+        onPress={() => {
+          console.log(marker.key);
+          setIsFocused((prevUserState) => ({
+            ...prevUserState,
+            map: false,
+            station: true,
+          }));
+        }}
       />
     );
   };
@@ -249,7 +257,7 @@ const styles = StyleSheet.create({
   },
   followButton: {
     position: "absolute",
-    bottom: 130,
+    bottom: 80,
     right: 0,
     zIndex: 1,
     width: 80,
@@ -257,7 +265,7 @@ const styles = StyleSheet.create({
   },
   screenButton: {
     position: "absolute",
-    bottom: 130,
+    bottom: 80,
     right: 60,
     zIndex: 1,
     width: 80,

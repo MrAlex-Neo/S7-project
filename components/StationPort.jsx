@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { images } from "../constants";
-
+import { useTranslation } from "react-i18next";
 const StationPort = ({ busy, isActive, onPress }) => {
-  
+  const { t, i18n } = useTranslation();
   const disabled = busy; // Вы можете динамически изменять это значение
 
   return (
@@ -16,7 +16,7 @@ const StationPort = ({ busy, isActive, onPress }) => {
     >
       <View className="justify-between py-[2vh]">
         <View>
-          <Text className="text-xs font-robotoRegular">Зарядный порт</Text>
+          <Text className="text-xs font-robotoRegular">{t('station_port')}</Text>
           <Text className="text-base font-robotoBold">GB/T 120 кВт</Text>
         </View>
         <Text

@@ -24,10 +24,7 @@ const UserMenuLayout = () => {
           }}
         />
       </Stack>
-      <StatusBar 
-        backgroundColor="#161622"
-        style="light"
-      />
+      <StatusBar backgroundColor="#FFFFFF" style="dark" />
     </>
   )
 }

@@ -227,7 +227,7 @@ export default function App() {
               ) : null}
             </View>
           </ScrollView>
-          <StatusBar backgroundColor="#161622" style="light" />
+          <StatusBar backgroundColor="#FFFFFF" style="dark" />
         </SafeAreaView>
       </I18nextProvider>
     </>

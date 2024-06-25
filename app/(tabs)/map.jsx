@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { icons, images } from "../../constants";
 import CameraModal from "../../components/CameraModal"; // Изменили импорт
 import MapComponent from "../../components/MapComponent";
+import RouteChoose from "../../components/RouteChoose";
 
 const Map = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const Map = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw]">
       <View className="h-full">
         {isFocused.station ? (
           <StationMap />
@@ -60,7 +61,7 @@ const Map = () => {
         {isFocused.camera && (
           <View style={styles.container}>
             <TouchableOpacity
-              className="bg-grayColor-300 w-[15vw] h-[15vw] my-[8vh] mx-[5vw] rounded-full justify-center items-center"
+              className="bg-grayColor-300 w-[15vw] h-[15vw] my-[4vh] mx-[5vw] rounded-full justify-center items-center"
               style={{ zIndex: 1 }}
               onPress={() => {
                 setIsFocused((prevUserState) => ({
@@ -75,6 +76,11 @@ const Map = () => {
             <CameraModal // Используем CameraModal для сканирования
               modalVisible={isFocused.camera}
             />
+          </View>
+        )}
+        {isFocused.route && (
+          <View style={styles.container}>
+            <RouteChoose latitude="41.304597" longitude="69.229359" />
           </View>
         )}
       </View>

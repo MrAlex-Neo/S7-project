@@ -57,6 +57,7 @@ export const focus = atom({
     map: false,
     station: false,
     camera: false,
+    route: false,
 });
 
 export const towardPage = atom({

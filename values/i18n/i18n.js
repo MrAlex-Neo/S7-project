@@ -95,6 +95,8 @@ const resources = {
       charge_end_2: 'The e-wallet has been debited',
       close: 'Close',
       energy: 'Energy',
+      station_port: 'Charging port',
+      route_choose: 'Open with',
     },
   },
   ru: {
@@ -186,6 +188,8 @@ const resources = {
       charge_end_2: 'С электронного кошелка списано',
       close: 'Закрыть',
       energy: 'Энергия',
+      station_port: 'Зарядный порт',
+      route_choose: 'Открыть с помощью',
     },
   },
   uz: {
@@ -276,6 +280,8 @@ const resources = {
       charge_end_2: 'Elektron hamyondan olingan',
       close: 'Yopish',
       energy: 'Energiya',
+      station_port: 'Zaryadlash porti',
+      route_choose: 'Bilan oching',
     },
   },
 };

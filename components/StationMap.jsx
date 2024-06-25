@@ -64,14 +64,13 @@ const StationMap = () => {
       if (translationY > 20 * (Platform.OS === "ios" ? 4.5 : 3)) {
         Animated.timing(translateY, {
           toValue: 500, // значение, при котором контейнер будет полностью скрыт
-          duration: 300, // Длительность анимации
+          duration: 500, // Длительность анимации
           useNativeDriver: true,
         }).start(() => {
           setIsFocused((prevUserState) => ({
             ...prevUserState,
             map: false,
-          station: false,
-
+            station: false,
           }));
         });
       } else {
@@ -139,7 +138,13 @@ const StationMap = () => {
                 title={t("route")}
                 containerStyles="bg-primary w-[42vw] p-[1.5vh]"
                 textStyles="text-black"
-                handlePress={() => console.log("route")}
+                isLoading={isLoading}
+                handlePress={() => {
+                  setIsFocused((prevUserState) => ({
+                    ...prevUserState,
+                    route: true,
+                  }));
+                }}
               />
               <PrimaryButton
                 title={t("start")}

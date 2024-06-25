@@ -38,6 +38,7 @@ import chat from "../assets/s7/icons/chat.png"
 import locationBtn from "../assets/s7/icons/locationBtn.png"
 import screenBtn from "../assets/s7/icons/screenBtn.png"
 import backBtnWhite from "../assets/s7/icons/backBtnWhite.png"
+import test_route from "../assets/s7/icons/test_route.png"
 
 
 
@@ -96,5 +97,6 @@ export default {
   marker_notWorking_notWorking,
   locationBtn,
   screenBtn,
-  backBtnWhite
+  backBtnWhite,
+  test_route
 };

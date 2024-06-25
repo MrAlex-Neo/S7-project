@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai";
 import { focus } from "../../values/atom/myAtoms";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 const TabIcon = ({ icon, color, name, focused }) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -106,7 +107,7 @@ const TabsLayout = () => {
               borderTopColor: "#A2A2A2",
               paddingBottom: 5,
               height: 80,
-              display: `${visible.search || visible.map || visible.camera? "none" : ""}`,
+              display: `${visible.search || visible.map || visible.camera || visible.route? "none" : ""}`,
             },
             isKeyboardVisible && styles.hidden,
           ],
@@ -197,6 +198,7 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      <StatusBar backgroundColor="#FFFFFF" style="dark" />
     </View>
   );
 };
