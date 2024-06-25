@@ -61,8 +61,15 @@ const Settings = () => {
     console.log(translationY);
     if (nativeEvent.state === State.END) {
       if (translationY > 20 * (Platform.OS === "ios" ? 4.5 : 6)) {
-        setIsPressed(false);
-        setExit(false);
+        Animated.timing(translateY, {
+          toValue: 500, // значение, при котором контейнер будет полностью скрыт
+          duration: 100, // Длительность анимации
+          useNativeDriver: true,
+        }).start(() => {
+          setIsPressed(false);
+          setExit(false);
+        });
+    
       } else {
         Animated.spring(translateY, {
           toValue: 0,

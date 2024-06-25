@@ -62,11 +62,18 @@ const StationMap = () => {
     console.log(translationY);
     if (nativeEvent.state === State.END) {
       if (translationY > 20 * (Platform.OS === "ios" ? 4.5 : 3)) {
-        setIsFocused((prevUserState) => ({
-          ...prevUserState,
-          map: false,
+        Animated.timing(translateY, {
+          toValue: 500, // значение, при котором контейнер будет полностью скрыт
+          duration: 300, // Длительность анимации
+          useNativeDriver: true,
+        }).start(() => {
+          setIsFocused((prevUserState) => ({
+            ...prevUserState,
+            map: false,
           station: false,
-        }));
+
+          }));
+        });
       } else {
         Animated.spring(translateY, {
           toValue: 0,

@@ -38,29 +38,40 @@ const SearchMap = () => {
     console.log(translationY);
     if (nativeEvent.state === State.END) {
       if (translationY > 20 * (Platform.OS === "ios" ? 8.5 : 10)) {
-        setIsFocused((prevUserState) => ({
-          ...prevUserState,
-          map: false,
-        }));
-        Keyboard.dismiss();
+        // Плавное скрытие контейнера
+        Animated.timing(translateY, {
+          toValue: 800, // значение, при котором контейнер будет полностью скрыт
+          duration: 300, // Длительность анимации
+          useNativeDriver: true,
+        }).start(() => {
+          setIsFocused((prevUserState) => ({
+            ...prevUserState,
+            map: false,
+          }));
+          Keyboard.dismiss();
+        });
       } else {
         Animated.spring(translateY, {
           toValue: 0,
           useNativeDriver: true,
         }).start();
       }
+    } else {
+      Animated.spring(translateY, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
     }
-    Animated.spring(translateY, {
-      toValue: 0,
-      useNativeDriver: true,
-    }).start();
   };
+
   return (
     <GestureHandlerRootView className="absolute z-20 h-[90%] bottom-0 right-0 w-[100%]">
       <Animated.View
         className="w-[100%] p-[4vw] pt-[1vh] pb-0 rounded-3xl rounded-br-none rounded-bl-none bg-white"
         id="main"
-        style={{ transform: [{ translateY }] }}
+        style={{
+          transform: [{ translateY }],
+        }}
       >
         <PanGestureHandler
           onGestureEvent={handleGesture}
