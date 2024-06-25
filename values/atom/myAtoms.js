@@ -59,6 +59,11 @@ export const focus = atom({
     camera: false,
     route: false,
 });
+export const userData = atom({
+    name: '',
+    surname: ''
+});
+
 
 export const towardPage = atom({
     profile: false,
