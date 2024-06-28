@@ -104,7 +104,7 @@ export default function App() {
   return (
     <>
       <I18nextProvider i18n={i18next}>
-        <SafeAreaView className="bg-white h-full">
+        <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw]">
           <ScrollView contentContainerStyle={{ height: "100%" }}>
             <View className="w-full flex-col justify-end items-center min-h-[100vh] h-full pb-[3vh]">
               <Animated.View
