@@ -109,7 +109,7 @@ const SignUp = () => {
         enableAutomaticScroll={true}
       >
         <ImgButton
-          containerStyles="fixed top-[4vh] left-[4vw]"
+          containerStyles="fixed top-[4vh] left-[8vw]"
           imgStyles="w-[3vh] h-[3vh]"
           textStyles="text-white"
           handlePress={() => (part === 0 ? router.push("/") : setPart(0))}

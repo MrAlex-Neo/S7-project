@@ -37,7 +37,7 @@ const PhoneInputSecond = ({
           resizeMode="contain"
         />
         <TouchableOpacity
-          className={`absolute top-[14%] right-[1vw] z-10 ${
+          className={`absolute top-[14%] right-[2.3vw] z-10 ${
             isLoading ? "opacity-50" : ""
           }`}
           disabled={isLoading}

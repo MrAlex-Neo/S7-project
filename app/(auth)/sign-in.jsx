@@ -139,7 +139,7 @@ const SignIn = () => {
     <SafeAreaView className="bg-white flex-1">
       <KeyboardAwareScrollView extraScrollHeight={0} enableOnAndroid={true} keyboardOpeningTime={50} enableAutomaticScroll={true}>
         <ImgButton
-          containerStyles="absolute top-[4vh] left-[2vw]"
+          containerStyles="absolute top-[4vh] left-[8vw]"
           imgStyles="w-[3vh] h-[3vh]"
           textStyles="text-white"
           handlePress={() => {

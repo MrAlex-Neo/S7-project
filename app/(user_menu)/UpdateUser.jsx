@@ -201,7 +201,7 @@ const UpdateUser = () => {
               <PrimaryButton
                 title={t("update_user")}
                 containerStyles="bg-secondary w-[92vw]"
-                textStyles="text-white"
+                textStyles="text-white font-robotoMedium text-sm text-center"
                 handlePress={() => router.push("/DownloadIMG")}
               />
             </Animated.View>

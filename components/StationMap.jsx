@@ -47,9 +47,6 @@ const StationMap = () => {
   const data = [
     { id: 1, busy: true },
     { id: 2, busy: false },
-    { id: 3, busy: false },
-    { id: 4, busy: true },
-    { id: 5, busy: false },
   ];
 
   const handleGesture = Animated.event(
