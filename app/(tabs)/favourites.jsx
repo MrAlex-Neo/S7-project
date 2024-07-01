@@ -8,9 +8,9 @@ const Favourites = () => {
   
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <View className="w-full flex-1 pt-[7vh] px-[5vw] bg-white">
-        <Text className="text-2xl font-robotoMedium mb-[2vh]">
+    <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute top-0">
+      <View className="w-full flex-1 px-[5vw] bg-white">
+        <Text className="text-2xl font-robotoMedium mb-[2vh] mt-[2vh]">
           {t("favourites")}
         </Text>
         <SearchInput placeholder={t("searchText")} />

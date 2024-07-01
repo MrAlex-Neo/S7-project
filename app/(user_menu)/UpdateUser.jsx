@@ -98,7 +98,7 @@ const UpdateUser = () => {
     }
   };
   return (
-    <SafeAreaView className="bg-white flex-1 pb-[3vh]">
+    <SafeAreaView className="bg-white h-[100vh] w-[100vw] absolute bottom-0">
       <GestureHandlerRootView style={{ flex: 1 }}>
         <KeyboardAwareScrollView
           extraScrollHeight={110}
@@ -106,7 +106,7 @@ const UpdateUser = () => {
           keyboardOpeningTime={50}
           enableAutomaticScroll={true}
         >
-          <View className="w-full flex-1 pb-[1vh] px-[5vw] bg-white pt-[10vh]">
+          <View className="w-full flex-1 pb-[1vh] px-[5vw] bg-white pt-[4vh]">
             <View className="flex-row items-center">
               <ImgButton
                 containerStyles="p-0"

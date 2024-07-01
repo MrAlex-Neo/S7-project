@@ -57,7 +57,7 @@ const Map = () => {
             </TouchableOpacity>
           </View>
         )}
-        <MapComponent />
+        {/* <MapComponent /> */}
         {isFocused.camera && (
           <View style={styles.container}>
             <TouchableOpacity

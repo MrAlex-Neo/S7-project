@@ -85,7 +85,7 @@ const StationMap = () => {
   };
 
   return (
-    <GestureHandlerRootView className="absolute z-20 bottom-0 right-0 w-[100%]">
+    <GestureHandlerRootView className="absolute z-20 bottom-0 w-[100vw]">
       <Animated.View
         className="bg-white rounded-3xl rounded-br-none rounded-bl-none pt-[1vh] px-[5vw]"
         style={{ transform: [{ translateY }] }}
@@ -117,10 +117,10 @@ const StationMap = () => {
             <Text className="ml-[2vw] text-xs font-robotoMedium">24/7</Text>
           </View>
           <TouchableOpacity>
-            <Image source={icons.flag} className="w-[8vw] h-[8vw]" />
+            <Image source={icons.flag} className="w-[7vw] h-[7vw]" />
           </TouchableOpacity>
         </View>
-        <View className="h-[50vh]">
+        <View>
           <ScrollView vertical showsVerticalScrollIndicator={false}>
             {data.map((item) => (
               <StationPort

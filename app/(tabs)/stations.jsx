@@ -7,9 +7,9 @@ import StationCard from "../../components/StationCard.jsx";
 const Stations = () => {
   const { t, i18 } = useTranslation();
   return (
-    <SafeAreaView className="bg-white h-full">
-      <View className="w-full flex-1 py-[7vh] px-[5vw] pb-[0] bg-white">
-        <Text className="text-2xl font-robotoMedium mb-[2vh]">
+    <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute top-0">
+      <View className="w-full flex-1  px-[5vw] pb-[0] bg-white">
+        <Text className="text-2xl font-robotoMedium mb-[2vh] mt-[2vh]">
           {t("stations")}
         </Text>
         <SearchInput placeholder={t("searchText")} />

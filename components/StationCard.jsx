@@ -33,7 +33,8 @@ const StationCard = ({ busy }) => {
                 busy
                   ? "border-red-500 text-red-500"
                   : "border-secondary text-secondary"
-              } p-[1vw] text-center w-[25vw] rounded-md`}
+              } p-[1vw] text-center w-[25vw] rounded-md`} 
+              style={{borderWidth: 2, borderRadius: 5, borderColor: busy ? '#FF6666' : '#19B775'}}
             >
               {busy ? t("busy") : t("free")}
             </Text>

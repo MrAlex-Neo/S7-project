@@ -22,7 +22,7 @@ const StationPort = ({ busy, isActive, onPress }) => {
         <Text
           className={`text-xs font-robotoBold ${
             busy ? " bg-grayColor-300" : " bg-secondary"
-          } px-[2vw] py-[0.3vh] color-white rounded-lg`}
+          } px-[2vw] py-[0.3vh] color-white rounded-md`}
           style={{ alignSelf: "flex-start" }}
         >
           {busy ? "1 занят" : "1 свободен"}

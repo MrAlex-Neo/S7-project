@@ -103,7 +103,7 @@ const Settings = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-white h-[100vh] absolute bottom-0">
       <GestureHandlerRootView style={{ flex: 1 }}>
         {isPressed ? (
           <Animated.View
@@ -190,7 +190,7 @@ const Settings = () => {
             </Animated.View>
           </Animated.View>
         ) : null}
-        <View className="w-full flex-1 pb-[1vh] px-[5vw] h-full bg-white pt-[10vh]">
+        <View className="w-full flex-1 pb-[1vh] px-[5vw] h-full bg-white pt-[4vh]">
           <View className="flex-row items-center">
             <ImgButton
               containerStyles="p-0"

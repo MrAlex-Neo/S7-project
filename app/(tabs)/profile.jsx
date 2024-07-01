@@ -45,10 +45,10 @@ const Profile = () => {
   }, [data]);
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <View className="w-full flex-1 justify-between pb-[1vh] pt-[7vh] px-[5vw] bg-white">
+    <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute top-0">
+      <View className="w-full flex-1 justify-between pb-[1vh] px-[5vw] bg-white">
         <View>
-          <Text className="text-2xl font-robotoMedium mb-[2vh]">
+          <Text className="text-2xl font-robotoMedium mb-[2vh] mt-[2vh]">
             {t("profile")}
           </Text>
           <View className="flex-col gap-5">

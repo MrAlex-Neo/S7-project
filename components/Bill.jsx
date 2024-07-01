@@ -63,6 +63,7 @@ const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
                 ? "border-red-500 text-red-500"
                 : "border-secondary text-secondary"
             } p-[1vw] text-center w-[27vw] rounded-md`}
+            style={{borderWidth: 2, borderRadius: 5, borderColor: spend ? '#FF6666' : '#19B775'}}
           >
             {spend ? t("spend") : t("received")}
           </Text>

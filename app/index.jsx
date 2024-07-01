@@ -102,11 +102,11 @@ export default function App() {
   }
 
   return (
-    <>
+    <View className="bg-white h-[100vh] absolute bottom-0">
       <I18nextProvider i18n={i18next}>
-        <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw]">
+        {/* <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw]"> */}
           <ScrollView contentContainerStyle={{ height: "100%" }}>
-            <View className="w-full flex-col justify-end items-center min-h-[100vh] h-full pb-[3vh]">
+            <View className="w-full flex-col justify-end items-center min-h-[100vh] h-full pb-[6vh]">
               <Animated.View
                 className={`w-full flex-col ${
                   part === 0 ? "justify-start" : " justify-end"
@@ -228,8 +228,8 @@ export default function App() {
             </View>
           </ScrollView>
           <StatusBar backgroundColor="#FFFFFF" style="dark" />
-        </SafeAreaView>
+        {/* </SafeAreaView> */}
       </I18nextProvider>
-    </>
+    </View>
   );
 }

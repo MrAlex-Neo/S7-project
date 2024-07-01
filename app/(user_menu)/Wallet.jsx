@@ -51,8 +51,8 @@ const Wallet = () => {
 
   return (
     <>
-      <SafeAreaView className="bg-white h-full pb-[1vh] justify-between">
-        <View className="w-full flex-1 px-[5vw] pt-[10vh] bg-white">
+      <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw] pb-[1vh] justify-between">
+        <View className="w-full flex-1 px-[5vw] pt-[4vh] bg-white">
           <View className="flex-row items-center">
             <ImgButton
               containerStyles="p-0"
@@ -73,9 +73,9 @@ const Wallet = () => {
             <View className="py-[1vh]">
               <ScrollView vertical showsVerticalScrollIndicator={false}>
                 {[
-                  { icon: icons.click, height: "5vh" },
-                  { icon: icons.payme, height: "4vh" },
-                  { icon: icons.paynet, height: "3.88vh" },
+                  { icon: icons.click, height: "" },
+                  { icon: icons.payme, height: "" },
+                  { icon: icons.paynet, height: "" },
                 ].map((item, index) => (
                   <TouchableOpacity
                     key={index}
@@ -119,7 +119,12 @@ const Wallet = () => {
                     className="w-[30%] items-center border-2 border-grayColor-600 mt-[2vh] py-[1vh] rounded-2xl"
                     onPress={() => setSum(amount)}
                   >
-                    <Text className="font-robotoMedium text-lg">{amount.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</Text>
+                    <Text className="font-robotoMedium text-lg">
+                      {amount
+                        .toString()
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                    </Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -151,7 +156,10 @@ const Wallet = () => {
               {t("purse_2")}
             </Text>
             <Text className="font-robotoRegular text-base color-grayColor-300 text-center mb-[4vh]">
-              {`${t("purse_3")} ${inputValue.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${t("sum")}`}
+              {`${t("purse_3")} ${inputValue
+                .toString()
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${t("sum")}`}
             </Text>
             <PrimaryButton
               title={t("purse_4")}

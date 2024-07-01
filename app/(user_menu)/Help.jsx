@@ -26,8 +26,8 @@ const Help = () => {
     );
   };
   return (
-    <SafeAreaView className="bg-white h-full">
-      <View className="w-full flex-1 pb-[1vh] px-[5vw] pt-[10vh] bg-white">
+    <SafeAreaView className="bg-white h-[100vh] w-[100vw] absolute bottom-0">
+      <View className="w-full flex-1 pb-[1vh] px-[5vw] pt-[4vh] bg-white">
         <View className="flex-row items-center">
           <ImgButton
             containerStyles="p-0"
