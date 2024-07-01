@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import MapView, { PROVIDER_OSM, Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useRef } from "react";
@@ -15,6 +15,7 @@ const initialRegion = {
   latitudeDelta: 0.0922,
   longitudeDelta: 0.0421,
 };
+
 const MapComponent = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.stations.stations.items);
@@ -29,6 +30,7 @@ const MapComponent = () => {
   useEffect(() => {
     dispatch(fetchStations());
   }, []);
+
   useEffect(() => {
     if (data.results) {
       console.log(data.results);
@@ -174,18 +176,21 @@ const MapComponent = () => {
     setIsFocused((prevUserState) => ({
       ...prevUserState,
       camera: true,
-    })); // Показываем модальное окно при нажатии на сканирование
+    }));
   };
+
   return (
     <View className="absolute b-0 w-[100vw] h-[100vh] z-1">
       <TouchableOpacity
-        style={styles.followButton} // Изменено для использования стиля
+        style={styles.followButton}
+        className="absolute mb-[15vh]"
         onPress={handlePress}
       >
         <Image source={icons.locationBtn} style={{ width: 80, height: 80 }} />
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.screenButton} // Изменено для использования стиля
+        style={styles.screenButton}
+        className="absolute mb-[15vh]"
         onPress={handleScanPress}
       >
         <Image source={icons.screenBtn} style={{ width: 80, height: 80 }} />
@@ -195,7 +200,7 @@ const MapComponent = () => {
         style={styles.map}
         initialRegion={initialRegion}
         showsCompass={true}
-        provider={PROVIDER_GOOGLE}
+        provider={PROVIDER_OSM} // Использование OSM вместо Google Maps
         showsUserLocation={locationPermissionGranted}
         showsMyLocationButton={false}
         onUserLocationChange={(userLocation) => {
@@ -257,7 +262,7 @@ const styles = StyleSheet.create({
   },
   followButton: {
     position: "absolute",
-    bottom: 80,
+    bottom: 0,
     right: 0,
     zIndex: 1,
     width: 80,
@@ -265,13 +270,14 @@ const styles = StyleSheet.create({
   },
   screenButton: {
     position: "absolute",
-    bottom: 80,
+    bottom: 0,
     right: 60,
     zIndex: 1,
     width: 80,
     height: 80,
   },
 });
+
 
 // const randomPoints = [
 //   {
