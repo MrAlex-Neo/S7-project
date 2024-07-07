@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { fetchRegister } from "../redux/slices/auth";
+import { fetchRegister, fetchAuth } from "../redux/slices/auth";
 import {
   View,
   TextInput,
@@ -75,19 +75,40 @@ const CodeInput = ({ state, startTimer }) => {
   };
   const handleResendCode = async () => {
     try {
-      const obj = {
-        phone: regCode.tel,
-      };
-      console.log(obj);
-      const response = await dispatch(fetchRegister(obj));
-      if (!response || !response.payload) {
-        return console.log("ответ", response);
+      if (state === "auth") {
+        const obj = {
+          phone: authCode.tel,
+        };
+        console.log(obj);
+        const response = await dispatch(fetchAuth(obj));
+        if (!response || !response.payload) {
+          return console.log("ответ", response);
+        }
+        console.log(response.payload.code);
+        setAuthCode((prevUserState) => ({
+          ...prevUserState,
+          response_code: response.payload.code,
+          badCode: false,
+        }));
+      } else {
+        const obj = {
+          phone: regCode.tel,
+        };
+        console.log(obj);
+        const response = await dispatch(fetchRegister(obj));
+        if (!response || !response.payload) {
+          return console.log("ответ", response);
+        }
+        console.log(response.payload.code);
+        setRegCode((prevUserState) => ({
+          ...prevUserState,
+          response_code: response.payload.code,
+          badCode: false,
+        }));
       }
-      if (response) {
-        console.log(response.payload);
-        setTimer(true);
-        setSum(59);
-      }
+      setInputValues(["", "", "", ""]);
+      setTimer(true);
+      setSum(59);
     } catch (error) {
       console.log(error);
     }

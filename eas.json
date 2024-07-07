@@ -1,0 +1,41 @@
+{
+    "cli": {
+      "version": ">= 10.0.3"
+    },
+    "build": {
+      "development": {
+        "developmentClient": true,
+        "distribution": "internal",
+        "android": {
+          "buildType": "apk",
+          "releaseChannel": "default",
+          "gradleCommand": ":app:assembleRelease",
+          "image": "default",
+          "withoutCredentials": true
+        }
+      },
+      "preview": {
+        "distribution": "internal",
+        "android": {
+          "buildType": "apk",
+          "releaseChannel": "default",
+          "gradleCommand": ":app:assembleRelease",
+          "image": "default",
+          "withoutCredentials": true
+        }
+      },
+      "production": {
+        "android": {
+          "buildType": "apk",
+          "releaseChannel": "default",
+          "gradleCommand": ":app:assembleRelease",
+          "image": "default",
+          "withoutCredentials": true
+        }
+      }
+    },
+    "submit": {
+      "production": {}
+    }
+  }
+  

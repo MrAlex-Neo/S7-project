@@ -40,6 +40,7 @@ export const regAtom = atom({
     tel: "",
     name: "",
     surname: "",
+    badCode: false,
 });
 
 
@@ -50,6 +51,7 @@ export const authAtom = atom({
     tel: "",
     name: "",
     surname: "",
+    badCode: false,
 });
 
 export const focus = atom({

@@ -25,7 +25,29 @@ const MapComponent = () => {
   const [isFocused, setIsFocused] = useAtom(focus);
   const [followUser, setFollowUser] = useState(false);
   const [markers, setMarkers] = useState([]);
+  const [stations, setStations] = useState([]);
   const mapRef = useRef(null);
+
+  const areStationsEqual = (oldStations, newStations) => {
+    if (oldStations.length !== newStations.length) {
+      return false;
+    }
+    for (let i = 0; i < oldStations.length; i++) {
+      if (
+        oldStations[i].key !== newStations[i].key ||
+        oldStations[i].title !== newStations[i].title ||
+        oldStations[i].coordinate.latitude !==
+          newStations[i].coordinate.latitude ||
+        oldStations[i].coordinate.longitude !==
+          newStations[i].coordinate.longitude ||
+        oldStations[i].state[0] !== newStations[i].state[0] ||
+        oldStations[i].state[1] !== newStations[i].state[1]
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   useEffect(() => {
     dispatch(fetchStations());
@@ -33,7 +55,23 @@ const MapComponent = () => {
 
   useEffect(() => {
     if (data.results) {
-      console.log(data.results);
+      let array = [];
+      for (let index = 0; index < data.results.length; index++) {
+        const station = data.results[index];
+        array.push({
+          key: station.charge_point_id,
+          title: station.location.name,
+          coordinate: {
+            latitude: parseFloat(station.latitude), // Преобразуем в float, если это строки
+            longitude: parseFloat(station.longitude),
+          },
+          state: [true, "not_working"],
+        });
+      }
+
+      if (!areStationsEqual(stations, array)) {
+        setStations(array);
+      }
     }
   }, [data.results]);
 
@@ -70,55 +108,19 @@ const MapComponent = () => {
   }, [locationPermissionGranted]);
 
   useEffect(() => {
-    const randomPoints = [
-      {
-        key: 101234,
-        title: `Point 1`,
-        coordinate: { latitude: 41.303087, longitude: 69.231691 },
-        state: [true, "not_working"],
-      },
-      {
-        key: 523451,
-        title: `Point 2`,
-        coordinate: { latitude: 41.301385, longitude: 69.253649 },
-        state: [false, "not_working"],
-      },
-      {
-        key: 247382,
-        title: `Point 3`,
-        coordinate: { latitude: 41.31152, longitude: 69.243847 },
-        state: ["not_working", "not_working"],
-      },
-      {
-        key: 310239,
-        title: `Point 4`,
-        coordinate: { latitude: 41.316612, longitude: 69.215128 },
-        state: [true, false],
-      },
-      {
-        key: 434850,
-        title: `Point 5`,
-        coordinate: { latitude: 41.304597, longitude: 69.229359 },
-        state: [true, true],
-      },
-      {
-        key: 515932,
-        title: `Point 6`,
-        coordinate: { latitude: 41.299012, longitude: 69.233501 },
-        state: [false, false],
-      },
-    ];
-    const formattedMarkers = randomPoints.map((station) => ({
-      key: station.key,
-      title: station.title,
-      coordinate: {
-        latitude: station.coordinate.latitude,
-        longitude: station.coordinate.longitude,
-      },
-      state: station.state,
-    }));
-    setMarkers(formattedMarkers);
-  }, []);
+    if (stations.length > 0) {
+      const formattedMarkers = stations.map((station) => ({
+        key: station.key,
+        title: station.title,
+        coordinate: {
+          latitude: station.coordinate.latitude,
+          longitude: station.coordinate.longitude,
+        },
+        state: station.state,
+      }));
+      setMarkers(formattedMarkers);
+    }
+  }, [stations]);
 
   const getMarkerImageSource = (state) => {
     if (state[0] === true && state[1] === true) {
@@ -137,6 +139,7 @@ const MapComponent = () => {
   };
 
   const CustomMarker = ({ marker, getMarkerImageSource }) => {
+    console.log("Координаты маркера:", marker.coordinate);
     const markerImage = getMarkerImageSource(marker.state);
     return (
       <Marker
@@ -145,7 +148,6 @@ const MapComponent = () => {
         title={marker.title}
         image={markerImage}
         onPress={() => {
-          console.log(marker.key);
           setIsFocused((prevUserState) => ({
             ...prevUserState,
             map: false,
@@ -236,7 +238,7 @@ const MapComponent = () => {
       >
         {markers.map((marker) => (
           <CustomMarker
-            key={marker.key}
+            key={marker.key} // и здесь
             marker={marker}
             getMarkerImageSource={getMarkerImageSource}
           />
@@ -277,7 +279,6 @@ const styles = StyleSheet.create({
     height: 80,
   },
 });
-
 
 // const randomPoints = [
 //   {

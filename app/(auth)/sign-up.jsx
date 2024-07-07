@@ -62,6 +62,9 @@ const SignUp = () => {
       console.log('part-1', response);
       if (!response || !response.payload) {
         setBadResponse(true);
+        if (response.error.message) {
+          setMistake(response.error.message);
+        }
         return console.log("ответ", response);
       }
       if (response) {
@@ -79,20 +82,26 @@ const SignUp = () => {
   };
 
   const sendCodeHandler = async () => {
+    setAuthData((prevUserState) => ({
+      ...prevUserState,
+      badCode: false,
+    }));
     try {
       const obj = { phone: authData.tel, verification_code: authData.authCode };
       console.log(obj);
       const response = await dispatch(fetchCode(obj));
       console.log(response);
       if (!response || !response.payload) {
-        setBadCode(true);
+        setAuthData((prevUserState) => ({
+          ...prevUserState,
+          badCode: true,
+        }));
         return console.log("ответ", response);
       }
       if (response) {
         console.log(response.payload.access);
         AsyncStorage.setItem("token", response.payload.access);
         AsyncStorage.setItem("refresh", response.payload.refresh);
-        setBadCode(false);
         router.push("/map");
       }
     } catch (error) {
@@ -109,13 +118,13 @@ const SignUp = () => {
         enableAutomaticScroll={true}
       >
         <ImgButton
-          containerStyles="fixed top-[4vh] left-[8vw]"
+          containerStyles="fixed top-[4vh] left-[6vw]"
           imgStyles="w-[3vh] h-[3vh]"
           textStyles="text-white"
           handlePress={() => (part === 0 ? router.push("/") : setPart(0))}
         />
         {part === 0 ? (
-          <View className="w-full flex-col justify-around items-center h-[80vh] px-[4vw] py-[6vh]">
+          <View className="w-full flex-col justify-around items-center px-[4vw] py-[6vh]">
             <Image
               source={images.image5}
               resizeMode="contain"
@@ -127,13 +136,13 @@ const SignUp = () => {
               handleChangeText={(e) => setNumber(e)}
               otherStyles="w-full"
               badResponse={badResponse}
-              mistake={t("badPhoneInputText")}
+              mistake={mistake}
               isLoading={btnFirst}
               click={sendNumberHandler}
             />
           </View>
         ) : (
-          <View className="w-full flex-col flex-1 box-border justify-between items-center px-[4vw] pt-[6vh] pb-[2vh]">
+          <View className="w-full h-[100vh] flex-col flex-1 box-border justify-between items-center px-[4vw] pt-[6vh] pb-[5vh]">
             <View>
               <Text className="font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8">
                 {t("enterTheCode")}
@@ -144,7 +153,7 @@ const SignUp = () => {
                 )} ${authData.response_code}`}
               </Text>
               <CodeInput state="auth" startTimer={btnFirst} />
-              {badCode && (
+              {authData.badCode && (
                 <Text className="font-robotoRegular text-sm text-red text-center">
                   {t("wrongCode")}
                 </Text>

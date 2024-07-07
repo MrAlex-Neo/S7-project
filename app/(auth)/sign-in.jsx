@@ -27,15 +27,14 @@ const SignIn = () => {
   const [part, setPart] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [badResponse, setBadResponse] = useState(false);
-  const [badCode, setBadCode] = useState(false);
   const [badResponseOne, setBadResponseOne] = useState(false);
   const [badResponseTwo, setBadResponseTwo] = useState(false);
   const [btnFirst, setBtnFirst] = useState(true);
   const [btnSec, setBtnSec] = useState(true);
   const [btnThird, setBtnThird] = useState(true);
   const [regData, setRegData] = useAtom(regAtom);
-  const [mistake, setMistake] = useState('')
-  const [code, setCode] = useState('')
+  const [mistake, setMistake] = useState("");
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     if (isChecked && number.length === 12) {
@@ -77,7 +76,7 @@ const SignIn = () => {
       if (!response || !response.payload) {
         setBadResponseOne(true);
         if (response.error.message) {
-          setMistake(response.error.message)
+          setMistake(response.error.message);
         }
         return console.log("ответ", response);
       }
@@ -96,21 +95,27 @@ const SignIn = () => {
   };
 
   const sendCodeHandler = async () => {
+    setBadResponseTwo(false);
+    setRegData((prevUserState) => ({
+      ...prevUserState,
+     badCode: false
+    }));
     try {
       const obj = { phone: regData.tel, verification_code: regData.regCode };
       const response = await dispatch(fetchCode(obj));
       if (!response || !response.payload) {
         setBadResponseTwo(true);
-        setBadCode(true);
+        setRegData((prevUserState) => ({
+          ...prevUserState,
+         badCode: true
+        }));
         return console.log("ответ", response);
       }
       if (response) {
         console.log(response.payload.access);
         AsyncStorage.setItem("token", response.payload.access);
         AsyncStorage.setItem("refresh", response.payload.refresh);
-        setBadCode(false);
         setPart(2);
-        setBadResponseTwo(false);
       }
     } catch (error) {
       console.log(error);
@@ -119,8 +124,8 @@ const SignIn = () => {
 
   const sendUserInputsHandler = async () => {
     try {
-      console.log(regData.name)
-      console.log(regData.surname)
+      console.log(regData.name);
+      console.log(regData.surname);
       const obj = { first_name: regData.name, last_name: regData.surname };
       const response = await dispatch(fetchUpdate(obj));
       if (!response || !response.payload) {
@@ -137,22 +142,32 @@ const SignIn = () => {
 
   return (
     <SafeAreaView className="bg-white flex-1">
-      <KeyboardAwareScrollView extraScrollHeight={0} enableOnAndroid={true} keyboardOpeningTime={50} enableAutomaticScroll={true}>
+      <KeyboardAwareScrollView
+        extraScrollHeight={0}
+        enableOnAndroid={true}
+        keyboardOpeningTime={50}
+        enableAutomaticScroll={true}
+      >
         <ImgButton
           containerStyles="absolute top-[4vh] left-[8vw]"
           imgStyles="w-[3vh] h-[3vh]"
           textStyles="text-white"
           handlePress={() => {
-            setBadCode(false);
             part === 0 ? router.push("/") : setPart(0);
           }}
         />
         <View className="flex-1 justify-between h-[100vh] px-[4vw] py-[6vh] pb-[2vh]">
           {part === 0 ? (
             <>
-              <Image source={images.image5} resizeMode="contain" className="w-full h-[35vh]" />
+              <Image
+                source={images.image5}
+                resizeMode="contain"
+                className="w-full h-[35vh]"
+              />
               <View>
-                <Text className="font-robotoBold tracking-wider text-xl leading-8">{t("hello")}</Text>
+                <Text className="font-robotoBold tracking-wider text-xl leading-8">
+                  {t("hello")}
+                </Text>
                 <Text className="font-robotoMedium text-grayColor-300 text-base mt-[1vh] mb-[4vh]">
                   {t("phone_number_sing_in")}
                 </Text>
@@ -167,10 +182,22 @@ const SignIn = () => {
                   keyboardType="numeric"
                 />
                 <View className="flex-row items-center mt-[2vh]">
-                  <CheckBox checked={isChecked} onPress={() => setIsChecked(!isChecked)} containerStyle={{ padding: 0, margin: 0 }} wrapperStyle={{ margin: 0, padding: 0 }} />
+                  <CheckBox
+                    checked={isChecked}
+                    onPress={() => setIsChecked(!isChecked)}
+                    containerStyle={{ padding: 0, margin: 0 }}
+                    wrapperStyle={{ margin: 0, padding: 0 }}
+                  />
                   <View>
-                    <Text className="font-robotoRegular text-sm">{`${t("regCheckBox1")} `}</Text>
-                    <Text className="text-blue-100" onPress={() => Linking.openURL("https://mralex-neo.github.io/nurb/")}>{`${t("regCheckBox2")}`}</Text>
+                    <Text className="font-robotoRegular text-sm">{`${t(
+                      "regCheckBox1"
+                    )} `}</Text>
+                    <Text
+                      className="text-blue-100"
+                      onPress={() =>
+                        Linking.openURL("https://mralex-neo.github.io/nurb/")
+                      }
+                    >{`${t("regCheckBox2")}`}</Text>
                   </View>
                 </View>
               </View>
@@ -185,13 +212,23 @@ const SignIn = () => {
           ) : part === 1 ? (
             <>
               <View>
-                <Text className="font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8">{t("enterTheCode")}</Text>
-                <Text className="font-robotoRegular text-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
-                  {`${t("checkCode")} --- --- --- -${number[10]}${number[11]} ${t("checkCode1")} ${regData.response_code}`}
+                <Text className="font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8">
+                  {t("enterTheCode")}
                 </Text>
-                <CodeInput state="reg" startTimer={btnFirst} mistake={badResponseTwo} />
-                {badCode && (
-                  <Text className="font-robotoRegular text-sm text-red text-center">{t("wrongCode")}</Text>
+                <Text className="font-robotoRegular text-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
+                  {`${t("checkCode")} --- --- --- -${number[10]}${
+                    number[11]
+                  } ${t("checkCode1")} ${regData.response_code}`}
+                </Text>
+                <CodeInput
+                  state="reg"
+                  startTimer={btnFirst}
+                  mistake={badResponseTwo}
+                />
+                {regData.badCode && (
+                  <Text className="font-robotoRegular text-sm text-red text-center">
+                    {t("wrongCode")}
+                  </Text>
                 )}
               </View>
               <PrimaryButton
@@ -205,7 +242,9 @@ const SignIn = () => {
           ) : (
             <>
               <View>
-                <Text className="text-center font-robotoBold tracking-wider text-2xl leading-8 py-[3vh]">{t("registration")}</Text>
+                <Text className="text-center font-robotoBold tracking-wider text-2xl leading-8 py-[3vh]">
+                  {t("registration")}
+                </Text>
                 <PhoneInputFirst
                   title={t("name")}
                   handleChangeText={setName}
