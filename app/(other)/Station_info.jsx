@@ -38,8 +38,8 @@ const Station_info = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute top-0">
-      <View className="w-full flex-1 pb-[1vh] px-[5vw] pt-[4vh]">
+    <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute bottom-0">
+      <View className="w-full flex-1 pb-[1vh] px-[5vw]">
         <View className="flex-row items-center">
            <ImgButton
             containerStyles="p-0"

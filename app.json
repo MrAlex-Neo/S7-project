@@ -10,7 +10,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/iconS7.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -25,12 +25,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/iconS7.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ],
       "package": "com.alex_neo_2024.s7"
     },
@@ -59,9 +61,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "68e92e80-160a-4b65-910f-b096c3fcee5f"
+        "projectId": "b1e68dd1-5773-4a20-a6d4-ae462641c35a"
       }
     },
-    "owner": "alex_neo_2025"
+    "owner": "alex_neo_2026"
   }
 }
