@@ -22,7 +22,7 @@ export const fetchCode = createAsyncThunk('users/verify/', async (payload) => {
 export const fetchUpdate = createAsyncThunk('users/update/', async (payload) => {
     try {
         console.log(payload)
-        const { data } = await axios.post('/api/v1/users/update/', payload);
+        const { data } = await axios.patch('/api/v1/users/update/', payload);
         console.log('data_response', data)
         return data;
     } catch (error) {

@@ -55,7 +55,7 @@ const Profile = () => {
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-2">
                 <Image
-                  source={images.user}
+                  source={data && data?.data?.picture ? data && data?.data?.picture : images.user}
                   className="w-[10vh] h-[10vh] rounded-full"
                 />
                 <View>

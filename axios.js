@@ -1,6 +1,8 @@
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Создание экземпляра axios с базовым URL
 const instance = axios.create({
     baseURL: 'http://91.228.152.152'
 });
@@ -11,11 +13,12 @@ const getToken = async () => {
         const token = await AsyncStorage.getItem('token');
         return token;
     } catch (error) {
-        console.error('Error getting token from AsyncStorage:', error);
+        console.error('Ошибка при получении токена из AsyncStorage:', error);
         return null;
     }
 };
 
+// Добавление перехватчика для включения токена в заголовки запросов
 instance.interceptors.request.use(
     async (config) => {
         const token = await getToken();
@@ -29,6 +32,38 @@ instance.interceptors.request.use(
     }
 );
 
-export default instance;
+// Асинхронное действие для обновления пользователя
+export const fetchUpdate = createAsyncThunk('users/update/', async (payload, thunkAPI) => {
+    try {
+        console.log(payload);
 
-//blablabla
+        let config = {
+            headers: {
+                'Content-Type': 'application/json',
+                // Другие заголовки, если необходимо
+            }
+        };
+
+        let data;
+        if (payload.picture) {
+            const formData = new FormData();
+            for (const key in payload) {
+                if (payload.hasOwnProperty(key)) {
+                    formData.append(key, payload[key]);
+                }
+            }
+            config.headers['Content-Type'] = 'multipart/form-data';
+            data = await instance.patch('/api/v1/users/update/', formData, config);
+        } else {
+            data = await instance.patch('/api/v1/users/update/', payload, config);
+        }
+
+        console.log('data_response', data);
+        return data.data;
+    } catch (error) {
+        console.error('Ошибка запроса:', error.response?.data?.message || error.message);
+        return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+    }
+});
+
+export default instance;
