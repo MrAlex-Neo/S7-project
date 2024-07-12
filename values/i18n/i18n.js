@@ -101,6 +101,8 @@ const resources = {
       download_img_1: 'Profile Photo',
       download_img_2: 'Replace the photo',
       download_img_3: 'Delete a photo',
+      permission: 'Grant permission',
+      permission_1: 'We need your permission to show the camera',
     },
   },
   ru: {
@@ -198,6 +200,8 @@ const resources = {
       download_img_1: 'Фото профиля',
       download_img_2: 'Заменить фото',
       download_img_3: 'Удалить фото',
+      permission: 'Предоставьте разрешение',
+      permission_1: 'Нам нужно ваше разрешение, чтобы показать камеру',
     },
   },
   uz: {
@@ -294,6 +298,8 @@ const resources = {
       download_img_1: 'Profil fotosurati',
       download_img_2: 'Fotosuratni almashtiring',
       download_img_3: "Fotosuratni o'chirish",
+      permission: 'Ruxsat bering',
+      permission_1: "Kamerani ko'rsatish uchun sizga ruxsat kerak",
     },
   },
 };
