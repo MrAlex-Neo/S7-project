@@ -37,9 +37,9 @@ const UpdateUser = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   const [badName, setBadName] = useState(false);
   const [badSurname, setBadSurname] = useState(false);
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
   const [user, ] = useAtom(userData)
+  const [name, setName] = useState(user.name);
+  const [surname, setSurname] = useState(user.surname);
 
 
   const resetStack = () => {
@@ -50,7 +50,7 @@ const UpdateUser = () => {
       })
     );
   };
-
+  console.log(user)
   const handleGesture = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
     { useNativeDriver: true }
@@ -144,14 +144,14 @@ const UpdateUser = () => {
             <View className="mt-[6vh]">
               <PhoneInputFirst
                 title={t("phone_number")}
-                value=""
+                value={user.phone}
                 otherStyles=""
                 editable={false}
                 keyboardType="numeric"
               />
               <PhoneInputFirst
                 title={t("name")}
-                placeholder={user.name}
+                value={name}
                 handleChangeText={(text) => setName(text)}
                 otherStyles=""
                 badResponse={badName}
@@ -160,7 +160,7 @@ const UpdateUser = () => {
               />
               <PhoneInputFirst
                 title={t("surname")}
-                placeholder={user.surname}
+                value={surname}
                 handleChangeText={(text) => setSurname(text)}
                 otherStyles=""
                 badResponse={badSurname}

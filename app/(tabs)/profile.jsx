@@ -42,6 +42,12 @@ const Profile = () => {
         surname: data.data.last_name,
       }));
     }
+    if (data?.data?.phone) {
+      setUser((prev) => ({
+        ...prev,
+        phone: data.data.phone,
+      }));
+    }
   }, [data]);
 
   return (

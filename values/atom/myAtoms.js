@@ -63,7 +63,8 @@ export const focus = atom({
 });
 export const userData = atom({
     name: '',
-    surname: ''
+    surname: '',
+    phone: ''
 });
 
 
