@@ -14,6 +14,7 @@ module.exports = {
           DEFAULT: "#000",
           100: "#1E1E2D",
           200: "#232533",
+          300: "#1F1F1F",
         },
         grayColor: {
           DEFAULT: "#F8F8F8",

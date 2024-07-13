@@ -141,12 +141,12 @@ const MapComponent = () => {
   const CustomMarker = ({ marker, getMarkerImageSource }) => {
     console.log("Координаты маркера:", marker.coordinate);
     const markerImage = getMarkerImageSource(marker.state);
+  
     return (
       <Marker
         key={marker.key}
         coordinate={marker.coordinate}
         title={marker.title}
-        image={markerImage}
         onPress={() => {
           setIsFocused((prevUserState) => ({
             ...prevUserState,
@@ -154,7 +154,9 @@ const MapComponent = () => {
             station: true,
           }));
         }}
-      />
+      >
+        <Image source={markerImage} className="w-[25vw] h-[25vw]" />
+      </Marker>
     );
   };
 
