@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -27,7 +27,7 @@ const SignUp = () => {
   const [btnSec, setBtnSec] = useState(true);
   const [badCode, setBadCode] = useState(false);
   const [authData, setAuthData] = useAtom(authAtom);
-  const [mistake, setMistake] = useState('')
+  const [mistake, setMistake] = useState("");
 
   useEffect(() => {
     if (number.length === 12) {
@@ -59,7 +59,7 @@ const SignUp = () => {
       const obj = { phone: authData.tel };
       console.log(obj);
       const response = await dispatch(fetchAuth(obj));
-      console.log('part-1', response);
+      console.log("part-1", response);
       if (!response || !response.payload) {
         setBadResponse(true);
         if (response.error.message) {
@@ -142,9 +142,13 @@ const SignUp = () => {
             />
           </View>
         ) : (
-          <View className="w-full h-[100vh] flex-col flex-1 box-border justify-between items-center px-[4vw] pt-[6vh] pb-[5vh]">
+          <View
+            className={`w-full h-[100vh] flex-col flex-1 box-border justify-between items-center px-[4vw] pt-[6vh]  ${
+              Platform.OS !== "android" ? "pb-[15vh]" : "pb-[5vh]"
+            }`}
+          >
             <View>
-              <Text className="font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8">
+              <Text className={`font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8`}>
                 {t("enterTheCode")}
               </Text>
               <Text className="font-robotoRegular color-grayColor-300 text-lg mt-[4vh] mb-[4vh]">

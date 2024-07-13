@@ -6,6 +6,7 @@ import {
   Animated,
   Keyboard,
   StyleSheet,
+  Platform
 } from "react-native";
 import { Tabs } from "expo-router";
 import { icons } from "../../constants";
@@ -105,8 +106,8 @@ const TabsLayout = () => {
             {
               backgroundColor: "#ffffff",
               borderTopColor: "#A2A2A2",
-              paddingBottom: 5,
-              height: 80,
+              paddingBottom: Platform.OS === "android" ? 0 : 15,
+              height: Platform.OS === "android" ? 70 : 100,
               display: `${visible.search || visible.map || visible.camera || visible.route? "none" : ""}`,
             },
             isKeyboardVisible && styles.hidden,

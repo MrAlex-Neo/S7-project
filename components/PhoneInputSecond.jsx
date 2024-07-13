@@ -29,15 +29,15 @@ const PhoneInputSecond = ({
       <Text className="text-lg tracking-wider font-roboto">{title}</Text>
 
       <View
-        className={`border-2 border-secondary focus:border-secondary-100 rounded-lg w-full h-[6.5vh] px-2`}
+        className={`border-2 border-secondary focus:border-secondary-100 rounded-lg w-full px-2 py-[1vh] pt-[0.5vh]`}
       >
         <Image
           source={icons.phone}
-          className="w-[4vh] h-auto absolute top-[1.9vh] left-[1.5vw]"
+          className="w-[4vh] h-auto absolute top-[1.3vh] left-[1.5vw]"
           resizeMode="contain"
         />
         <TouchableOpacity
-          className={`absolute top-[14%] right-[2.3vw] z-10 ${
+          className={`absolute top-[0.5vh] right-[2.3vw] z-10 ${
             isLoading ? "opacity-50" : ""
           }`}
           disabled={isLoading}

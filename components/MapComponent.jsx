@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, Platform } from "react-native";
 import MapView, { PROVIDER_OSM, Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
 import { icons } from "../constants";
 import { fetchStations } from "../redux/slices/stations";
+import { useIsFocused } from "@react-navigation/native";
 
 const initialRegion = {
   latitude: 41.2995,
@@ -96,16 +97,16 @@ const MapComponent = () => {
     requestLocationPermission();
   }, []);
 
-  useEffect(() => {
-    if (!locationPermissionGranted) {
-      mapRef.current.animateToRegion({
-        latitude: initialRegion.latitude,
-        longitude: initialRegion.longitude,
-        latitudeDelta: initialRegion.latitudeDelta,
-        longitudeDelta: initialRegion.longitudeDelta,
-      });
-    }
-  }, [locationPermissionGranted]);
+  // useEffect(() => {
+  //   if (!locationPermissionGranted) {
+  //     mapRef.current.animateToRegion({
+  //       latitude: initialRegion.latitude,
+  //       longitude: initialRegion.longitude,
+  //       latitudeDelta: initialRegion.latitudeDelta,
+  //       longitudeDelta: initialRegion.longitudeDelta,
+  //     });
+  //   }
+  // }, [locationPermissionGranted]);
 
   useEffect(() => {
     if (stations.length > 0) {
@@ -139,24 +140,43 @@ const MapComponent = () => {
   };
 
   const CustomMarker = ({ marker, getMarkerImageSource }) => {
+    const isFocused = useIsFocused();
     console.log("Координаты маркера:", marker.coordinate);
     const markerImage = getMarkerImageSource(marker.state);
-  
+
     return (
-      <Marker
-        key={marker.key}
-        coordinate={marker.coordinate}
-        title={marker.title}
-        onPress={() => {
-          setIsFocused((prevUserState) => ({
-            ...prevUserState,
-            map: false,
-            station: true,
-          }));
-        }}
-      >
-        <Image source={markerImage} className="w-[25vw] h-[25vw]" />
-      </Marker>
+      <>
+        {isFocused && (
+          <Marker
+            key={marker.key}
+            coordinate={marker.coordinate}
+            title={marker.title}
+            onPress={() => {
+              setIsFocused((prevUserState) => ({
+                ...prevUserState,
+                map: false,
+                station: true,
+              }));
+            }}
+          >
+            <Image source={markerImage} className="w-[30vw] h-[30vw]" />
+          </Marker>
+        )}
+      </>
+      // <Marker
+      //   key={marker.key}
+      //   coordinate={marker.coordinate}
+      //   title={marker.title}
+      //   image={markerImage}
+      //   className="bg-black"
+      //   onPress={() => {
+      //     setIsFocused((prevUserState) => ({
+      //       ...prevUserState,
+      //       map: false,
+      //       station: true,
+      //     }));
+      //   }}
+      // />
     );
   };
 
@@ -187,14 +207,14 @@ const MapComponent = () => {
     <View className="absolute b-0 w-[100vw] h-[100vh] z-1">
       <TouchableOpacity
         style={styles.followButton}
-        className="absolute mb-[15vh]"
+        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[15vh]'}`}
         onPress={handlePress}
       >
         <Image source={icons.locationBtn} style={{ width: 80, height: 80 }} />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.screenButton}
-        className="absolute mb-[15vh]"
+        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[15vh]'}`}
         onPress={handleScanPress}
       >
         <Image source={icons.screenBtn} style={{ width: 80, height: 80 }} />

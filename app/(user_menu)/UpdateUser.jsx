@@ -106,7 +106,7 @@ const UpdateUser = () => {
           keyboardOpeningTime={50}
           enableAutomaticScroll={true}
         >
-          <View className="w-full flex-1 pb-[1vh] px-[5vw] bg-white pt-[4vh]">
+          <View className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white  ${Platform.OS === 'android' ? 'pt-[4vh]' : 'pt-[2vh]'}`}>
             <View className="flex-row items-center">
               <ImgButton
                 containerStyles="p-0"

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Image } from "react-native";
+import { View, Text, TextInput, Image, Platform } from "react-native";
 import { useState } from "react";
 import { icons } from "../constants";
 
@@ -43,7 +43,7 @@ const PhoneInputFirst = ({
           {keyboardType === "numeric" ? (
             <Image
               source={icons.phone}
-              className="w-[4vh] h-auto absolute top-[1.3vh] left-[1.5vw]"
+              className={`w-[4vh] h-auto absolute  left-[1.5vw] ${Platform.OS === 'android' ? 'top-[1.3vh]' : 'top-[1.8vh]'}`}
               resizeMode="contain"
             />
           ) : null}
