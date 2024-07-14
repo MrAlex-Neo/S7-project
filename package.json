@@ -28,6 +28,7 @@
     "i18next": "^23.11.3",
     "intl-pluralrules": "^2.0.1",
     "jotai": "^2.8.0",
+    "lottie-react-native": "^6.7.2",
     "moment": "^2.30.1",
     "nativewind": "^2.0.11",
     "react": "18.2.0",

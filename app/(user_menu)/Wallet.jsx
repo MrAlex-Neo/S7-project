@@ -20,6 +20,8 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { CommonActions } from "@react-navigation/native";
 import WalletInput from "../../components/WalletInput";
 import { useEffect } from "react";
+import LottieView from "lottie-react-native";
+import animation from "../../assets/s7/animation.json"
 
 const Wallet = () => {
   const navigation = useNavigation();
@@ -153,8 +155,10 @@ const Wallet = () => {
           style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
         >
           <View className="bg-white w-[86vw] mx-[7vw] items-center px-[5vw] py-[10vw] rounded-xl">
-            <Image
-              source={images.chargesEnd}
+            <LottieView
+              source={animation}
+              autoPlay
+              loop
               className="h-[60vw] w-[60vw] mb-[2vh]"
             />
             <Text className="font-semibold text-2xl color-secondary text-center mb-[2vh]">

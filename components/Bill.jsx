@@ -37,7 +37,7 @@ const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ["90deg", "0deg"],
+    outputRange: ["-90deg", "0deg"],
   });
 
   const fadeIn = fadeInValue.interpolate({
