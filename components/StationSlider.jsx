@@ -14,7 +14,7 @@ const StationSlider = () => {
     {
       title: t("stationSlider_3"),
       img: icons.battery,
-      size: "w-[4vw] h-[3.4vh]",
+      size: "w-[5vw] h-[3.6vh]",
     },
     {
       title: t("stationSlider_4"),
@@ -25,7 +25,7 @@ const StationSlider = () => {
     {
       title: t("stationSlider_5"),
       img: icons.som,
-      size: "w-[8.2vw] h-[1.8vh]",
+      size: "w-[9.5vw] h-[1.8vh]",
       cost: "50 000so'm",
     },
     {
@@ -37,7 +37,7 @@ const StationSlider = () => {
     {
       title: t("stationSlider_6"),
       img: icons.persent,
-      size: "w-[3vh] h-[2.4vh]",
+      size: "w-[3vh] h-[2.5vh]",
       cost: "80%",
     },
   ];

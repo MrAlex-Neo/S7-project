@@ -43,7 +43,7 @@ const PhoneInputFirst = ({
           {keyboardType === "numeric" ? (
             <Image
               source={icons.phone}
-              className={`w-[4vh] h-auto absolute  left-[1.5vw] ${Platform.OS === 'android' ? 'top-[1.3vh]' : 'top-[1.8vh]'}`}
+              className={`w-[3vh] h-[3vh] absolute  left-[2vw] ${Platform.OS === 'android' ? 'top-[1.2vh]' : 'top-[1.3vh]'}`}
               resizeMode="contain"
             />
           ) : null}

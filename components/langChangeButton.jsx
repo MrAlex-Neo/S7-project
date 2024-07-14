@@ -22,7 +22,7 @@ const LangChangeButton = ({
         <View className="flex-row items-center gap-5">
           <Image
             source={img}
-            className="h-[5vh] w-auto rounded-full"
+            className="h-[5vh] w-[5vh] rounded-full"
             resizeMode="contain"
           />
           <Text

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, Image } from "react-native";
+import { View, Text, SafeAreaView, Image, Platform } from "react-native";
 import { icons } from "../../constants";
 import CircleAnimation from "../../components/CircleAnimation";
 import PrimaryButton from "../../components/PrimaryButton";
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 const Charge_page = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(2);
   const [popup, setPopup] = useState(false);
 
   // useEffect(() => {
@@ -32,12 +32,14 @@ const Charge_page = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
-      <View className="justify-between w-full flex-1 pb-[2vh] px-[5vw] pt-[10vh] bg-white">
+      <View className={`justify-between w-full flex-1 pb-[2vh] px-[5vw] bg-white ${
+          Platform.OS !== "android" ? "pt-[2vh]" : "pt-[10vh]"
+        }`}>
         <View className="flex-row justify-between">
           <Text className="font-robotoMedium text-xl">
             {t("charging_process")}
           </Text>
-          <Image source={icons.chat} />
+          <Image source={icons.chat}  className="w-[6vw] h-[6vw]"/>
         </View>
         <CircleAnimation step={step} kw="30" />
         <View className="p-[5vw] border-2 border-grayColor-600 rounded-xl bg-grayColor-200">

@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from "react-native";
 import React from "react";
 import ImgButton from "../../components/ImgButton";
@@ -29,11 +30,15 @@ const FAQ = () => {
   };
   return (
     <SafeAreaView className="bg-white h-[100vh] absolute bottom-0">
-      <View className="w-full flex-1 pb-[1vh] px-[5vw] pt-[4vh] bg-white">
+      <View
+        className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white ${
+          Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
+        }`}
+      >
         <View className="flex-row items-center">
           <ImgButton
             containerStyles="p-0"
-            imgStyles="w-[3vh] h-[3vh]"
+            imgStyles="w-[4vh] h-[4vh]"
             textStyles="text-white"
             handlePress={resetStack}
           />

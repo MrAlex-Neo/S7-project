@@ -10,10 +10,10 @@ import {
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import * as FileSystem from 'expo-file-system';
-import * as MediaLibrary from 'expo-media-library';
-import * as ImagePicker from 'expo-image-picker';
-import moment from 'moment';
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
+import moment from "moment";
 import { fetchAuthMe, fetchUpdate } from "../../redux/slices/auth";
 import { icons, images } from "../../constants";
 
@@ -51,13 +51,13 @@ const DownloadIMG = () => {
   };
 
   const handleDownload = async () => {
-    console.log('handleDownload')
+    console.log("handleDownload");
     if (!image) {
       console.log("No image selected");
       return;
     }
 
-    let date = moment().format('YYYYMMDDhhmmss');
+    let date = moment().format("YYYYMMDDhhmmss");
     let fileUri = FileSystem.documentDirectory + `${date}.jpg`;
 
     try {
@@ -70,15 +70,15 @@ const DownloadIMG = () => {
   };
 
   const saveFile = async (fileUri) => {
-    console.log('saveFile')
+    console.log("saveFile");
 
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === "granted") {
       try {
         const asset = await MediaLibrary.createAssetAsync(fileUri);
-        const album = await MediaLibrary.getAlbumAsync('Download');
+        const album = await MediaLibrary.getAlbumAsync("Download");
         if (album == null) {
-          await MediaLibrary.createAlbumAsync('Download', asset, false);
+          await MediaLibrary.createAlbumAsync("Download", asset, false);
         } else {
           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
         }
@@ -91,13 +91,13 @@ const DownloadIMG = () => {
   };
 
   const uploadImage = async (fileUri) => {
-    console.log('uploadImage')
+    console.log("uploadImage");
 
     const formData = new FormData();
-    formData.append('picture', {
+    formData.append("picture", {
       uri: fileUri,
-      name: `${moment().format('YYYYMMDDhhmmss')}.jpg`,
-      type: 'image/jpeg',
+      name: `${moment().format("YYYYMMDDhhmmss")}.jpg`,
+      type: "image/jpeg",
     });
 
     try {
@@ -111,7 +111,11 @@ const DownloadIMG = () => {
   return (
     <SafeAreaView className="bg-black absolute b-0 h-full justify-between mt-[4vh] py-[4vh]">
       <View className="w-full px-[5vw] bg-black">
-        <View className="flex-row items-center">
+        <View
+          className={`flex-row items-center ${
+            Platform.OS !== "android" ? "mt-[2vh]" : ""
+          }`}
+        >
           <TouchableOpacity onPress={resetStack}>
             <Image
               source={icons.backBtnWhite}
@@ -133,7 +137,9 @@ const DownloadIMG = () => {
           className="w-[40vh] h-[40vh] rounded-full"
         />
       </View>
-      <View className="flex-row justify-around">
+      <View className={`flex-row justify-around ${
+            Platform.OS !== "android" ? "mb-[2vh]" : ""
+          }`}>
         <TouchableOpacity
           className="items-center mb-[4vh] justify-between"
           onPress={pickImage}

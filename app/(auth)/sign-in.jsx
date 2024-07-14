@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Platform, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { images } from "../../constants";
@@ -98,7 +98,7 @@ const SignIn = () => {
     setBadResponseTwo(false);
     setRegData((prevUserState) => ({
       ...prevUserState,
-     badCode: false
+      badCode: false,
     }));
     try {
       const obj = { phone: regData.tel, verification_code: regData.regCode };
@@ -107,7 +107,7 @@ const SignIn = () => {
         setBadResponseTwo(true);
         setRegData((prevUserState) => ({
           ...prevUserState,
-         badCode: true
+          badCode: true,
         }));
         return console.log("ответ", response);
       }
@@ -149,14 +149,18 @@ const SignIn = () => {
         enableAutomaticScroll={true}
       >
         <ImgButton
-          containerStyles="absolute top-[4vh] left-[8vw]"
-          imgStyles="w-[3vh] h-[3vh]"
+          containerStyles={`left-[3vw] ${
+            Platform.OS !== "android" ? "top-[2vh]" : "top-[4vh]"
+          }`}
+          imgStyles="w-[4vh] h-[4vh]"
           textStyles="text-white"
-          handlePress={() => {
-            part === 0 ? router.push("/") : setPart(0);
-          }}
+          handlePress={() => (part === 0 ? router.push("/") : setPart(0))}
         />
-        <View className="flex-1 justify-between h-[100vh] px-[4vw] py-[6vh] pb-[2vh]">
+        <View
+          className={`flex-1 justify-between  px-[4vw] py-[6vh] ${
+            Platform.OS !== "android" ? "pb-[0vh] h-[85vh]" : "pb-[2vh] h-[95vh]"
+          }`}
+        >
           {part === 0 ? (
             <>
               <Image
@@ -181,7 +185,7 @@ const SignIn = () => {
                   // mistake={t("badPhoneInputText")}
                   keyboardType="numeric"
                 />
-                <View className="flex-row items-center mt-[2vh]">
+                <View className="flex-row items-center mt-[0vh]">
                   <CheckBox
                     checked={isChecked}
                     onPress={() => setIsChecked(!isChecked)}
@@ -212,7 +216,7 @@ const SignIn = () => {
           ) : part === 1 ? (
             <>
               <View>
-                <Text className="font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8">
+                <Text className="font-robotoBold tracking-wider text-2xl leading-8">
                   {t("enterTheCode")}
                 </Text>
                 <Text className="font-robotoRegular text-grayColor-300 text-lg mt-[4vh] mb-[4vh]">

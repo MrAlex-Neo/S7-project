@@ -1,40 +1,39 @@
-import { View, TextInput, Image } from "react-native";
+import { View, TextInput, Image, Platform } from "react-native";
 import { useEffect, useState } from "react";
 import { icons } from "../constants";
 import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
 
-const SearchInput = ({ placeholder, map }) => {
+const SearchInput = ({ placeholder, map, unBar }) => {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useAtom(focus);
   const [editable, setEditable] = useState(false);
   useEffect(() => {
     // console.log(isFocused)
-  }, [isFocused])
-  
+  }, [isFocused]);
+
   const handleFocus = () => {
     setIsFocused((prevUserState) => ({
       ...prevUserState,
-      search: true
+      search: true,
     })); // Используйте метод set для обновления состояния
 
     // console.log(map, 'map')
     if (map === true) {
       setIsFocused((prevUserState) => ({
         ...prevUserState,
-        map: true
+        map: true,
       }));
     }
     // console.log(focus)
   };
 
- 
   const handleBlur = () => {
     setIsFocused((prevUserState) => ({
       ...prevUserState,
-      search: false
+      search: false,
     }));
-    return false
+    return false;
     // console.log(focus)
   };
 
@@ -47,7 +46,7 @@ const SearchInput = ({ placeholder, map }) => {
       />
       <TextInput
         className={`w-full rounded-xl bg-grayColor-400 text-base font-robotoRegular p-[2vh] pl-[12vw] ${
-          isFocused ? 'border-blue-500' : '' // Пример добавления стиля при фокусе
+          isFocused ? "border-blue-500" : "" // Пример добавления стиля при фокусе
         }`}
         value={value}
         placeholder={placeholder}
@@ -55,6 +54,14 @@ const SearchInput = ({ placeholder, map }) => {
         onFocus={handleFocus}
         onBlur={handleBlur}
         editable={!map ? map : true}
+        onPress={() =>
+          unBar && Platform.OS !== "android"
+            ? setIsFocused((prevUserState) => ({
+                ...prevUserState,
+                map: true,
+              }))
+            : null
+        }
       />
     </View>
   );

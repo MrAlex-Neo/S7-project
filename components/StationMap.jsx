@@ -30,6 +30,7 @@ const StationMap = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   const [activeId, setActiveId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [like, setLike] = useState(true)
 
   const handlePress = (id) => {
     setActiveId(id);
@@ -116,8 +117,8 @@ const StationMap = () => {
             </View>
             <Text className="ml-[2vw] text-xs font-robotoMedium">24/7</Text>
           </View>
-          <TouchableOpacity>
-            <Image source={icons.flag} className="w-[7vw] h-[7vw]" />
+          <TouchableOpacity onPress={() => setLike((prev) => !prev)}>
+            <Image source={like ? icons.flag : icons.flagSec} className="w-[7vw] h-[7vw]" />
           </TouchableOpacity>
         </View>
         <View>

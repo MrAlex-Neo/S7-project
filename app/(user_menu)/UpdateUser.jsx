@@ -110,7 +110,7 @@ const UpdateUser = () => {
             <View className="flex-row items-center">
               <ImgButton
                 containerStyles="p-0"
-                imgStyles="w-[3vh] h-[3vh]"
+                imgStyles="w-[4vh] h-[4vh]"
                 textStyles="text-white"
                 handlePress={resetStack}
               />

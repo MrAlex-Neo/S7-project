@@ -68,7 +68,7 @@ export default function App() {
   return (
     <View
       style={styles.container}
-      className="flex-1 bg-black-100 justify-center absolute w-[100vw] h-[100vh]"
+      className="flex-1 bg-black-100 justify-start absolute w-[100vw] h-[100vh] pt-[15vh]"
     >
       <View className="mx-[20vw]">
         <Text className="text-white text-center font-robotoMedium text-base mb-[1vh]">Отсканируйте QR код</Text>
@@ -76,7 +76,7 @@ export default function App() {
       </View>
       <View
         style={styles.scannerFrame}
-        className="border-4 border-secondary rounded-3xl overflow-hidden h-[45vh] mx-[10vw]"
+        className="border-4 border-secondary rounded-3xl overflow-hidden h-[45vh] mx-[10vw] mb-[2vh]"
       >
         <CameraView
           barcodeScannerEnabled
@@ -92,7 +92,7 @@ export default function App() {
         onPress={toggleFlashlight}
         className="items-center"
       >
-        <Image source={flashlightEnabled ? icons.stationsActive : icons.stations} className="w-[16vw] h-[16vw] mt-[2vh]"/>
+        <Image source={flashlightEnabled ? icons.stationsActive : icons.stations} className="w-[16vw] h-[16vw]"/>
       </TouchableOpacity>
       {scanned && (
         <Modal transparent={true} animationType="slide" visible={scanned}>

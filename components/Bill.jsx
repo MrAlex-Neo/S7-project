@@ -37,7 +37,7 @@ const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "90deg"],
+    outputRange: ["90deg", "0deg"],
   });
 
   const fadeIn = fadeInValue.interpolate({
@@ -62,7 +62,7 @@ const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
               spend
                 ? "border-red-500 text-red-500"
                 : "border-secondary text-secondary"
-            } p-[1vw] text-center w-[27vw] rounded-md`}
+            } p-[1vw] text-center w-[26vw] rounded-md`}
             style={{borderWidth: 2, borderRadius: 5, borderColor: spend ? '#FF6666' : '#19B775'}}
           >
             {spend ? t("spend") : t("received")}
@@ -83,7 +83,7 @@ const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
             <Animated.Image
               source={icons.cardArrow}
               style={{ transform: [{ rotate: spin }] }}
-              className="h-[2vh] w-[1.2.3vh]"
+              className="h-[3vh] w-[3vh] mr-[1vw]"
             />
           </TouchableOpacity>
         ) : (

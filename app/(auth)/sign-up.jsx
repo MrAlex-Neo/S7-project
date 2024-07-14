@@ -119,7 +119,7 @@ const SignUp = () => {
       >
         <ImgButton
           containerStyles="fixed top-[4vh] left-[6vw]"
-          imgStyles="w-[3vh] h-[3vh]"
+          imgStyles="w-[4vh] h-[4vh]"
           textStyles="text-white"
           handlePress={() => (part === 0 ? router.push("/") : setPart(0))}
         />

@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, Text, SafeAreaView, Image, Animated } from "react-native";
+import { View, Text, Animated, Platform } from "react-native";
 import { Svg, Path } from "react-native-svg";
 
 const CircleAnimation = ({ step, kw }) => {
-  const {t, i18n} = useTranslation()
+  const { t, i18n } = useTranslation();
   const [color, setColor] = useState("#FA0D0D");
   const [animation] = useState(new Animated.Value(5)); // Используем Animated.Value для анимации elevation
 
   const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
   useEffect(() => {
-    // Функция для анимации изменения elevation
+    // Функция для анимации изменения elevation/shadow
     const animateElevation = () => {
       Animated.loop(
         Animated.sequence([
           Animated.timing(animation, {
-            toValue: 25, // Максимальное значение elevation
+            toValue: 25, // Максимальное значение elevation/shadow
             duration: 1000,
             easing: easeInOut,
-            useNativeDriver: true,
+            useNativeDriver: false, // Изменено на false для использования с тенями
           }),
           Animated.timing(animation, {
-            toValue: 5, // Минимальное значение elevation
+            toValue: 5, // Минимальное значение elevation/shadow
             duration: 1000,
             easing: easeInOut,
-            useNativeDriver: true,
+            useNativeDriver: false, // Изменено на false для использования с тенями
           }),
         ])
       ).start();
@@ -38,6 +38,7 @@ const CircleAnimation = ({ step, kw }) => {
       animation.stopAnimation();
     };
   }, []);
+
   useEffect(() => {
     // Логика для изменения цвета в зависимости от значения step
     if (step === 0) {
@@ -49,49 +50,67 @@ const CircleAnimation = ({ step, kw }) => {
     }
   }, [step]);
 
+  const shadowStyle = Platform.select({
+    ios: {
+      shadowColor: color,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: animation.interpolate({
+        inputRange: [5, 25],
+        outputRange: [0.5, 1], // Интерполяция для изменения прозрачности тени
+      }),
+      shadowRadius: animation.interpolate({
+        inputRange: [5, 25],
+        outputRange: [5, 25], // Интерполяция для изменения радиуса тени
+      }),
+    },
+    android: {
+      elevation: animation,
+    },
+  });
+
   return (
     <Animated.View
       className="justify-center items-center rounded-full mx-auto shadow-2xl w-[60vw] h-[60vw]"
-      style={{
-        shadowColor: color,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: animation, // Это важно для Android
-        overflow: "visible", // чтобы тень отображалась за пределами границ
-        backgroundColor: "white",
-      }}
+      style={[
+        shadowStyle,
+        {
+          overflow: "visible", // чтобы тень отображалась за пределами границ
+          backgroundColor: "white",
+        },
+      ]}
     >
       <Animated.View
         className="justify-center items-center rounded-full mx-auto shadow-2xl w-[60vw] h-[60vw]"
-        style={{
-          shadowColor: color,
-          shadowOffset: { width: 0, height: 4 },
-          elevation: animation, // Это важно для Android
-          overflow: "visible", // чтобы тень отображалась за пределами границ
-          backgroundColor: "white",
-        }}
+        style={[
+          shadowStyle,
+          {
+            overflow: "visible", // чтобы тень отображалась за пределами границ
+            backgroundColor: "white",
+          },
+        ]}
       >
         <Animated.View
           className="justify-center items-center rounded-full mx-auto shadow-2xl w-[60vw] h-[60vw]"
-          style={{
-            shadowColor: color,
-            shadowOffset: { width: 0, height: 4 },
-            elevation: animation, // Это важно для Android
-            overflow: "visible", // чтобы тень отображалась за пределами границ
-            backgroundColor: "white",
-          }}
+          style={[
+            shadowStyle,
+            {
+              overflow: "visible", // чтобы тень отображалась за пределами границ
+              backgroundColor: "white",
+            },
+          ]}
         >
           <Animated.View
             className={`items-center border-4 mx-auto px-[15vw] py-[12vw]  shadow-2xl w-[60vw] h-[60vw]`}
-            style={{
-              alignItems: "center",
-              borderColor: color,
-              borderRadius: 999, // используйте большое значение для максимального округления
-              shadowColor: color,
-              shadowOffset: { width: 0, height: 4 },
-              elevation: animation, // Это важно для Android
-              overflow: "visible", // чтобы тень отображалась за пределами границ
-              backgroundColor: "white",
-            }}
+            style={[
+              shadowStyle,
+              {
+                alignItems: "center",
+                borderColor: color,
+                borderRadius: 999, // используйте большое значение для максимального округления
+                overflow: "visible", // чтобы тень отображалась за пределами границ
+                backgroundColor: "white",
+              },
+            ]}
           >
             <View className="absolute items-center top-[12vw] w-[60vw] h-[60vw]">
               <Svg
@@ -106,8 +125,13 @@ const CircleAnimation = ({ step, kw }) => {
                   fill={color}
                 />
               </Svg>
-              <Text className="font-semibold text-3xl mt-[3vw]">{kw}{t('kw')}</Text>
-              <Text className="font-robotoRegular text-base mt-[3vw]">{t('energy')}</Text>
+              <Text className="font-semibold text-3xl mt-[3vw]">
+                {kw}
+                {t("kw")}
+              </Text>
+              <Text className="font-robotoRegular text-base mt-[3vw]">
+                {t("energy")}
+              </Text>
             </View>
           </Animated.View>
         </Animated.View>

@@ -41,7 +41,7 @@ const StationInfoItem = () => {
             </View>
           </View>
           <View className="flex-col justify-between">
-            <Image source={images.stationGun} className="w-[33vw] mr-[1vw]" />
+            <Image source={images.stationGun} className="w-[33vw] h-[30vw] mr-[1vw]" />
           </View>
         </View>
       </View>

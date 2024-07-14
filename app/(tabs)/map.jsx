@@ -53,7 +53,7 @@ const Map = () => {
         ) : (
           <View className="absolute z-20 w-[93vw] bottom-[2vh] mx-[3.5vw] rounded-md p-[2vw] bg-white">
             <TouchableOpacity onPress={handleMapPress}>
-              <SearchInp placeholder={t("searchText")} map={searchMap} />
+              <SearchInp placeholder={t("searchText")} map={searchMap} unBar={true}/>
             </TouchableOpacity>
           </View>
         )}

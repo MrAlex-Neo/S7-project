@@ -29,7 +29,7 @@ const StationPort = ({ busy, isActive, onPress }) => {
         </Text>
       </View>
       <View>
-        <Image source={images.stationGun} className="w-[33vw]" />
+        <Image source={images.stationGun} className="w-[33vw] h-[30vw]" />
       </View>
     </TouchableOpacity>
   );

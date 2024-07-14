@@ -8,6 +8,7 @@ const ImgButton = ({
   isLoading,
   imgStyles
 }) => {
+  console.log(handlePress)
   return (
     <View className="">
       <TouchableOpacity

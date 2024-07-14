@@ -46,7 +46,7 @@ const StationCard = ({ busy }) => {
               Riviera, charger №1
             </Text>
           </View>
-          <Image source={icons.cardArrow} className="h-[2vh]" />
+          <Image source={icons.cardArrow} className="h-[3vh] w-[3vh] -rotate-90" />
         </View>
         <View className="flex-row justify-between">
           <View>

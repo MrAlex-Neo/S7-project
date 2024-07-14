@@ -19,7 +19,7 @@ import history from "../assets/s7/icons/history.png"
 import purse from "../assets/s7/icons/purse.png"
 import green_purse from "../assets/s7/icons/green_purse.png"
 import settings from "../assets/s7/icons/settings.png"
-import pencilSec from "../assets/s7/icons/pencilSec.png"
+import pencilSec from "../assets/s7/icons/pencil_sec.png"
 import exit from "../assets/s7/icons/exit.png"
 import callUs from "../assets/s7/icons/CallUs.png"
 import tg from "../assets/s7/icons/TG.png"
@@ -27,6 +27,7 @@ import click from "../assets/s7/icons/click.png"
 import paynet from "../assets/s7/icons/paynet.png"
 import payme from "../assets/s7/icons/payme.png"
 import flag from "../assets/s7/icons/flag.png"
+import flagSec from "../assets/s7/icons/flagSec.png"
 import clock from "../assets/s7/icons/clock.png"
 import battery from "../assets/s7/icons/battery.png"
 import persent from "../assets/s7/icons/persent.png"
@@ -83,6 +84,7 @@ export default {
   paynet,
   payme,
   flag,
+  flagSec,
   clock,
   battery,
   persent,

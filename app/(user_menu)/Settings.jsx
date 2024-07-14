@@ -69,7 +69,6 @@ const Settings = () => {
           setIsPressed(false);
           setExit(false);
         });
-    
       } else {
         Animated.spring(translateY, {
           toValue: 0,
@@ -190,11 +189,15 @@ const Settings = () => {
             </Animated.View>
           </Animated.View>
         ) : null}
-        <View className="w-full flex-1 pb-[1vh] px-[5vw] h-full bg-white pt-[4vh]">
+        <View
+          className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white ${
+            Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
+          }`}
+        >
           <View className="flex-row items-center">
             <ImgButton
               containerStyles="p-0"
-              imgStyles="w-[3vh] h-[3vh]"
+              imgStyles="w-[4vh] h-[4vh]"
               textStyles="text-white"
               handlePress={resetStack}
             />
@@ -224,7 +227,7 @@ const Settings = () => {
               <View className="flex-row items-center gap-5">
                 <Image
                   source={icons.exit}
-                  className="h-[5vh] w-auto"
+                  className="h-[4vh] w-[4vh]"
                   resizeMode="contain"
                 />
                 <Text
