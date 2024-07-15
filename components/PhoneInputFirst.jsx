@@ -18,12 +18,16 @@ const PhoneInputFirst = ({
 
   // Функция для форматирования ввода номера телефона
   const formatPhoneNumber = (input) => {
-    // Убираем все нецифровые символы
     const cleaned = input.replace(/\D/g, "");
-    // Добавляем пробелы между группами цифр
-    const formatted = cleaned.replace(
-      /(\d{1,3})(\d{1,2})(\d{1,3})(\d{1,2})(\d{1,2})/,
-      "$1 $2 $3 $4 $5"
+    const limited = cleaned.slice(0, maxLength);
+    const maxLength = 12;
+
+    // Форматируем номер телефона
+    const formatted = limited.replace(
+        /^(?=.{0,12}$)\+?(\d{0,3})(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})$/,
+        (match, p1, p2, p3, p4, p5) => {
+            return `${p1} ${p2} ${p3} ${p4} ${p5}`.trim();
+        }
     );
     return "+" + formatted;
   };

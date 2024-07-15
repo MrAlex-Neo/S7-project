@@ -17,27 +17,33 @@ const PhoneInputSecond = ({
 
   const formatPhoneNumber = (input) => {
     const cleaned = input.replace(/\D/g, "");
-    const formatted = cleaned.replace(
-      /(\d{1,3})(\d{1,2})(\d{1,3})(\d{1,2})(\d{1,2})/,
-      "$1 $2 $3 $4 $5"
+    const limited = cleaned.slice(0, maxLength);
+    const maxLength = 12;
+
+    // Форматируем номер телефона
+    const formatted = limited.replace(
+        /^(?=.{0,12}$)\+?(\d{0,3})(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})$/,
+        (match, p1, p2, p3, p4, p5) => {
+            return `${p1} ${p2} ${p3} ${p4} ${p5}`.trim();
+        }
     );
     return "+" + formatted;
   };
 
   return (
     <View className="pb-[3vh] w-full">
-      <Text className="text-lg tracking-wider font-roboto">{title}</Text>
+      <Text className="text-lg tracking-wider font-roboto mb-[1vh]">{title}</Text>
 
       <View
         className={`border-2 border-secondary focus:border-secondary-100 rounded-lg w-full px-2 py-[1vh] pt-[0.5vh]`}
       >
         <Image
           source={icons.phone}
-          className="w-[4vh] h-auto absolute top-[1.3vh] left-[1.5vw]"
+          className="w-[4vh] h-[4vh] absolute top-[0.6vh] left-[1.5vw]"
           resizeMode="contain"
         />
         <TouchableOpacity
-          className={`absolute top-[0.5vh] right-[2.3vw] z-10 ${
+          className={`absolute top-[0.7vh] right-[2.3vw] z-10 ${
             isLoading ? "opacity-50" : ""
           }`}
           disabled={isLoading}
@@ -45,7 +51,7 @@ const PhoneInputSecond = ({
         >
           <Image
             source={icons.authInput}
-            className="w-[8vw]"
+            className="w-[8vw] h-[8vw]"
             resizeMode="contain"
           />
         </TouchableOpacity>

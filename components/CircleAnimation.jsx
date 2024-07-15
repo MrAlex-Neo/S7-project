@@ -4,7 +4,7 @@ import { View, Text, Animated, Platform } from "react-native";
 import { Svg, Path } from "react-native-svg";
 
 const CircleAnimation = ({ step, kw }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [color, setColor] = useState("#FA0D0D");
   const [animation] = useState(new Animated.Value(5)); // Используем Animated.Value для анимации elevation
 
@@ -16,7 +16,7 @@ const CircleAnimation = ({ step, kw }) => {
       Animated.loop(
         Animated.sequence([
           Animated.timing(animation, {
-            toValue: 25, // Максимальное значение elevation/shadow
+            toValue: Platform.OS === 'android' ? 45 : 25, // Максимальное значение elevation/shadow увеличено для большей яркости
             duration: 1000,
             easing: easeInOut,
             useNativeDriver: false, // Изменено на false для использования с тенями
@@ -53,17 +53,19 @@ const CircleAnimation = ({ step, kw }) => {
   const shadowStyle = Platform.select({
     ios: {
       shadowColor: color,
-      shadowOffset: { width: 0, height: 4 },
+      shadowOffset: { width: 0, height: 0 },
       shadowOpacity: animation.interpolate({
-        inputRange: [5, 25],
+        inputRange: [5, 35],
         outputRange: [0.5, 1], // Интерполяция для изменения прозрачности тени
       }),
       shadowRadius: animation.interpolate({
-        inputRange: [5, 25],
-        outputRange: [5, 25], // Интерполяция для изменения радиуса тени
+        inputRange: [5, 35],
+        outputRange: [5, 35], // Интерполяция для изменения радиуса тени
       }),
     },
     android: {
+      shadowOffset: { width: 0, height: 0 },
+      shadowColor: color,
       elevation: animation,
     },
   });

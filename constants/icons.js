@@ -2,6 +2,7 @@
 import phone from "../assets/s7/icons/phone.png"
 import backBtn from "../assets/s7/icons/back_btn.png"
 import authInput from "../assets/s7/icons/arrowAuthInput.png"
+import search from "../assets/s7/icons/search.png"
 import map from "../assets/s7/icons/map.png"
 import stations from "../assets/s7/icons/stations.png"
 import favourites from "../assets/s7/icons/favourites.png"
@@ -76,6 +77,7 @@ export default {
   purse,
   green_purse,
   settings,
+  search,
   pencilSec,
   exit,
   tg,

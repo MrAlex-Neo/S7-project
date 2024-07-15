@@ -128,7 +128,7 @@ const SignUp = () => {
             <Image
               source={images.image5}
               resizeMode="contain"
-              className="w-full h-[45vh]"
+              className="w-full h-[45vh] mb-[4vh]"
             />
             <PhoneInputSecond
               title={t("phone_number")}

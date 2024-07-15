@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import { View, Text, ScrollView, SafeAreaView, Platform } from "react-native";
 import React, { useTransition } from "react";
 import SearchInput from "../../components/SearchInp.jsx";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,11 @@ const Stations = () => {
         </Text>
         <SearchInput placeholder={t("searchText")} />
         <ScrollView vertical showsVerticalScrollIndicator={false}>
-          <View className="flex-col pt-[1vh]">
+          <View
+            className={`flex-col pt-[1vh]  ${
+              Platform.OS === "android" ? "pb-[7vh]" : "pb-[12vh]"
+            }`}
+          >
             <StationCard busy={true} />
             <StationCard busy={false} />
             <StationCard busy={true} />

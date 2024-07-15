@@ -31,9 +31,9 @@ const Charge_page = () => {
   // [] означает, что useEffect будет запущен только один раз при монтировании
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-white absolute bottom-0 h-[100vh]">
       <View className={`justify-between w-full flex-1 pb-[2vh] px-[5vw] bg-white ${
-          Platform.OS !== "android" ? "pt-[2vh]" : "pt-[10vh]"
+          Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
         }`}>
         <View className="flex-row justify-between">
           <Text className="font-robotoMedium text-xl">

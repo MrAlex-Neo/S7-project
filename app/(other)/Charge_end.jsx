@@ -5,7 +5,8 @@ import { CommonActions } from "@react-navigation/native";
 import { images } from "../../constants";
 import PrimaryButton from "../../components/PrimaryButton";
 import { useTranslation } from "react-i18next";
-
+import LottieView from "lottie-react-native";
+import animation from '../../assets/s7/animation.json'
 
 const Charge_end = () => {
   const { t, i18n } = useTranslation();
@@ -22,20 +23,22 @@ const Charge_end = () => {
     <SafeAreaView className="bg-white h-full">
       <View className="justify-center w-full flex-1 pb-[2vh] px-[5vw] pt-[2vh] bg-white">
         <View className="items-center">
-          <Image
-            source={images.chargesEnd}
-            className="w-[60vw] h-[58.8vw] mb-[6vh]"
+          <LottieView
+            source={animation}
+            autoPlay
+            loop
+            className="h-[80vw] w-[80vw] mb-[2vh]"
           />
           <Text className="font-semibold text-2xl text-center color-secondary mb-[3vh]">
-            {`${t('charge_end_1')} 50%`}
+            {`${t("charge_end_1")} 50%`}
           </Text>
           <Text className="font-robotoRegular text-sm color-grayColor-300 mx-[12vw] text-center">
-            {`${t('charge_end_2')} 45 000 ${t('sum')}`} сум
+            {`${t("charge_end_2")} 45 000 ${t("sum")}`}
           </Text>
         </View>
       </View>
       <PrimaryButton
-        title={t('close')}
+        title={t("close")}
         containerStyles="bg-secondary w-[90vw] mx-[5vw] mb-[4vh]"
         textStyles="text-white"
         isLoading={false}

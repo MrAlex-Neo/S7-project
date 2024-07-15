@@ -207,14 +207,14 @@ const MapComponent = () => {
     <View className="absolute b-0 w-[100vw] h-[100vh] z-1">
       <TouchableOpacity
         style={styles.followButton}
-        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[15vh]'}`}
+        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[14.5vh]'}`}
         onPress={handlePress}
       >
         <Image source={icons.locationBtn} style={{ width: 80, height: 80 }} />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.screenButton}
-        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[15vh]'}`}
+        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[14.5vh]'}`}
         onPress={handleScanPress}
       >
         <Image source={icons.screenBtn} style={{ width: 80, height: 80 }} />
