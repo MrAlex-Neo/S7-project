@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Image, TouchableOpacity, Platform } from "react-native";
 import { useState } from "react";
 import { icons } from "../constants";
 
@@ -39,11 +39,11 @@ const PhoneInputSecond = ({
       >
         <Image
           source={icons.phone}
-          className="w-[4vh] h-[4vh] absolute top-[0.6vh] left-[1.5vw]"
+          className={`w-[4vh] h-[4vh] absolute ${Platform.OS !== "android" ? "top-[0.2vh]" : "top-[0.6vh]"} left-[1.5vw]`}
           resizeMode="contain"
         />
         <TouchableOpacity
-          className={`absolute top-[0.7vh] right-[2.3vw] z-10 ${
+          className={`absolute ${Platform.OS !== "android" ? "top-[0.5vh]" : "top-[0.7vh]"} right-[2.3vw] z-10 ${
             isLoading ? "opacity-50" : ""
           }`}
           disabled={isLoading}

@@ -149,7 +149,7 @@ const SignIn = () => {
         enableAutomaticScroll={true}
       >
         <ImgButton
-          containerStyles={`left-[3vw] ${
+          containerStyles={`fixed top-[1vh] p-[3vw] ${
             Platform.OS !== "android" ? "top-[2vh]" : "top-[4vh]"
           }`}
           imgStyles="w-[4vh] h-[4vh]"

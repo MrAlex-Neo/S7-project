@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from './slices/auth'
 import { stationsReducer } from "./slices/stations";
+import imageUploadSlice from "./slices/imageUploadSlice";
 // import { videosReducer } from './slices/videos'
 // import { bannersReducer } from "./slices/banners";
 // import { categoriesReducer } from "./slices/categories";
@@ -11,6 +12,7 @@ const store = configureStore({
         auth: authReducer,
         // videos: videosReducer,
         stations: stationsReducer,
+        imageUpload: imageUploadSlice,
         // banners: bannersReducer,
         // categories: categoriesReducer,
         // offers: offersReducer,

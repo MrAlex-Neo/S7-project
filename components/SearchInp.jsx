@@ -41,7 +41,9 @@ const SearchInput = ({ placeholder, map, unBar }) => {
     <View className="w-full">
       <Image
         source={icons.search}
-        className="w-[4vh] h-[4vh] absolute top-[1.4vh] left-[2.2vw] z-10"
+        className={`w-[4vh] h-[4vh] absolute ${
+          Platform.OS !== "android" ? "top-[1.5vh]" : "top-[2vh]"
+        } left-[2.2vw] z-10`}
         resizeMode="contain"
       />
       <TextInput

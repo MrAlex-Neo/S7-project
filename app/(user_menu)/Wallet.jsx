@@ -7,6 +7,8 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import React, { useState } from "react";
 import { useAtom } from "jotai";
 import { towardPage } from "../../values/atom/myAtoms";
@@ -21,7 +23,8 @@ import { CommonActions } from "@react-navigation/native";
 import WalletInput from "../../components/WalletInput";
 import { useEffect } from "react";
 import LottieView from "lottie-react-native";
-import animation from "../../assets/s7/animation.json"
+import animation from "../../assets/s7/animation.json";
+import animation_1 from "../../assets/s7/animation_1.json";
 
 const Wallet = () => {
   const navigation = useNavigation();
@@ -30,6 +33,7 @@ const Wallet = () => {
   const [part, setPart] = useState(0);
   const [sum, setSum] = useState("30000");
   const [inputValue, setInputValue] = useState("");
+  const [inputValueNumber, setInputValueNumber] = useState("");
 
   const handlePress = (index) => {
     setActiveButton(index);
@@ -46,18 +50,31 @@ const Wallet = () => {
   const isDisabled = activeButton === null;
 
   useEffect(() => {
+    setInputValueNumber(sum)
+    setInputValue(sum);
+  }, [sum]);
+  useEffect(() => {
     setInputValue(sum);
   }, [sum]);
   const handleValueChange = (newValue) => {
+    setInputValueNumber(Number(newValue.replace(/\D/g, "")))
+    console.log(Number(newValue.replace(/\D/g, "")))
     setInputValue(newValue);
   };
 
   return (
-    <>
-      <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw] pb-[1vh] justify-between">
+    <SafeAreaView className="bg-white flex-1">
+      <KeyboardAwareScrollView
+        extraScrollHeight={0}
+        enableOnAndroid={true}
+        keyboardOpeningTime={50}
+        enableAutomaticScroll={true}
+      >
         <View
           className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white ${
-            Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
+            Platform.OS !== "android"
+              ? "pt-[2vh] h-[82vh]"
+              : "pt-[7vh] h-[95vh]"
           }`}
         >
           <View className="flex-row items-center">
@@ -80,21 +97,29 @@ const Wallet = () => {
             <View className="py-[1vh]">
               <ScrollView vertical showsVerticalScrollIndicator={false}>
                 {[
-                  { icon: icons.click, height: "" },
-                  { icon: icons.payme, height: "" },
-                  { icon: icons.paynet, height: "" },
+                  { icon: icons.click,  },
+                  { icon: icons.payme,  },
+                  { icon: icons.paynet,  },
+                  { icon: icons.kaspi, },
+                // {[
+                //   { icon: icons.click, height: "140%", width: "30vw" },
+                //   { icon: icons.payme, height: Platform.OS === 'android' ?"110%" : "100%", width: "30vw" },
+                //   { icon: icons.paynet, height: Platform.OS === 'android' ? "4.1vh" : "7vw", width: Platform.OS === 'android' ? "38vw" : "33vw" },
+                //   { icon: icons.kaspi, height: Platform.OS === 'android' ? "5vh" : "5vh", width: Platform.OS === 'android' ? "30vw" : "33vw"},
                 ].map((item, index) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() => handlePress(index)}
                   >
                     <View
-                      className={`flex-row justify-between items-center p-[3vh] border-2 border-grayColor-400 rounded-2xl mt-[2vh]
+                      className={`flex-row justify-between items-center p-[2vh] border-2 border-grayColor-400 rounded-2xl mt-[2vh]
                   `}
                     >
                       <Image
                         source={item.icon}
-                        className={`h-[${item.height}]`}
+                        // source={icons.click}
+                        // className={`h-[140%] w-[${item.width}]`}
+                        className={`h-[${item.height}] w-[${item.width}]`}
                       />
                       <View
                         className={`border-4 border-secondary h-[4vh] w-[4vh] rounded-full ${
@@ -116,7 +141,9 @@ const Wallet = () => {
                   {`1${t("kw")}. 1000 ${t("sum")}`}
                 </Text>
                 <Text className="font-robotoMedium text-xs">
-                  {`30.000 ${t("sum")} ≈ 30${t("kw")}.`}
+                  {`${inputValue} ${t("sum")} ≈ ${(inputValueNumber / 1000).toFixed(
+                    1
+                  )}${t("kw")}.`}
                 </Text>
               </View>
               <View className="flex-row justify-between mt-[2vh] flex-wrap">
@@ -148,38 +175,38 @@ const Wallet = () => {
           }}
           isLoading={part === 0 ? isDisabled : false} // Управляем состоянием disabled
         />
-      </SafeAreaView>
-      {part === 2 ? (
-        <View
-          className="absolute justify-center w-full h-[100%] z-20"
-          style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
-        >
-          <View className="bg-white w-[86vw] mx-[7vw] items-center px-[5vw] py-[10vw] rounded-xl">
-            <LottieView
-              source={animation}
-              autoPlay
-              loop
-              className="h-[60vw] w-[60vw] mb-[2vh]"
-            />
-            <Text className="font-semibold text-2xl color-secondary text-center mb-[2vh]">
-              {t("purse_2")}
-            </Text>
-            <Text className="font-robotoRegular text-base color-grayColor-300 text-center mb-[4vh]">
-              {`${t("purse_3")} ${inputValue
-                .toString()
-                .replace(/\D/g, "")
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${t("sum")}`}
-            </Text>
-            <PrimaryButton
-              title={t("purse_4")}
-              containerStyles="bg-secondary w-[65vw] px-[0] py-[2vh] mr-[1vw]"
-              textStyles="text-white text-center font-robotoRegular text-sm"
-              handlePress={resetStack}
-            />
+        {part === 2 ? (
+          <View
+            className="absolute justify-center w-full h-[100%] z-20"
+            style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
+          >
+            <View className="bg-white w-[86vw] mx-[7vw] items-center px-[5vw] py-[10vw] rounded-xl">
+              <LottieView
+                source={animation_1}
+                autoPlay
+                loop
+                className="h-[60vw] w-[60vw] mb-[2vh]"
+              />
+              <Text className="font-semibold text-2xl color-secondary text-center mb-[2vh]">
+                {t("purse_2")}
+              </Text>
+              <Text className="font-robotoRegular text-base color-grayColor-300 text-center mb-[4vh]">
+                {`${t("purse_3")} ${inputValue
+                  .toString()
+                  .replace(/\D/g, "")
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${t("sum")}`}
+              </Text>
+              <PrimaryButton
+                title={t("purse_4")}
+                containerStyles="bg-secondary w-[65vw] px-[0] py-[2vh] mr-[1vw]"
+                textStyles="text-white text-center font-robotoRegular text-sm"
+                handlePress={resetStack}
+              />
+            </View>
           </View>
-        </View>
-      ) : null}
-    </>
+        ) : null}
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

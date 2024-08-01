@@ -23,14 +23,52 @@ import {
   PanGestureHandler,
   State,
 } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { mistake } from "../values/atom/myAtoms";
 
 const StationMap = () => {
   const { t, i18 } = useTranslation();
   const [isFocused, setIsFocused] = useAtom(focus);
+  const [isMistake, setIsMistake] = useAtom(mistake);
   const translateY = useRef(new Animated.Value(0)).current;
   const [activeId, setActiveId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [like, setLike] = useState(true)
+  const [like, setLike] = useState(true);
+  const [hasToken, setHasToken] = useState(false);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        setHasToken(!!token);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    checkToken();
+  }, []);
+
+  const handleTabPress = (e) => {
+    if (!hasToken) {
+      setIsMistake((prevUserState) => ({
+        ...prevUserState,
+        badToken: true,
+      }));
+      setIsFocused((prevUserState) => ({
+        ...prevUserState,
+        map: true,
+      }));
+      // e.preventDefault();
+    } else {
+      setIsFocused((prevUserState) => ({
+        ...prevUserState,
+        map: false,
+        station: false,
+      }));
+      router.push("Station_info");
+    }
+  };
 
   const handlePress = (id) => {
     setActiveId(id);
@@ -118,7 +156,10 @@ const StationMap = () => {
             <Text className="ml-[2vw] text-xs font-robotoMedium">24/7</Text>
           </View>
           <TouchableOpacity onPress={() => setLike((prev) => !prev)}>
-            <Image source={like ? icons.flag : icons.flagSec} className="w-[7vw] h-[7vw]" />
+            <Image
+              source={like ? icons.flag : icons.flagSec}
+              className="w-[7vw] h-[7vw]"
+            />
           </TouchableOpacity>
         </View>
         <View>
@@ -149,14 +190,7 @@ const StationMap = () => {
                 containerStyles="bg-secondary w-[42vw] p-[1.5vh]"
                 textStyles="text-white"
                 isLoading={isLoading}
-                handlePress={() => {
-                  setIsFocused((prevUserState) => ({
-                    ...prevUserState,
-                    map: false,
-                    station: false,
-                  }));
-                  router.push("Station_info");
-                }}
+                handlePress={handleTabPress}
               />
             </View>
           </ScrollView>

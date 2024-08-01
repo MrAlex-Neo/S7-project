@@ -24,9 +24,10 @@ import pencilSec from "../assets/s7/icons/pencil_sec.png"
 import exit from "../assets/s7/icons/exit.png"
 import callUs from "../assets/s7/icons/CallUs.png"
 import tg from "../assets/s7/icons/TG.png"
-import click from "../assets/s7/icons/click.png"
-import paynet from "../assets/s7/icons/paynet.png"
-import payme from "../assets/s7/icons/payme.png"
+import click from "../assets/s7/icons/wallet/click.png"
+import paynet from "../assets/s7/icons/wallet/paynet.png"
+import kaspi from "../assets/s7/icons/wallet/kaspi.png"
+import payme from "../assets/s7/icons/wallet/payme.png"
 import flag from "../assets/s7/icons/flag.png"
 import flagSec from "../assets/s7/icons/flagSec.png"
 import clock from "../assets/s7/icons/clock.png"
@@ -105,5 +106,6 @@ export default {
   backBtnWhite,
   test_route,
   change_photo,
-  delete_photo
+  delete_photo,
+  kaspi
 };

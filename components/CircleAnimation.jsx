@@ -16,7 +16,7 @@ const CircleAnimation = ({ step, kw }) => {
       Animated.loop(
         Animated.sequence([
           Animated.timing(animation, {
-            toValue: Platform.OS === 'android' ? 45 : 25, // Максимальное значение elevation/shadow увеличено для большей яркости
+            toValue: Platform.OS === 'android' ? 15 : 25, // Максимальное значение elevation/shadow увеличено для большей яркости
             duration: 1000,
             easing: easeInOut,
             useNativeDriver: false, // Изменено на false для использования с тенями
@@ -68,6 +68,7 @@ const CircleAnimation = ({ step, kw }) => {
       shadowColor: color,
       elevation: animation,
     },
+    
   });
 
   return (
@@ -102,13 +103,13 @@ const CircleAnimation = ({ step, kw }) => {
           ]}
         >
           <Animated.View
-            className={`items-center border-4 mx-auto px-[15vw] py-[12vw]  shadow-2xl w-[60vw] h-[60vw]`}
+            className={`items-center border-4 mx-auto px-[15vw] py-[12vw] shadow-2xl w-[60vw] h-[60vw]`}
             style={[
               shadowStyle,
               {
                 alignItems: "center",
                 borderColor: color,
-                borderRadius: 999, // используйте большое значение для максимального округления
+                borderRadius: 9999, // используйте большое значение для максимального округления
                 overflow: "visible", // чтобы тень отображалась за пределами границ
                 backgroundColor: "white",
               },

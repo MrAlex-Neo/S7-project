@@ -48,6 +48,12 @@ const Profile = () => {
         phone: data.data.phone,
       }));
     }
+    if (data?.data?.picture) {
+      setUser((prev) => ({
+        ...prev,
+        picture: { uri: "http://91.228.152.152" + data.data.picture },
+      }));
+    }
   }, [data]);
 
   return (
@@ -61,11 +67,15 @@ const Profile = () => {
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-2">
                 <Image
-                  source={data && data?.data?.picture ? data && data?.data?.picture : images.user}
+                  source={
+                    data && data?.data?.picture
+                      ? { uri: "http://91.228.152.152" + data.data.picture }
+                      : images.user
+                  }
                   className="w-[10vh] h-[10vh] rounded-full"
                 />
                 <View>
-                  {data && data?.data?.first_name && data?.data?.last_name? (
+                  {data && data?.data?.first_name && data?.data?.last_name ? (
                     <Text className="font-robotoMedium text-xl">
                       {`${data.data.first_name} ${data.data.last_name}`}
                     </Text>

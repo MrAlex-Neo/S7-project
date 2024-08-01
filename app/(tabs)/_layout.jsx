@@ -6,15 +6,18 @@ import {
   Animated,
   Keyboard,
   StyleSheet,
-  Platform
+  Platform,
+  TouchableOpacity
 } from "react-native";
 import { Tabs } from "expo-router";
 import { icons } from "../../constants";
 import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai";
 import { focus } from "../../values/atom/myAtoms";
+import { error } from "../../values/atom/myAtoms";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TabIcon = ({ icon, color, name, focused }) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -51,7 +54,10 @@ const TabIcon = ({ icon, color, name, focused }) => {
       <Image
         source={icon}
         resizeMode="contain"
-        style={{ width: 40, height: 40 }}
+        style={{
+          width: Platform.OS === "android" ? 35 : 40,
+          height: Platform.OS === "android" ? 35 : 40,
+        }}
       />
       <Text className={`font-robotoMedium text-xs`} style={{ color: color }}>
         {name}
@@ -64,7 +70,22 @@ const TabsLayout = () => {
   const { t } = useTranslation();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [visible, setVisible] = useAtom(focus);
-  const navigation = useNavigation()
+  const [isError, setIsError] = useAtom(error);
+  const [hasToken, setHasToken] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        setHasToken(!!token);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    checkToken();
+  }, []);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -95,8 +116,23 @@ const TabsLayout = () => {
     };
   }, [visible.map]);
 
+  const handleTabPress = (e) => {
+    if (!hasToken) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
+      {/* {false && (
+        <View style={styles.mistake} className="bottom-0 items-center justify-center">
+          <Text>asdasd</Text>
+          <TouchableOpacity>
+
+          </TouchableOpacity>
+        </View>
+      )} */}
+
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
@@ -106,9 +142,13 @@ const TabsLayout = () => {
             {
               backgroundColor: "#ffffff",
               borderTopColor: "#A2A2A2",
-              paddingBottom: Platform.OS === "android" ? 0 : 15,
+              paddingBottom: Platform.OS === "android" ? 0 : 25,
               height: Platform.OS === "android" ? 70 : 100,
-              display: `${visible.search || visible.map || visible.camera || visible.route? "none" : ""}`,
+              display: `${
+                visible.search || visible.map || visible.camera || visible.route
+                  ? "none"
+                  : ""
+              }`,
             },
             isKeyboardVisible && styles.hidden,
           ],
@@ -128,12 +168,6 @@ const TabsLayout = () => {
               />
             ),
           }}
-          listeners={{
-            tabPress: (e) => {
-              // navigation.popToTop()
-              // navigation.navigate("map")
-            },
-          }}
         />
         <Tabs.Screen
           name="stations"
@@ -149,12 +183,9 @@ const TabsLayout = () => {
               />
             ),
           }}
-          listeners={{
-            tabPress: (e) => {
-              // navigation.popToTop()
-              // navigation.navigate("stations")
-            },
-          }}
+          // listeners={{
+          //   tabPress: handleTabPress,
+          // }}
         />
         <Tabs.Screen
           name="favourites"
@@ -171,10 +202,7 @@ const TabsLayout = () => {
             ),
           }}
           listeners={{
-            tabPress: (e) => {
-              // navigation.popToTop()
-              // navigation.navigate("favourites")
-            },
+            tabPress: handleTabPress,
           }}
         />
         <Tabs.Screen
@@ -192,10 +220,7 @@ const TabsLayout = () => {
             ),
           }}
           listeners={{
-            tabPress: (e) => {
-              // navigation.popToTop()
-              // navigation.navigate("profile")
-            },
+            tabPress: handleTabPress,
           }}
         />
       </Tabs>
@@ -207,6 +232,13 @@ const TabsLayout = () => {
 const styles = StyleSheet.create({
   hidden: {
     display: "none",
+  },
+  mistake: {
+    position: "absolute",
+    zIndex: 1000,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(40, 40, 40, 0.6)",
   },
 });
 

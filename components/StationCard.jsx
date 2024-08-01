@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
 import { useState } from "react";
 import { color } from "react-native-elements/dist/helpers";
 import { router, useNavigation } from "expo-router";
@@ -33,7 +33,9 @@ const StationCard = ({ busy }) => {
                 busy
                   ? "border-red-500 text-red-500"
                   : "border-secondary text-secondary"
-              } p-[1vw] text-center w-[25vw] rounded-md`} 
+              } p-[1vw] text-center w-[25vw] ${
+                Platform.OS !== "android" ? "h-[7vw]" : "h-[8vw]"
+              } rounded-md`} 
               style={{borderWidth: 2, borderRadius: 5, borderColor: busy ? '#FF6666' : '#19B775'}}
             >
               {busy ? t("busy") : t("free")}

@@ -84,7 +84,7 @@ const Charge_page = () => {
           <View className="bg-white w-[90vw] mx-[5vw] items-center px-[5vw] py-[10vw] rounded-xl">
             <Image
               source={images.popupBatery}
-              className="h-[8vh] w-[8vh] mb-[2vh]"
+              className={`h-[8.1vh] w-[8.1vh] mb-[2vh] `}
             />
             <Text className="font-robotoRegular text-2xl text-center mb-[2vh]">
               {t("charge_page_1")}

@@ -10,19 +10,21 @@ import {
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
-import moment from "moment";
-import { fetchAuthMe, fetchUpdate } from "../../redux/slices/auth";
+import { fetchAuthMe } from "../../redux/slices/auth";
+import {
+  uploadImage,
+  reset as resetImageUpload,
+} from "../../redux/slices/imageUploadSlice";
 import { icons, images } from "../../constants";
 
 const DownloadIMG = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const data = useSelector((state) => state.auth?.data);
-  const [image, setImage] = useState(null);
+  const imageUploadState = useSelector((state) => state.imageUpload);
+  const [image, setImage] = useState(data?.data?.picture);
 
   useEffect(() => {
     dispatch(fetchAuthMe());
@@ -41,72 +43,54 @@ const DownloadIMG = () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
+      const selectedImage = result.assets[0];
+      setImage(selectedImage.uri);
+      handleDownload(selectedImage);
     }
   };
 
-  const handleDownload = async () => {
-    console.log("handleDownload");
+  const handleDownload = async (image) => {
     if (!image) {
       console.log("No image selected");
       return;
     }
 
-    let date = moment().format("YYYYMMDDhhmmss");
-    let fileUri = FileSystem.documentDirectory + `${date}.jpg`;
+    const mimeType = image.uri.endsWith(".jpg") ? "image/jpeg" : "image/png";
+
+    const formData = {
+      uri: image.uri,
+      name: `photo.jpg`,
+      type: mimeType,
+    };
 
     try {
-      const res = await FileSystem.downloadAsync(image, fileUri);
-      saveFile(res.uri);
-      await uploadImage(fileUri); // Upload the image to the server
-    } catch (err) {
-      console.log("FS Err: ", err);
-    }
-  };
-
-  const saveFile = async (fileUri) => {
-    console.log("saveFile");
-
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status === "granted") {
-      try {
-        const asset = await MediaLibrary.createAssetAsync(fileUri);
-        const album = await MediaLibrary.getAlbumAsync("Download");
-        if (album == null) {
-          await MediaLibrary.createAlbumAsync("Download", asset, false);
-        } else {
-          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-        }
-      } catch (err) {
-        console.log("Save err: ", err);
+      const response = await dispatch(uploadImage(formData));
+      console.log("70", response);
+      // Проверка формата ответа
+      if (response && response.meta.requestStatus === "fulfilled") {
+        console.log("Response data:", response.payload);
+        dispatch(fetchAuthMe())
+      } else {
+        console.error("Unexpected response format:", response);
       }
-    } else if (status === "denied") {
-      alert("please allow permissions to download");
+    } catch (err) {
+      console.error("FS Err: ", err);
     }
   };
+  useEffect(() => {
+    console.log(image);
+  }, [image]);
 
-  const uploadImage = async (fileUri) => {
-    console.log("uploadImage");
+  if (imageUploadState?.error) {
+    console.error(imageUploadState.error);
+  }
 
-    const formData = new FormData();
-    formData.append("picture", {
-      uri: fileUri,
-      name: `${moment().format("YYYYMMDDhhmmss")}.jpg`,
-      type: "image/jpeg",
-    });
-
-    try {
-      const result = await dispatch(fetchUpdate(formData));
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  console.log(data?.data?.picture);
 
   return (
     <SafeAreaView className="bg-black absolute b-0 h-full justify-between mt-[4vh] py-[4vh]">
@@ -131,17 +115,20 @@ const DownloadIMG = () => {
         <Image
           source={
             data && data?.data?.picture
-              ? { uri: data.data.picture }
+              ? { uri: "http://91.228.152.152" + data?.data?.picture }
               : images.userPhotoDefault
           }
           className="w-[40vh] h-[40vh] rounded-full"
         />
       </View>
-      <View className={`flex-row justify-around ${
-            Platform.OS !== "android" ? "mb-[2vh]" : ""
-          }`}>
+      <View
+        className={`flex-row justify-around ${
+          Platform.OS !== "android" ? "mb-[2vh]" : ""
+        }`}
+      >
         <TouchableOpacity
           className="items-center mb-[4vh] justify-between"
+          id="btn_for_fownload_img"
           onPress={pickImage}
         >
           <Image source={icons.change_photo} className="w-[8vw] h-[8vw]" />
@@ -151,7 +138,8 @@ const DownloadIMG = () => {
         </TouchableOpacity>
         <TouchableOpacity
           className="items-center mb-[4vh] justify-between"
-          onPress={handleDownload}
+          id="btn_for_delete_img"
+          onPress={console.log("this btn is for delete")}
         >
           <Image source={icons.delete_photo} className="w-[8vw] h-[8vw]" />
           <Text className="color-white font-robotoMedium text-xs text-center mt-[1vh]">
@@ -164,3 +152,16 @@ const DownloadIMG = () => {
 };
 
 export default DownloadIMG;
+
+{
+  /* <TouchableOpacity
+  className="items-center mb-[4vh] justify-between"
+  id="btn_for_delete_img"
+  onPress={console.log("this btn is for delete")}
+>
+  <Image source={icons.delete_photo} className="w-[8vw] h-[8vw]" />
+  <Text className="color-white font-robotoMedium text-xs text-center mt-[1vh]">
+    {t("download_img_3")}
+  </Text>
+</TouchableOpacity>; */
+}

@@ -1,4 +1,11 @@
-import { StyleSheet, View, TouchableOpacity, Image, Platform } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image,
+  Platform,
+  Text,
+} from "react-native";
 import MapView, { PROVIDER_OSM, Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -6,6 +13,7 @@ import React, { useState, useEffect, useRef } from "react";
 import * as Location from "expo-location";
 import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
+import { charge } from "../values/atom/myAtoms";
 import { icons } from "../constants";
 import { fetchStations } from "../redux/slices/stations";
 import { useIsFocused } from "@react-navigation/native";
@@ -28,6 +36,7 @@ const MapComponent = () => {
   const [markers, setMarkers] = useState([]);
   const [stations, setStations] = useState([]);
   const mapRef = useRef(null);
+  const [charging, setCharging] = useAtom(charge);
 
   const areStationsEqual = (oldStations, newStations) => {
     if (oldStations.length !== newStations.length) {
@@ -55,24 +64,29 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (data.results) {
-      let array = [];
-      for (let index = 0; index < data.results.length; index++) {
-        const station = data.results[index];
-        array.push({
-          key: station.charge_point_id,
-          title: station.location.name,
-          coordinate: {
-            latitude: parseFloat(station.latitude), // Преобразуем в float, если это строки
-            longitude: parseFloat(station.longitude),
-          },
-          state: [true, "not_working"],
-        });
-      }
+    try {
+      if (data.results) {
+        let array = [];
+        for (let index = 0; index < data.results.length; index++) {
+          const station = data.results[index];
+          console.log(station);
+          array.push({
+            key: station.charge_point_id,
+            title: station.location.name,
+            coordinate: {
+              latitude: parseFloat(station.latitude), // Преобразуем в float, если это строки
+              longitude: parseFloat(station.longitude),
+            },
+            state: [true, "not_working"],
+          });
+        }
 
-      if (!areStationsEqual(stations, array)) {
-        setStations(array);
+        if (!areStationsEqual(stations, array)) {
+          setStations(array);
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   }, [data.results]);
 
@@ -207,14 +221,30 @@ const MapComponent = () => {
     <View className="absolute b-0 w-[100vw] h-[100vh] z-1">
       <TouchableOpacity
         style={styles.followButton}
-        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[14.5vh]'}`}
+        className={`absolute mb-[15vh] ${
+          Platform.OS === "android" ? "mb-[10vh]" : "mb-[14.5vh]"
+        }`}
         onPress={handlePress}
       >
         <Image source={icons.locationBtn} style={{ width: 80, height: 80 }} />
       </TouchableOpacity>
+      {charging.state ? (
+        <TouchableOpacity
+          style={styles.chargeButton}
+          className={`absolute mb-[15vh] bg-secondary justify-center items-center rounded-lg ${
+            Platform.OS === "android" ? "mb-[12.8vh]" : "mb-[16.8vh]"
+          }`}
+        >
+          <Text className="text-white font-robotoRegular text-xl pl-[1vw] pb-[0.2vw]">
+            {charging.sum}%
+          </Text>
+        </TouchableOpacity>
+      ) : null}
       <TouchableOpacity
         style={styles.screenButton}
-        className={`absolute mb-[15vh] ${Platform.OS === 'android' ? 'mb-[10vh]' : 'mb-[14.5vh]'}`}
+        className={`absolute mb-[15vh] ${
+          Platform.OS === "android" ? "mb-[10vh]" : "mb-[14.5vh]"
+        }`}
         onPress={handleScanPress}
       >
         <Image source={icons.screenBtn} style={{ width: 80, height: 80 }} />
@@ -299,6 +329,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: 80,
     height: 80,
+  },
+  chargeButton: {
+    position: "absolute",
+    bottom: 0,
+    left: 15,
+    zIndex: 1,
+    width: 60,
+    height: Platform.OS === "android" ? 35 : 40,
   },
 });
 

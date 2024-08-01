@@ -119,11 +119,11 @@ const UpdateUser = () => {
               </Text>
             </View>
             <View
-              className="mx-auto mt-[5vh]"
+              className="mx-auto mt-[3vh]"
               style={{ alignSelf: "flex-start" }}
             >
               <TouchableOpacity
-                className="absolute bottom-[-1vh] right-[0vh] z-20"
+                className="absolute bottom-[-1vh] right-[0.2vh] z-20"
                 onPress={() => setIsPressed(true)}
               >
                 <Image
@@ -136,12 +136,12 @@ const UpdateUser = () => {
                 style={{ alignSelf: "flex-start" }}
               >
                 <Image
-                  source={images.user}
-                  className="w-[12vh] h-[12vh] rounded-full"
+                  source={user.picture}
+                  className="w-[15vh] h-[15vh] rounded-full"
                 />
               </View>
             </View>
-            <View className="mt-[6vh]">
+            <View className="mt-[4vh]">
               <PhoneInputFirst
                 title={t("phone_number")}
                 value={user.phone}

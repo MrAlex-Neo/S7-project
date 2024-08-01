@@ -34,7 +34,7 @@ const FaqItem = ({ question, answer }) => {
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '90deg']
+    outputRange: ['-90deg', '0deg']
   });
 
   const fadeIn = fadeInValue.interpolate({
@@ -50,7 +50,7 @@ const FaqItem = ({ question, answer }) => {
           <Animated.Image 
             source={icons.cardArrow}
             style={{ transform: [{ rotate: spin }] }}
-            className="h-[2vh] w-[1.2.3vh]"
+            className="h-[3vh] w-[2vh]"
           />
         </TouchableOpacity>
       </View>

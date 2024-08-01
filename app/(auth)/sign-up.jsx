@@ -118,13 +118,13 @@ const SignUp = () => {
         enableAutomaticScroll={true}
       >
         <ImgButton
-          containerStyles="fixed top-[4vh] left-[6vw]"
+          containerStyles="fixed top-[1vh] p-[3vw]"
           imgStyles="w-[4vh] h-[4vh]"
           textStyles="text-white"
           handlePress={() => (part === 0 ? router.push("/") : setPart(0))}
         />
         {part === 0 ? (
-          <View className="w-full flex-col justify-around items-center px-[4vw] py-[6vh]">
+          <View className="w-full flex-col justify-around items-center px-[4vw]">
             <Image
               source={images.image5}
               resizeMode="contain"
@@ -143,7 +143,7 @@ const SignUp = () => {
           </View>
         ) : (
           <View
-            className={`w-full h-[100vh] flex-col flex-1 box-border justify-between items-center px-[4vw] pt-[6vh]  ${
+            className={`w-full h-[95vh] flex-col flex-1 box-border justify-between items-center px-[4vw]   ${
               Platform.OS !== "android" ? "pb-[15vh]" : "pb-[5vh]"
             }`}
           >
@@ -165,7 +165,7 @@ const SignUp = () => {
             </View>
             <PrimaryButton
               title={t("confirm")}
-              containerStyles="bg-secondary w-full mr-2"
+              containerStyles="bg-secondary w-[100%]"
               textStyles="text-white"
               isLoading={btnSec}
               handlePress={() => sendCodeHandler()}

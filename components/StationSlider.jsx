@@ -1,8 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, Image, Animated, PanResponder } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Animated,
+  PanResponder,
+  Platform,
+} from "react-native";
 import Pagination from "./Pagination";
 import { icons } from "../constants";
 import { useTranslation } from "react-i18next";
+import StationInputBox from "./StationInputBox";
 
 const StationSlider = () => {
   const [path, setPath] = useState(0);
@@ -14,31 +22,36 @@ const StationSlider = () => {
     {
       title: t("stationSlider_3"),
       img: icons.battery,
-      size: "w-[5vw] h-[3.6vh]",
+      size:
+        Platform.OS !== "android" ? "w-[5vw] h-[3.8vh]" : "w-[5vw] h-[4vh]",
     },
     {
       title: t("stationSlider_4"),
       img: icons.zip,
-      size: "w-[4vw] h-[3.4vh]",
-      cost: "50kWt",
+      size: Platform.OS !== "android" ? "w-[4vw] h-[3.6vh]" : "w-[4vw] h-[4.1vh]",
+      cost: "50",
+      const_1: t('kw')
     },
     {
       title: t("stationSlider_5"),
       img: icons.som,
-      size: "w-[9.5vw] h-[1.8vh]",
-      cost: "50 000so'm",
+      size: Platform.OS !== "android" ? "w-[10.58vw] h-[2vh]" : "w-[10.2vw] h-[2.1vh]",
+      cost: "50 000",
+      const_1: t('sum')
     },
     {
       title: t("stationSlider_6"),
       img: icons.stateClock,
-      size: "w-[3.4vh] h-[3.4vh]",
-      cost: "90min",
+      size: Platform.OS !== "android" ? "w-[3.41vh] h-[3.4vh]" : "w-[3.42vh] h-[3.4vh]",
+      cost: "90",
+      const_1: t('min')
     },
     {
       title: t("stationSlider_6"),
       img: icons.persent,
-      size: "w-[3vh] h-[2.5vh]",
-      cost: "80%",
+      size: Platform.OS !== "android" ? "w-[3vh] h-[2.5vh]" : "w-[3.6vh] h-[3vh]",
+      cost: "80",
+      const_1: '%'
     },
   ];
 
@@ -90,9 +103,9 @@ const StationSlider = () => {
           return prevPath - 1;
         } else if (direction === "right" && prevPath < myArray.length - 1) {
           return prevPath + 1;
-        }else if(direction === "right" && prevPath === myArray.length - 1){
+        } else if (direction === "right" && prevPath === myArray.length - 1) {
           return 0;
-        }else{
+        } else {
           return myArray.length - 1;
         }
         // return prevPath;
@@ -127,12 +140,9 @@ const StationSlider = () => {
           {path === 0 ? (
             ""
           ) : (
-            <View>
-              <Text className="px-[4vw] py-[3vw] rounded-xl font-robotoRegular text-center color-grayColor-300 bg-grayColor-200 border-2 border-gray-200 text-sm">
-                {myArray[path].cost}
-              </Text>
-            </View>
-          )}
+            <StationInputBox text={myArray[path].cost} text_1={myArray[path].const_1}/>
+
+)}
         </View>
         <View className="flex-row items-end justify-between w-full">
           <Text className="w-[60vw] font-robotoRegular text-xs color-grayColor-500">

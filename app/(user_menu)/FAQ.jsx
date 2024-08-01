@@ -44,7 +44,7 @@ const FAQ = () => {
           />
           <Text className="font-robotoMedium text-xl ml-[4vw]">{t("FAQ")}</Text>
         </View>
-        <View className="mt-[4vh]">
+        <View className="mt-[4vh] pb-[2vh]">
           <ScrollView vertical showsVerticalScrollIndicator={false}>
             <FaqItem
               question="Доступна ли регистрация с других стран?"

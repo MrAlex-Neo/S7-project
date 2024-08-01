@@ -31,7 +31,7 @@ const LangChangeButton = ({
             {title}
           </Text>
         </View>
-        <Image source={images.arrow} className="w-[3vw] h-[2vh]" resizeMode="contain" />
+        <Image source={images.arrow} className="w-[9vw] h-[6vh]" resizeMode="contain" />
       </TouchableOpacity>
     </>
   );
