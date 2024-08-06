@@ -4,7 +4,7 @@ import { icons } from "../constants";
 import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
 
-const SearchInput = ({ placeholder, map, unBar }) => {
+const SearchInput = ({ placeholder, map, unBar, otherStyles }) => {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useAtom(focus);
   const [editable, setEditable] = useState(false);
@@ -38,7 +38,7 @@ const SearchInput = ({ placeholder, map, unBar }) => {
   };
 
   return (
-    <View className="w-full">
+    <View className={`w-full ${otherStyles}`} >
       <Image
         source={icons.search}
         className={`w-[4vh] h-[4vh] absolute ${

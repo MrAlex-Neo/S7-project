@@ -103,6 +103,8 @@ const resources = {
       download_img_3: 'Delete a photo',
       permission: 'Grant permission',
       permission_1: 'We need your permission to show the camera',
+      error: 'An error has occurred, please write to the support service in a telegram',
+      error_1: 'Error',
     },
   },
   ru: {
@@ -202,6 +204,8 @@ const resources = {
       download_img_3: 'Удалить фото',
       permission: 'Предоставьте разрешение',
       permission_1: 'Нам нужно ваше разрешение, чтобы показать камеру',
+      error: 'Возникла ошибка, пожалуйста напишите в службу поддержки в телеграме',
+      error_1: 'Ошибка',
     },
   },
   uz: {
@@ -300,6 +304,8 @@ const resources = {
       download_img_3: "Fotosuratni o'chirish",
       permission: 'Ruxsat bering',
       permission_1: "Kamerani ko'rsatish uchun sizga ruxsat kerak",
+      error: "Xatolik yuz berdi, iltimos, qo'llab-quvvatlash xizmatiga telegramda yozing",
+      error_1: 'Xato',
     },
   },
 };

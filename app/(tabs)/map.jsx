@@ -8,6 +8,7 @@ import {
   Platform,
   Text,
 } from "react-native";
+
 import SearchInp from "../../components/SearchInp";
 import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai";
@@ -15,7 +16,6 @@ import { focus } from "../../values/atom/myAtoms";
 import { mistake } from "../../values/atom/myAtoms";
 import StationMap from "../../components/StationMap";
 import SearchMap from "../../components/SearchMap";
-import { useDispatch, useSelector } from "react-redux";
 import { icons, images } from "../../constants";
 import CameraModal from "../../components/CameraModal"; // Изменили импорт
 import MapComponent from "../../components/MapComponent";
@@ -23,11 +23,12 @@ import RouteChoose from "../../components/RouteChoose";
 import MistakeMap from "../../components/MistakeMap";
 
 const Map = () => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useAtom(focus);
   const [isMistake, setIsMistake] = useAtom(mistake);
   const [searchMap, setSearchMap] = useState(false);
+  const [latitudeRoute, setLatitudeRoute] = useState(null);
+  const [longitudeRoute, setLongitudeRoute] = useState(null);
 
   useEffect(() => {
     setIsFocused((prevUserState) => ({
@@ -48,15 +49,25 @@ const Map = () => {
     }));
   };
 
+  const latitudeHandlerForRoute = (data) => {
+    setLatitudeRoute(data);
+  };
+  const longitudeHandlerForRoute = (data) => {
+    setLongitudeRoute(data);
+  };
+
   return (
-    <SafeAreaView className="bg-white h-[100vh] absolute bottom-0 w-[100vw]">
+    <SafeAreaView className="bg-white h-[100%] absolute bottom-0 w-[100vw]">
       <View className="h-full">
         {isFocused.station ? (
-          <StationMap />
+          <StationMap
+            latitude={latitudeHandlerForRoute}
+            longitude={longitudeHandlerForRoute}
+          />
         ) : isFocused.map ? (
           <SearchMap />
         ) : (
-          <View className="absolute z-20 w-[93vw] bottom-[2vh] mx-[3.5vw] rounded-2xl p-[2vw] bg-white">
+          <View className={`absolute z-20 w-[93vw] ${Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"} mx-[3.5vw] rounded-2xl p-[2vw] bg-white`}>
             <TouchableOpacity onPress={handleMapPress}>
               <SearchInp
                 placeholder={t("searchText")}
@@ -90,7 +101,7 @@ const Map = () => {
         )}
         {isFocused.route && (
           <View style={styles.container}>
-            <RouteChoose latitude="41.304597" longitude="69.229359" />
+            <RouteChoose latitude={latitudeRoute} longitude={longitudeRoute} />
           </View>
         )}
         {isMistake.badToken && <MistakeMap />}

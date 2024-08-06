@@ -10,6 +10,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
+
 import * as Location from "expo-location";
 import SearchInp from "./SearchInp";
 import { useTranslation } from "react-i18next";
@@ -21,7 +22,6 @@ import {
   State,
 } from "react-native-gesture-handler";
 import StationCard from "./StationCard";
-import StationMap from "./StationMap";
 
 const SearchMap = () => {
   const { t, i18 } = useTranslation();
@@ -65,29 +65,37 @@ const SearchMap = () => {
   };
 
   return (
-    <GestureHandlerRootView className="absolute z-20 h-[90%] bottom-0 right-0 w-[100%]">
-      <Animated.View
-        className="w-[100%] p-[4vw] pt-[1vh] pb-0 rounded-3xl rounded-br-none rounded-bl-none bg-white"
-        id="main"
-        style={{
-          transform: [{ translateY }],
-        }}
-      >
-        <PanGestureHandler
-          onGestureEvent={handleGesture}
-          onHandlerStateChange={handleStateChange}
-          activeOffsetY={[-9999, 0]} // Проверяем с меньшими значениями
+    <GestureHandlerRootView
+      className={`absolute z-20  ${
+        Platform.OS === "ios" ? "h-[85vh]" : "h-[90vh] pb-[12vh]"
+      } top-[10vh] right-0 w-[100%]`}
+    >
+
+        <Animated.View
+          className="w-[100%] p-[4vw] pt-[1vh] pb-0 rounded-3xl rounded-br-none rounded-bl-none bg-white"
+          id="main"
+          style={{
+            transform: [{ translateY }],
+          }}
         >
-          <View className="h-[6vh]">
-            <Animated.View
-              id="child"
-              className="border-2 m-2 rounded-full w-[10vw] mx-auto"
-            />
-          </View>
-        </PanGestureHandler>
-        <SearchInp placeholder={t("searchText")} map={true} />
-        <ScrollView vertical showsVerticalScrollIndicator={false}>
-          <View className="flex-col pt-[3vh] pb-[3vh]">
+          <PanGestureHandler
+            onGestureEvent={handleGesture}
+            onHandlerStateChange={handleStateChange}
+            activeOffsetY={[-9999, 0]} // Проверяем с меньшими значениями
+          >
+            <View className="h-[6vh]">
+              <Animated.View
+                id="child"
+                className="border-2 m-2 rounded-full w-[10vw] mx-auto"
+              />
+            </View>
+          </PanGestureHandler>
+          <SearchInp placeholder={t("searchText")} map={true} otherStyles="mb-[2vh]" />
+          <ScrollView
+            vertical
+            showsVerticalScrollIndicator={false}
+            className="flex-col"
+          >
             <StationCard busy={true} />
             <StationCard busy={true} />
             <StationCard busy={false} />
@@ -95,9 +103,13 @@ const SearchMap = () => {
             <StationCard busy={false} />
             <StationCard busy={false} />
             <StationCard busy={true} />
-          </View>
-        </ScrollView>
-      </Animated.View>
+            <StationCard busy={false} />
+            <StationCard busy={true} />
+            <StationCard busy={false} />
+            <StationCard busy={false} />
+            <StationCard busy={true} />
+          </ScrollView>
+        </Animated.View>
     </GestureHandlerRootView>
   );
 };

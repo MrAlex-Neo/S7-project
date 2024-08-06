@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -57,10 +58,10 @@ const Profile = () => {
   }, [data]);
 
   return (
-    <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute top-0">
-      <View className="w-full flex-1 justify-between pb-[1vh] px-[5vw] bg-white">
+    <SafeAreaView className="bg-white h-[100%] pt-[4vh] pb-[9vh] absolute top-0">
+      <View className="w-full flex-1 px-[5vw] bg-white">
         <View>
-          <Text className="text-2xl font-robotoMedium mb-[2vh] mt-[2vh]">
+          <Text className={`text-2xl font-robotoMedium my-[2vh]`}>
             {t("profile")}
           </Text>
           <View className="flex-col gap-5">
@@ -163,8 +164,8 @@ const Profile = () => {
             </View>
           </View>
         </View>
-        <View>
-          <Text className="text-center font-robotoMedium text-xs color-grayColor-100">
+        <View className="absolute bottom-0 w-full">
+          <Text className="text-center font-robotoMedium text-xs color-grayColor-100 pl-[9vw] mb-[1vh]">
             v 1. 0. 0
           </Text>
         </View>

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { icons } from "../constants";
 import { focus } from "../values/atom/myAtoms";
 
-const StationCard = ({ busy }) => {
+const StationCard = ({ busy, id }) => {
   const { t, i18 } = useTranslation();
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useAtom(focus);
@@ -24,7 +24,7 @@ const StationCard = ({ busy }) => {
   };
 
   return (
-    <TouchableOpacity onPress={clickHandler}>
+    <TouchableOpacity key={id} onPress={clickHandler}>
       <View className="mt-[3vw] border-2 border-grayColor-100 rounded-md p-[2vh]">
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center ">

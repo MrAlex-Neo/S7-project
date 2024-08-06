@@ -17,6 +17,8 @@ import { charge } from "../values/atom/myAtoms";
 import { icons } from "../constants";
 import { fetchStations } from "../redux/slices/stations";
 import { useIsFocused } from "@react-navigation/native";
+import { error } from "../values/atom/myAtoms";
+import { activeStation } from "../values/atom/myAtoms";
 
 const initialRegion = {
   latitude: 41.2995,
@@ -25,7 +27,7 @@ const initialRegion = {
   longitudeDelta: 0.0421,
 };
 
-const MapComponent = () => {
+const MapComponent = ({  }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.stations.stations.items);
   const { t } = useTranslation();
@@ -37,27 +39,29 @@ const MapComponent = () => {
   const [stations, setStations] = useState([]);
   const mapRef = useRef(null);
   const [charging, setCharging] = useAtom(charge);
+  const [isError, setIsError] = useAtom(error);
+  const [active, setActive] = useAtom(activeStation);
 
-  const areStationsEqual = (oldStations, newStations) => {
-    if (oldStations.length !== newStations.length) {
-      return false;
-    }
-    for (let i = 0; i < oldStations.length; i++) {
-      if (
-        oldStations[i].key !== newStations[i].key ||
-        oldStations[i].title !== newStations[i].title ||
-        oldStations[i].coordinate.latitude !==
-          newStations[i].coordinate.latitude ||
-        oldStations[i].coordinate.longitude !==
-          newStations[i].coordinate.longitude ||
-        oldStations[i].state[0] !== newStations[i].state[0] ||
-        oldStations[i].state[1] !== newStations[i].state[1]
-      ) {
-        return false;
-      }
-    }
-    return true;
-  };
+  // const areStationsEqual = (oldStations, newStations) => {
+  //   if (oldStations.length !== newStations.length) {
+  //     return false;
+  //   }
+  //   for (let i = 0; i < oldStations.length; i++) {
+  //     if (
+  //       oldStations[i].key !== newStations[i].key ||
+  //       oldStations[i].title !== newStations[i].title ||
+  //       oldStations[i].coordinate.latitude !==
+  //         newStations[i].coordinate.latitude ||
+  //       oldStations[i].coordinate.longitude !==
+  //         newStations[i].coordinate.longitude ||
+  //       oldStations[i].state[0] !== newStations[i].state[0] ||
+  //       oldStations[i].state[1] !== newStations[i].state[1]
+  //     ) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
 
   useEffect(() => {
     dispatch(fetchStations());
@@ -65,12 +69,14 @@ const MapComponent = () => {
 
   useEffect(() => {
     try {
+      console.log(data.results);
       if (data.results) {
         let array = [];
         for (let index = 0; index < data.results.length; index++) {
           const station = data.results[index];
-          console.log(station);
+          // console.log("station", station);
           array.push({
+            charge_point_id: station.charge_point_id,
             key: station.charge_point_id,
             title: station.location.name,
             coordinate: {
@@ -80,13 +86,18 @@ const MapComponent = () => {
             state: [true, "not_working"],
           });
         }
+        // console.log("array", array);
 
-        if (!areStationsEqual(stations, array)) {
-          setStations(array);
-        }
+        setStations(array);
+        // if (!areStationsEqual(stations, array)) {
+        // }
       }
     } catch (error) {
       console.log(error);
+      setIsError((prev) => ({
+        ...prev,
+        state: true,
+      }));
     }
   }, [data.results]);
 
@@ -103,6 +114,10 @@ const MapComponent = () => {
       return location.coords;
     } catch (error) {
       console.warn("Ошибка получения местоположения:", error);
+      setIsError((prev) => ({
+        ...prev,
+        state: true,
+      }));
       return null;
     }
   };
@@ -125,6 +140,7 @@ const MapComponent = () => {
   useEffect(() => {
     if (stations.length > 0) {
       const formattedMarkers = stations.map((station) => ({
+        charge_point_id: station.charge_point_id,
         key: station.key,
         title: station.title,
         coordinate: {
@@ -155,27 +171,53 @@ const MapComponent = () => {
 
   const CustomMarker = ({ marker, getMarkerImageSource }) => {
     const isFocused = useIsFocused();
-    console.log("Координаты маркера:", marker.coordinate);
+    // console.log("Координаты маркера:", marker.coordinate);
+    // console.log(marker.charge_point_id);
     const markerImage = getMarkerImageSource(marker.state);
 
     return (
       <>
-        {isFocused && (
-          <Marker
-            key={marker.key}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            onPress={() => {
-              setIsFocused((prevUserState) => ({
-                ...prevUserState,
-                map: false,
-                station: true,
-              }));
-            }}
-          >
-            <Image source={markerImage} className="w-[30vw] h-[30vw]" />
-          </Marker>
-        )}
+        {Platform.OS === "android"
+          ? isFocused && (
+              <Marker
+                key={marker.key}
+                coordinate={marker.coordinate}
+                title={marker.title}
+                image={markerImage}
+                className="bg-black"
+                onPress={() => {
+                  setActive((prev) => ({
+                    ...prev,
+                    id: marker.charge_point_id,
+                  }));
+                  setIsFocused((prevUserState) => ({
+                    ...prevUserState,
+                    map: false,
+                    station: true,
+                  }));
+                }}
+              />
+            )
+          : isFocused && (
+              <Marker
+                key={marker.key}
+                coordinate={marker.coordinate}
+                title={marker.title}
+                onPress={() => {
+                  setActive((prev) => ({
+                    ...prev,
+                    id: marker.charge_point_id,
+                  }));
+                  setIsFocused((prevUserState) => ({
+                    ...prevUserState,
+                    map: false,
+                    station: true,
+                  }));
+                }}
+              >
+                <Image source={markerImage} className="w-[30vw] h-[30vw]" />
+              </Marker>
+            )}
       </>
       // <Marker
       //   key={marker.key}
@@ -316,7 +358,7 @@ const styles = StyleSheet.create({
   },
   followButton: {
     position: "absolute",
-    bottom: 0,
+    bottom: Platform.OS === "android" ? 30 : 90,
     right: 0,
     zIndex: 1,
     width: 80,
@@ -324,7 +366,7 @@ const styles = StyleSheet.create({
   },
   screenButton: {
     position: "absolute",
-    bottom: 0,
+    bottom: Platform.OS === "android" ? 30 : 90,
     right: 60,
     zIndex: 1,
     width: 80,
@@ -332,52 +374,13 @@ const styles = StyleSheet.create({
   },
   chargeButton: {
     position: "absolute",
-    bottom: 0,
+    bottom: Platform.OS === "android" ? 30 : 90,
     left: 15,
     zIndex: 1,
     width: 60,
     height: Platform.OS === "android" ? 35 : 40,
   },
 });
-
-// const randomPoints = [
-//   {
-//     key: 0,
-//     title: `Point 1`,
-//     coordinate: { latitude: 41.303087, longitude: 69.231691 },
-//     state: [true, "not_working"],
-//   },
-//   {
-//     key: 1,
-//     title: `Point 2`,
-//     coordinate: { latitude: 41.301385, longitude: 69.253649 },
-//     state: [false, "not_working"],
-//   },
-//   {
-//     key: 2,
-//     title: `Point 3`,
-//     coordinate: { latitude: 41.31152, longitude: 69.243847 },
-//     state: ["not_working", "not_working"],
-//   },
-//   {
-//     key: 3,
-//     title: `Point 4`,
-//     coordinate: { latitude: 41.316612, longitude: 69.215128 },
-//     state: [true, false],
-//   },
-//   {
-//     key: 4,
-//     title: `Point 5`,
-//     coordinate: { latitude: 41.304597, longitude: 69.229359 },
-//     state: [true, true],
-//   },
-//   {
-//     key: 5,
-//     title: `Point 6`,
-//     coordinate: { latitude: 41.299012, longitude: 69.233501 },
-//     state: [false, false],
-//   },
-// ];
 
 // const handleLocationButtonPress = () => {
 //   if (locationPermissionGranted) {

@@ -6,18 +6,11 @@ export const fetchStations = createAsyncThunk('manager/ChargePoints', async () =
     const { data } = await axios.get(`/api/v1/manager/ChargePoint`);
     return data;
 })
-export const fetchStation = createAsyncThunk('products/fetchProduct', async (id) => {
-    const { data } = await axios.get(`products/${id}`);
+export const fetchStation = createAsyncThunk('manager/ChargePoint', async (id) => {
+    const { data } = await axios.get(`/api/v1/manager/ChargePoint/${id}`);
     return data;
 })
 
-// export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
-//     const { data } = await axios.get('/tags');
-//     return data;
-// })
-// export const fetchRemovePost = createAsyncThunk('posts/fetchRemovePost', async (id) =>
-//     axios.delete(`/posts/${id}`)
-// )
 
 const initialState = {
     stations: {
@@ -36,7 +29,7 @@ const stationsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            //Получение всех продуктов
+            //Получение всех станций
             .addCase(fetchStations.pending, (state) => {
                 state.stations.items = [];
                 state.stations.status = 'loading';
@@ -49,7 +42,7 @@ const stationsSlice = createSlice({
                 state.stations.items = [];
                 state.stations.status = 'error';
             })
-            //Получение одного продукта
+            //Получение одной станции
             .addCase(fetchStation.pending, (state) => {
                 state.station.item = [];
                 state.station.status = 'loading';
@@ -62,10 +55,6 @@ const stationsSlice = createSlice({
                 state.station.item = [];
                 state.station.status = 'error';
             })
-        // //Удаление статьи
-        // .addCase(fetchRemovePost.pending, (state, action) => {
-        //     state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg)
-        // })
     },
 });
 

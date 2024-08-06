@@ -148,7 +148,9 @@ const SignUp = () => {
             }`}
           >
             <View>
-              <Text className={`font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8`}>
+              <Text
+                className={`font-robotoBold tracking-wider text-2xl mt-[2vh] leading-8`}
+              >
                 {t("enterTheCode")}
               </Text>
               <Text className="font-robotoRegular color-grayColor-300 text-lg mt-[4vh] mb-[4vh]">

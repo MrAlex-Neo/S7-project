@@ -55,6 +55,10 @@ export const authAtom = atom({
     badCode: false,
 });
 
+
+export const activeStation = atom({
+    id: ''
+});
 export const focus = atom({
     search: false,
     map: false,

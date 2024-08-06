@@ -22,7 +22,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.myapp.s7"
+      "bundleIdentifier": "com.myapp.s7",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {

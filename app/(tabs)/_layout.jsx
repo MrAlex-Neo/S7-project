@@ -7,7 +7,8 @@ import {
   Keyboard,
   StyleSheet,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { Tabs } from "expo-router";
 import { icons } from "../../constants";
@@ -18,6 +19,7 @@ import { error } from "../../values/atom/myAtoms";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ErrorBox from "../../components/ErrorBox";
 
 const TabIcon = ({ icon, color, name, focused }) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -87,34 +89,34 @@ const TabsLayout = () => {
     checkToken();
   }, []);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        if (visible.map) {
-          setVisible((prevUserState) => ({
-            ...prevUserState,
-            search: true,
-          }));
-        }
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false);
-        setVisible((prevUserState) => ({
-          ...prevUserState,
-          search: false,
-        }));
-      }
-    );
+  // useEffect(() => {
+  //   const keyboardDidShowListener = Keyboard.addListener(
+  //     "keyboardDidShow",
+  //     () => {
+  //       if (visible.map) {
+  //         setVisible((prevUserState) => ({
+  //           ...prevUserState,
+  //           search: true,
+  //         }));
+  //       }
+  //     }
+  //   );
+  //   const keyboardDidHideListener = Keyboard.addListener(
+  //     "keyboardDidHide",
+  //     () => {
+  //       setKeyboardVisible(false);
+  //       setVisible((prevUserState) => ({
+  //         ...prevUserState,
+  //         search: false,
+  //       }));
+  //     }
+  //   );
 
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, [visible.map]);
+  //   return () => {
+  //     keyboardDidHideListener.remove();
+  //     keyboardDidShowListener.remove();
+  //   };
+  // }, [visible.map]);
 
   const handleTabPress = (e) => {
     if (!hasToken) {
@@ -123,16 +125,8 @@ const TabsLayout = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* {false && (
-        <View style={styles.mistake} className="bottom-0 items-center justify-center">
-          <Text>asdasd</Text>
-          <TouchableOpacity>
-
-          </TouchableOpacity>
-        </View>
-      )} */}
-
+    <SafeAreaView className="bg-white h-[100%] absolute w-[100vw] bottom-0">
+      {isError.state && <ErrorBox />}
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
@@ -140,10 +134,12 @@ const TabsLayout = () => {
           tabBarInactiveTintColor: "#A2A2A2",
           tabBarStyle: [
             {
+              position: "absolute",
+              top: Platform.OS === "android" ? 690 : 750,
               backgroundColor: "#ffffff",
               borderTopColor: "#A2A2A2",
-              paddingBottom: Platform.OS === "android" ? 0 : 25,
-              height: Platform.OS === "android" ? 70 : 100,
+              paddingBottom: Platform.OS === "android" ? 0 : 0,
+              height: Platform.OS === "android" ? 70 : 70,
               display: `${
                 visible.search || visible.map || visible.camera || visible.route
                   ? "none"
@@ -225,20 +221,13 @@ const TabsLayout = () => {
         />
       </Tabs>
       <StatusBar backgroundColor="#FFFFFF" style="dark" />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   hidden: {
     display: "none",
-  },
-  mistake: {
-    position: "absolute",
-    zIndex: 1000,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(40, 40, 40, 0.6)",
   },
 });
 
