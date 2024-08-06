@@ -22,7 +22,6 @@ const Stations = () => {
   async function getAllStations() {
     const response = await dispatch(fetchStations());
     setList(response.payload.results); // Assuming response.payload contains the stations list
-    console.log('response.payload', response.payload)
   }
 
   return (
@@ -42,13 +41,18 @@ const Stations = () => {
               }`}
             >
               {list.map((elem, id) => (
-                <StationCard key={id} busy={true} /> // Adjust the props passed to StationCard as needed
+                <StationCard
+                  key={id}
+                  station={elem}
+                  busy={elem.is_enabled === "true"}
+                /> 
               ))}
             </View>
           ) : (
-            <Text className="p-[1vh] font-robotoRegular text-xl">
-              Ошибка в получении списка
-            </Text>
+            null
+            // <Text className="p-[1vh] font-robotoRegular text-xl">
+            //   Ошибка в получении списка
+            // </Text>
           )}
         </ScrollView>
       </View>

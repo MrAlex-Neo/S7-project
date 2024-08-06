@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { color } from "react-native-elements/dist/helpers";
 import { router, useNavigation } from "expo-router";
 import { useAtom } from "jotai";
@@ -7,13 +7,23 @@ import { useTranslation } from "react-i18next";
 
 import { icons } from "../constants";
 import { focus } from "../values/atom/myAtoms";
+import { activeStation } from "../values/atom/myAtoms";
 
-const StationCard = ({ busy, id }) => {
+const StationCard = ({ busy, station, key }) => {
   const { t, i18 } = useTranslation();
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useAtom(focus);
+  const [active, setActive] = useAtom(activeStation);
+
+  useEffect(() => {
+    // console.log("station", station);
+  }, [station]);
 
   const clickHandler = () => {
+    setActive((prev) => ({
+      ...prev,
+      id: station.charge_point_id,
+    }));
     setIsFocused((prevUserState) => ({
       ...prevUserState,
       map: false,
@@ -24,7 +34,7 @@ const StationCard = ({ busy, id }) => {
   };
 
   return (
-    <TouchableOpacity key={id} onPress={clickHandler}>
+    <TouchableOpacity key={key} onPress={clickHandler}>
       <View className="mt-[3vw] border-2 border-grayColor-100 rounded-md p-[2vh]">
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center ">
@@ -35,8 +45,12 @@ const StationCard = ({ busy, id }) => {
                   : "border-secondary text-secondary"
               } p-[1vw] text-center w-[25vw] ${
                 Platform.OS !== "android" ? "h-[7vw]" : "h-[8vw]"
-              } rounded-md`} 
-              style={{borderWidth: 2, borderRadius: 5, borderColor: busy ? '#FF6666' : '#19B775'}}
+              } rounded-md`}
+              style={{
+                borderWidth: 2,
+                borderRadius: 5,
+                borderColor: busy ? "#FF6666" : "#19B775",
+              }}
             >
               {busy ? t("busy") : t("free")}
             </Text>
@@ -45,10 +59,13 @@ const StationCard = ({ busy, id }) => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              Riviera, charger №1
+              {station.location.name}
             </Text>
           </View>
-          <Image source={icons.cardArrow} className="h-[3vh] w-[3vh] -rotate-90" />
+          <Image
+            source={icons.cardArrow}
+            className="h-[3vh] w-[3vh] -rotate-90"
+          />
         </View>
         <View className="flex-row justify-between">
           <View>
@@ -57,7 +74,7 @@ const StationCard = ({ busy, id }) => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              Toshkent sh. Nodira ko’chasi
+              {station.location.address1}
             </Text>
             <Text
               className="mt-[1vh] w-[60vw] text-grayColor-500 text-xs font-robotoRegular"
@@ -69,10 +86,10 @@ const StationCard = ({ busy, id }) => {
           </View>
           <View className="items-end">
             <Text className="mt-[1vh] text-grayColor-500 text-xs font-robotoRegular">
-              2 000 сум Квт
+              2 000 {t("sum")} {t("kw")}
             </Text>
             <Text className="mt-[1vh] text-grayColor-500 text-xs font-robotoRegular">
-              240 Квт
+              240 {t("kw")}
             </Text>
           </View>
         </View>

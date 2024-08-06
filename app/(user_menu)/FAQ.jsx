@@ -7,18 +7,29 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ImgButton from "../../components/ImgButton";
-import { images } from "../../constants";
-import { icons } from "../../constants";
-import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import FaqItem from "../../components/FaqItem";
 import { useNavigation, CommonActions } from "@react-navigation/native";
+import { fetchFaq } from "../../redux/slices/faq";
+import { useDispatch } from "react-redux";
 
 const FAQ = () => {
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
+  const [list, setList] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getFAQ();
+  }, []);
+
+  async function getFAQ() {
+    const response = await dispatch(fetchFaq());
+    console.log("faq", response);
+    setList(response.payload); // Assuming response.payload contains the stations list
+  }
 
   const resetStack = () => {
     navigation.dispatch(
@@ -46,30 +57,16 @@ const FAQ = () => {
         </View>
         <View className="mt-[4vh] pb-[2vh]">
           <ScrollView vertical showsVerticalScrollIndicator={false}>
-            <FaqItem
-              question="Доступна ли регистрация с других стран?"
-              answer="К сожалению нет, регистрация аккаунтов выполняется только местными мобильными номерами РУЗ"
-            />
-            <FaqItem
-              question="Каковы способы оплаты топлива через приложение?"
-              answer="К сожалению нет, регистрация аккаунтов выполняется только местными мобильными номерами РУЗ"
-            />
-            <FaqItem
-              question="Могу ли я заказать доставку зарядки своего авто на дом через ваше приложение?"
-              answer="К сожалению нет, регистрация аккаунтов выполняется только местными мобильными номерами РУЗ"
-            />
-            <FaqItem
-              question="Как найти ближайшую заправку с помощью вашего приложения?"
-              answer="К сожалению нет, регистрация аккаунтов выполняется только местными мобильными номерами РУЗ"
-            />
-            <FaqItem
-              question="Какая информация доступна в реальном времени через ваше приложение?"
-              answer="К сожалению нет, регистрация аккаунтов выполняется только местными мобильными номерами РУЗ"
-            />
-            <FaqItem
-              question="Какие расценки у вас за кВт?"
-              answer="К сожалению нет, регистрация аккаунтов выполняется только местными мобильными номерами РУЗ"
-            />
+            {list !== null &&
+              list.map((elem, id) => {
+                return (
+                  <FaqItem
+                    key={id}
+                    question={elem.question}
+                    answer={elem.answer}
+                  />
+                );
+              })}
           </ScrollView>
         </View>
       </View>

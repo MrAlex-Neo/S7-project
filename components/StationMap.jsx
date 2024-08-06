@@ -23,6 +23,11 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { mistake } from "../values/atom/myAtoms";
 import { fetchStation } from "../redux/slices/stations";
+import { fetchAuthMe } from "../redux/slices/auth";
+import {
+  fetchSaveStation,
+  fetchRemoveStation,
+} from "../redux/slices/favourites";
 import { useDispatch } from "react-redux";
 import { error } from "../values/atom/myAtoms";
 import { activeStation } from "../values/atom/myAtoms";
@@ -35,7 +40,7 @@ const StationMap = ({ latitude, longitude }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const [activeId, setActiveId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [like, setLike] = useState(true);
+  const [like, setLike] = useState(false);
   const [hasToken, setHasToken] = useState(false);
   const [stationInfo, setStationInfo] = useState(null);
   const [, setIsError] = useAtom(error);
@@ -44,13 +49,13 @@ const StationMap = ({ latitude, longitude }) => {
   useEffect(() => {
     if (active.id !== null) {
       getStation(active.id);
+      myFavouritesStations();
     }
   }, [active.id]);
 
   async function getStation(id) {
     try {
       const response = await dispatch(fetchStation(id));
-      console.log(response);
       if (response.payload) {
         setStationInfo(response.payload);
         latitude(response.payload.latitude);
@@ -62,6 +67,19 @@ const StationMap = ({ latitude, longitude }) => {
         ...prev,
         state: true,
       }));
+    }
+  }
+
+  async function myFavouritesStations() {
+    try {
+      const response = await dispatch(fetchAuthMe());
+      const savedStations = response.payload.data.saved || [];
+      const isLiked = savedStations.some(
+        (station) => station.charge_point_id === active.id
+      );
+      setLike(isLiked);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -97,6 +115,30 @@ const StationMap = ({ latitude, longitude }) => {
       }));
       router.push("Station_info");
     }
+  };
+
+  const likeBtnHandler = async () => {
+    // console.log(like);
+    if (like) {
+      try {
+        const response = await dispatch(
+          fetchRemoveStation({ charge_point_id: active.id })
+        );
+        // console.log("remove", response);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const response = await dispatch(
+          fetchSaveStation({ charge_point_id: active.id })
+        );
+        // console.log("save", response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    myFavouritesStations();
   };
 
   const handlePress = (id) => {
@@ -188,7 +230,7 @@ const StationMap = ({ latitude, longitude }) => {
               </View>
               <Text className="ml-[2vw] text-xs font-robotoMedium">24/7</Text>
             </View>
-            <TouchableOpacity onPress={() => setLike((prev) => !prev)}>
+            <TouchableOpacity onPress={likeBtnHandler}>
               <Image
                 source={like ? icons.flag : icons.flagSec}
                 className="w-[7vw] h-[7vw]"

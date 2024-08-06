@@ -4,27 +4,19 @@ import SearchInput from "../../components/SearchInp.jsx";
 import { useTranslation } from "react-i18next";
 import StationCard from "../../components/StationCard.jsx";
 import { useAtom } from "jotai";
-import { focus } from "../../values/atom/myAtoms.js";
-import { useDispatch } from "react-redux";
+import { activeStation } from "../../values/atom/myAtoms.js";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchAuthMe } from "../../redux/slices/auth.js";
 
 const Favourites = () => {
   const dispatch = useDispatch();
   const { t, i18 } = useTranslation();
-  const [visible, setVisible] = useAtom(focus);
-  const [list, setList] = useState(null);
+  const data = useSelector((state) => state.auth.data);
 
   useEffect(() => {
-    myFavouritesStations();
+    dispatch(fetchAuthMe());
   }, []);
 
-  async function myFavouritesStations() {
-    const response = await dispatch(fetchAuthMe());
-    if (response.payload.data.saved) {
-    } else {
-      setList(null);
-    }
-  }
 
   return (
     <SafeAreaView className="bg-white w-[100vw] h-[100%] pt-[4vh] absolute top-0">
@@ -36,32 +28,24 @@ const Favourites = () => {
           <SearchInput placeholder={t("searchText")} />
         </View>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
-          {list !== null && list.length > 0 ? (
+          {data.data.saved ? (
             <View
               className={`flex-col ${
                 Platform.OS === "android" ? "pb-[10vh]" : "pb-[8vh]"
               }`}
             >
-              {list.map(elem => {
-                return <StationCard busy={true} />
-              })}
-              {/* <StationCard busy={true} />
-              <StationCard busy={true} />
-              <StationCard busy={false} />
-              <StationCard busy={true} />
-              <StationCard busy={false} />
-              <StationCard busy={false} />
-              <StationCard busy={true} />
-              <StationCard busy={true} />
-              <StationCard busy={true} />
-              <StationCard busy={false} />
-              <StationCard busy={true} />
-              <StationCard busy={false} />
-              <StationCard busy={false} />
-              <StationCard busy={true} /> */}
+              {data.data.saved.map((elem, id) => (
+                <StationCard
+                  key={id}
+                  station={elem}
+                  busy={elem.is_enabled === "true"}
+                />
+              ))}
             </View>
           ) : (
-            <Text className="p-[1vh] font-robotoRegular text-xl">У вас пока нет избранных станций</Text>
+            <Text className="p-[1vh] font-robotoRegular text-xl">
+              У вас пока нет избранных станций
+            </Text>
           )}
         </ScrollView>
       </View>
