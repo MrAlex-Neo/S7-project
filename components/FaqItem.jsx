@@ -3,7 +3,7 @@ import { useState } from "react";
 import { icons } from "../constants";
 import React, { useRef } from "react";
 
-const FaqItem = ({ question, answer, key }) => {
+const FaqItem = ({ question, answer }) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const spinValue = useRef(new Animated.Value(0)).current;
   const fadeInValue = useRef(new Animated.Value(0)).current;
@@ -43,7 +43,7 @@ const FaqItem = ({ question, answer, key }) => {
   });
 
   return (
-    <View key={key} className="w-full px-[4vw] py-[3vh] border-2 border-grayColor-400 rounded-2xl mb-[2vh]">
+    <View className="w-full px-[4vw] py-[3vh] border-2 border-grayColor-400 rounded-2xl mb-[2vh]">
       <View className="flex-row justify-between items-center">
         <Text className="w-[90%] font-robotoBold text-lg">{question}</Text>
         <TouchableOpacity onPress={toggleAnswer} className="p-[4vw]">

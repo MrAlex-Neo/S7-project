@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
   },
   followButton: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 30 : 90,
+    bottom: Platform.OS === "android" ? 35 : 95,
     right: 0,
     zIndex: 1,
     width: 80,
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
   },
   screenButton: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 30 : 90,
+    bottom: Platform.OS === "android" ? 35 : 95,
     right: 60,
     zIndex: 1,
     width: 80,
@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
   },
   chargeButton: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 30 : 90,
+    bottom: Platform.OS === "android" ? 35 : 95,
     left: 15,
     zIndex: 1,
     width: 60,

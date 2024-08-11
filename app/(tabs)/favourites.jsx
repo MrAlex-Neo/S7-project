@@ -28,13 +28,13 @@ const Favourites = () => {
           <SearchInput placeholder={t("searchText")} />
         </View>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
-          {data.data.saved ? (
+          {data?.data?.saved ? (
             <View
               className={`flex-col ${
                 Platform.OS === "android" ? "pb-[10vh]" : "pb-[8vh]"
               }`}
             >
-              {data.data.saved.map((elem, id) => (
+              {data?.data?.saved.map((elem, id) => (
                 <StationCard
                   key={id}
                   station={elem}

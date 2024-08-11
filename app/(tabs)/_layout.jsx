@@ -135,7 +135,8 @@ const TabsLayout = () => {
           tabBarStyle: [
             {
               position: "absolute",
-              top: Platform.OS === "android" ? 690 : 750,
+              bottom: 0,
+              // top: Platform.OS === "android" ? 690 : 750,
               backgroundColor: "#ffffff",
               borderTopColor: "#A2A2A2",
               paddingBottom: Platform.OS === "android" ? 0 : 0,

@@ -9,7 +9,7 @@ import { icons } from "../constants";
 import { focus } from "../values/atom/myAtoms";
 import { activeStation } from "../values/atom/myAtoms";
 
-const StationCard = ({ busy, station, key }) => {
+const StationCard = ({ busy, station }) => {
   const { t, i18 } = useTranslation();
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useAtom(focus);
@@ -34,7 +34,7 @@ const StationCard = ({ busy, station, key }) => {
   };
 
   return (
-    <TouchableOpacity key={key} onPress={clickHandler}>
+    <TouchableOpacity onPress={clickHandler}>
       <View className="mt-[3vw] border-2 border-grayColor-100 rounded-md p-[2vh]">
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center ">

@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import { focus } from "../../values/atom/myAtoms.js";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStations } from "../../redux/slices/stations.js";
+import { error } from "../../values/atom/myAtoms.js";
 
 const Stations = () => {
   const { t, i18 } = useTranslation();
@@ -14,14 +15,24 @@ const Stations = () => {
   const dispatch = useDispatch();
   const stations = useSelector((state) => state.stations.items); // Assuming stations.items is where the stations list is stored
   const [list, setList] = useState([]);
+  const [isError, setIsError] = useAtom(error);
+
 
   useEffect(() => {
     getAllStations();
   }, []);
 
   async function getAllStations() {
-    const response = await dispatch(fetchStations());
-    setList(response.payload.results); // Assuming response.payload contains the stations list
+    try {
+      const response = await dispatch(fetchStations());
+      setList(response.payload.results); // Assuming response.payload contains the stations list
+    } catch (error) {
+      console.log(error)
+      setIsError((prev) => ({
+        ...prev,
+        state: true,
+      }));
+    }
   }
 
   return (

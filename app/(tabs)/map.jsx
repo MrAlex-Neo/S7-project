@@ -67,7 +67,7 @@ const Map = () => {
         ) : isFocused.map ? (
           <SearchMap />
         ) : (
-          <View className={`absolute z-20 w-[93vw] ${Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"} mx-[3.5vw] rounded-2xl p-[2vw] bg-white`}>
+          <View className={`absolute z-20 w-[93vw] ${Platform.OS === "android" ? "bottom-[11vh]" : "bottom-[9vh]"} mx-[3.5vw] rounded-2xl p-[2vw] bg-white`}>
             <TouchableOpacity onPress={handleMapPress}>
               <SearchInp
                 placeholder={t("searchText")}

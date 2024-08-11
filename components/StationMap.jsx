@@ -46,6 +46,8 @@ const StationMap = ({ latitude, longitude }) => {
   const [, setIsError] = useAtom(error);
   const [active, setActive] = useAtom(activeStation);
 
+
+
   useEffect(() => {
     if (active.id !== null) {
       getStation(active.id);
