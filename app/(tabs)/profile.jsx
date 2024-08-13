@@ -106,7 +106,7 @@ const Profile = () => {
               <View className=" flex-row items-center">
                 <Image source={icons.purse} className="w-[6vh] h-[6vh]" />
                 <Text className="color-white ml-[4vw] text-lg font-robotoMedium">
-                  5.878.550 сум
+                  {data?.data?.balance} сум
                 </Text>
               </View>
               <TouchableOpacity

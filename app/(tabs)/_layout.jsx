@@ -14,8 +14,7 @@ import { Tabs } from "expo-router";
 import { icons } from "../../constants";
 import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai";
-import { focus } from "../../values/atom/myAtoms";
-import { error } from "../../values/atom/myAtoms";
+import { focus, error, mistake } from "../../values/atom/myAtoms";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -73,6 +72,7 @@ const TabsLayout = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [visible, setVisible] = useAtom(focus);
   const [isError, setIsError] = useAtom(error);
+  const [isMistake, setIsMistake] = useAtom(mistake);
   const [hasToken, setHasToken] = useState(false);
   const navigation = useNavigation();
 
@@ -121,6 +121,10 @@ const TabsLayout = () => {
   const handleTabPress = (e) => {
     if (!hasToken) {
       e.preventDefault();
+      setIsMistake((prevUserState) => ({
+        ...prevUserState,
+        badToken: true,
+      }));
     }
   };
 

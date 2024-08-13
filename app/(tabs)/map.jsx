@@ -21,6 +21,8 @@ import CameraModal from "../../components/CameraModal"; // Изменили им
 import MapComponent from "../../components/MapComponent";
 import RouteChoose from "../../components/RouteChoose";
 import MistakeMap from "../../components/MistakeMap";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+
 
 const Map = () => {
   const { t } = useTranslation();
@@ -29,6 +31,9 @@ const Map = () => {
   const [searchMap, setSearchMap] = useState(false);
   const [latitudeRoute, setLatitudeRoute] = useState(null);
   const [longitudeRoute, setLongitudeRoute] = useState(null);
+  const navigation = useNavigation();
+
+ 
 
   useEffect(() => {
     setIsFocused((prevUserState) => ({
@@ -88,7 +93,9 @@ const Map = () => {
         {isFocused.camera && (
           <View style={styles.container}>
             <TouchableOpacity
-              className={`bg-grayColor-300 w-[15vw] h-[15vw] ${Platform.OS === 'android' ? 'mt-[10vh]': 'mt-[5vh]'} mx-[5vw] rounded-full justify-center items-center`}
+              className={`bg-grayColor-300 w-[15vw] h-[15vw] ${
+                Platform.OS === "android" ? "mt-[10vh]" : "mt-[5vh]"
+              } mx-[5vw] rounded-full justify-center items-center`}
               style={{ zIndex: 1 }}
               onPress={() => {
                 setIsFocused((prevUserState) => ({

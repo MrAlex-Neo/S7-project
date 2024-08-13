@@ -4,13 +4,13 @@ import { icons } from "../constants";
 import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
 
-const SearchInput = ({ placeholder, map, unBar, otherStyles }) => {
+const SearchInput = ({ placeholder, map, unBar, otherStyles, valueHandler }) => {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useAtom(focus);
   const [editable, setEditable] = useState(false);
   useEffect(() => {
-    // console.log(isFocused)
-  }, [isFocused]);
+    valueHandler(value)
+  }, [value]);
 
   const handleFocus = () => {
     setIsFocused((prevUserState) => ({

@@ -16,6 +16,9 @@ import PrimaryButton from "../../components/PrimaryButton";
 import CodeInput from "../../components/CodeInput";
 import ImgButton from "../../components/ImgButton";
 import PhoneInputSecond from "../../components/PhoneInputSecond";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+
+
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -28,6 +31,7 @@ const SignUp = () => {
   const [badCode, setBadCode] = useState(false);
   const [authData, setAuthData] = useAtom(authAtom);
   const [mistake, setMistake] = useState("");
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (number.length === 12) {
@@ -102,7 +106,13 @@ const SignUp = () => {
         console.log(response.payload.access);
         AsyncStorage.setItem("token", response.payload.access);
         AsyncStorage.setItem("refresh", response.payload.refresh);
-        router.push("/map");
+
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "(tabs)", params: { screen: "map" } }], // Сброс стека и переход на вкладку "profile"
+          })
+        );
       }
     } catch (error) {
       // console.log(error);

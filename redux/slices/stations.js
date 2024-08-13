@@ -10,6 +10,10 @@ export const fetchStation = createAsyncThunk('manager/ChargePoint', async (id) =
     const { data } = await axios.get(`/api/v1/manager/ChargePoint/${id}`);
     return data;
 })
+export const fetchStationSearch = createAsyncThunk('manager/ChargePoint/search', async (value) => {
+    const { data } = await axios.get(`/api/v1/manager/ChargePoint?q=${value}`);
+    return data;
+})
 
 
 const initialState = {
@@ -54,6 +58,19 @@ const stationsSlice = createSlice({
             .addCase(fetchStation.rejected, (state) => {
                 state.station.item = [];
                 state.station.status = 'error';
+            })
+            //Поиск
+            .addCase(fetchStationSearch.pending, (state) => {
+                state.stations.items = [];
+                state.stations.status = 'loading';
+            })
+            .addCase(fetchStationSearch.fulfilled, (state, action) => {
+                state.stations.items = action.payload;
+                state.stations.status = 'loaded';
+            })
+            .addCase(fetchStationSearch.rejected, (state) => {
+                state.stations.items = [];
+                state.stations.status = 'error';
             })
     },
 });

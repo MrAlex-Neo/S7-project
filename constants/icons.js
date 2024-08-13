@@ -43,6 +43,8 @@ import backBtnWhite from "../assets/s7/icons/backBtnWhite.png"
 import test_route from "../assets/s7/icons/test_route.png"
 import change_photo from "../assets/s7/icons/change_photo.png"
 import delete_photo from "../assets/s7/icons/delete_photo.png"
+import flash from "../assets/s7/icons/flash.png"
+import flash_disabled from "../assets/s7/icons/flash_disabled.png"
 
 
 
@@ -107,5 +109,7 @@ export default {
   test_route,
   change_photo,
   delete_photo,
-  kaspi
+  kaspi,
+  flash,
+  flash_disabled
 };

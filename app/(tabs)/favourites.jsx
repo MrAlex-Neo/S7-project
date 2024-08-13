@@ -1,22 +1,43 @@
 import { View, Text, ScrollView, SafeAreaView, Platform } from "react-native";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState } from "react";
 import SearchInput from "../../components/SearchInp.jsx";
 import { useTranslation } from "react-i18next";
 import StationCard from "../../components/StationCard.jsx";
-import { useAtom } from "jotai";
-import { activeStation } from "../../values/atom/myAtoms.js";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuthMe } from "../../redux/slices/auth.js";
 
 const Favourites = () => {
   const dispatch = useDispatch();
-  const { t, i18 } = useTranslation();
+  const { t } = useTranslation();
   const data = useSelector((state) => state.auth.data);
+  const [value, setValue] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     dispatch(fetchAuthMe());
   }, []);
 
+  useEffect(() => {
+    if (data?.data?.saved) {
+      const filtered = data.data.saved.filter((elem) => {
+        const address1 = elem.location.address1.toLowerCase();
+        const description = elem.description.toLowerCase();
+        const name = elem.location.name.toLowerCase();
+        const searchValue = value.toLowerCase();
+
+        return (
+          address1.includes(searchValue) ||
+          description.includes(searchValue) ||
+          name.includes(searchValue)
+        );
+      });
+      setFilteredData(filtered);
+    }
+  }, [value, data]);
+
+  const valueHandler = (e) => {
+    setValue(e);
+  };
 
   return (
     <SafeAreaView className="bg-white w-[100vw] h-[100%] pt-[4vh] absolute top-0">
@@ -25,16 +46,16 @@ const Favourites = () => {
           {t("favourites")}
         </Text>
         <View className="py-[2vh]">
-          <SearchInput placeholder={t("searchText")} />
+          <SearchInput valueHandler={valueHandler} placeholder={t("searchText")} />
         </View>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
-          {data?.data?.saved ? (
+          {filteredData.length > 0 ? (
             <View
               className={`flex-col ${
                 Platform.OS === "android" ? "pb-[10vh]" : "pb-[8vh]"
               }`}
             >
-              {data?.data?.saved.map((elem, id) => (
+              {filteredData.map((elem, id) => (
                 <StationCard
                   key={id}
                   station={elem}
@@ -44,7 +65,7 @@ const Favourites = () => {
             </View>
           ) : (
             <Text className="p-[1vh] font-robotoRegular text-xl">
-              У вас пока нет избранных станций
+              ...
             </Text>
           )}
         </ScrollView>

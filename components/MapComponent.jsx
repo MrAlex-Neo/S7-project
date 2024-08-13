@@ -63,14 +63,14 @@ const MapComponent = ({  }) => {
   //   }
   //   return true;
   // };
-
+  
   useEffect(() => {
     dispatch(fetchStations());
   }, []);
-
+  
   useEffect(() => {
     try {
-      console.log(data.results);
+      // console.log('data.results', data.results)
       if (data.results) {
         let array = [];
         for (let index = 0; index < data.results.length; index++) {
@@ -88,7 +88,7 @@ const MapComponent = ({  }) => {
           });
         }
         // console.log("array", array);
-
+        // console.log('array', array)
         setStations(array);
         // if (!areStationsEqual(stations, array)) {
         // }
@@ -140,6 +140,7 @@ const MapComponent = ({  }) => {
 
   useEffect(() => {
     if (stations.length > 0) {
+      // console.log('stations', stations)
       const formattedMarkers = stations.map((station) => ({
         charge_point_id: station.charge_point_id,
         key: station.key,

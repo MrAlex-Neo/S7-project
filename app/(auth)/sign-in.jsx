@@ -16,6 +16,8 @@ import ImgButton from "../../components/ImgButton";
 import PhoneInputFirst from "../../components/PhoneInputFirst";
 import PrimaryButton from "../../components/PrimaryButton";
 import { CheckBox } from "react-native-elements";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -35,6 +37,8 @@ const SignIn = () => {
   const [regData, setRegData] = useAtom(regAtom);
   const [mistake, setMistake] = useState("");
   const [code, setCode] = useState("");
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     if (isChecked && number.length === 12) {
@@ -133,7 +137,12 @@ const SignIn = () => {
       }
       if (response) {
         console.log(response.payload.status);
-        router.push("/map");
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "(tabs)", params: { screen: "map" } }], // Сброс стека и переход на вкладку "profile"
+          })
+        );
       }
     } catch (error) {
       console.log(error);
@@ -150,15 +159,15 @@ const SignIn = () => {
       >
         <ImgButton
           containerStyles={`fixed top-[1vh] p-[3vw] ${
-            Platform.OS !== "android" ? "top-[2vh]" : "top-[4vh]"
+            Platform.OS !== "android" ? "top-[2vh]" : "top-[3vh]"
           }`}
           imgStyles="w-[4vh] h-[4vh]"
           textStyles="text-white"
           handlePress={() => (part === 0 ? router.push("/") : setPart(0))}
         />
         <View
-          className={`flex-1 justify-between  px-[4vw] py-[6vh] ${
-            Platform.OS !== "android" ? "pb-[0vh] h-[85vh]" : "pb-[2vh] h-[95vh]"
+          className={`flex-1 justify-between  px-[4vw] py-[3vh] ${
+            Platform.OS !== "android" ? "pb-[2vh] h-[85vh]" : "pb-[4vh] h-[95vh]"
           }`}
         >
           {part === 0 ? (

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useAtom } from "jotai";
 import { towardPage } from "../../values/atom/myAtoms";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import ImgButton from "../../components/ImgButton";
@@ -21,12 +21,19 @@ import PrimaryButton from "../../components/PrimaryButton";
 import StationInfoItem from "../../components/StationInfoItem";
 import StationSlider from "../../components/StationSlider";
 import { CommonActions } from "@react-navigation/native";
+import { fetchAuthMe } from "../../redux/slices/auth";
+import { useSelector, useDispatch } from "react-redux";
 
 const Station_info = () => {
+  const dispatch = useDispatch()
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
   const [, setToward] = useAtom(towardPage);
+  const user = useSelector((state) => state.auth?.data);
   
+  useEffect(() => {
+    dispatch(fetchAuthMe());
+  }, []);
 
   const resetStack = () => {
     navigation.dispatch(
@@ -64,7 +71,7 @@ const Station_info = () => {
                 <View className="flex-row justify-between ">
                   <Text className="font-robotoRegular text-base">{t('station_info_2')}</Text>
                   <Text className="font-robotoMedium text-base">
-                    120 000 {t('sum')}
+                    {user?.data?.balance} {t('sum')}
                   </Text>
                 </View>
                 <TouchableOpacity

@@ -89,7 +89,7 @@ export default function App() {
         onPress={toggleFlashlight}
         className="items-center"
       >
-        <Image source={flashlightEnabled ? icons.stationsActive : icons.stations} className={`${Platform.OS === 'android' ? 'w-[16vw] h-[16.12vw]': 'w-[16vw] h-[16vw]'}`}/>
+        <Image source={flashlightEnabled ? icons.flash : icons.flash_disabled} className={`${Platform.OS === 'android' ? 'w-[16vw] h-[16.12vw]': 'w-[16vw] h-[16vw]'}`}/>
       </TouchableOpacity>
       {scanned && (
         <Modal transparent={true} animationType="slide" visible={scanned}>
