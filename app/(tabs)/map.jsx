@@ -59,7 +59,13 @@ const Map = () => {
   return (
     <SafeAreaView className="bg-white h-[100%] absolute bottom-0 w-[100vw]">
       <View className="h-full">
-        {isFocused.station ? (
+        {isFocused.station && (
+          <StationMap
+            latitude={latitudeHandlerForRoute}
+            longitude={longitudeHandlerForRoute}
+          />
+        )}
+        {/* {isFocused.station ? (
           <StationMap
             latitude={latitudeHandlerForRoute}
             longitude={longitudeHandlerForRoute}
@@ -76,13 +82,13 @@ const Map = () => {
               />
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
 
         <MapComponent />
         {isFocused.camera && (
           <View style={styles.container}>
             <TouchableOpacity
-              className="bg-grayColor-300 w-[15vw] h-[15vw] my-[4vh] mx-[5vw] rounded-full justify-center items-center"
+              className={`bg-grayColor-300 w-[15vw] h-[15vw] ${Platform.OS === 'android' ? 'mt-[10vh]': 'mt-[5vh]'} mx-[5vw] rounded-full justify-center items-center`}
               style={{ zIndex: 1 }}
               onPress={() => {
                 setIsFocused((prevUserState) => ({

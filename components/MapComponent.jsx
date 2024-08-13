@@ -19,6 +19,7 @@ import { fetchStations } from "../redux/slices/stations";
 import { useIsFocused } from "@react-navigation/native";
 import { error } from "../values/atom/myAtoms";
 import { activeStation } from "../values/atom/myAtoms";
+import AnimatedButton from "./AnimatedButton";
 
 const initialRegion = {
   latitude: 41.2995,
@@ -178,7 +179,7 @@ const MapComponent = ({  }) => {
     return (
       <>
         {Platform.OS === "android"
-          ? isFocused && (
+          && isFocused ? (
               <Marker
                 key={marker.key}
                 coordinate={marker.coordinate}
@@ -215,7 +216,7 @@ const MapComponent = ({  }) => {
                   }));
                 }}
               >
-                <Image source={markerImage} className="w-[30vw] h-[30vw]" />
+                <Image source={markerImage} className="w-[15vw] h-[15vw]" />
               </Marker>
             )}
       </>
@@ -260,32 +261,30 @@ const MapComponent = ({  }) => {
   };
 
   return (
-    <View className="absolute b-0 w-[100vw] h-[100vh] z-1">
+    <View className="absolute b-0 w-[100vw] h-[100%] z-1">
       <TouchableOpacity
-        style={styles.followButton}
-        className={`absolute mb-[15vh] ${
-          Platform.OS === "android" ? "mb-[10vh]" : "mb-[14.5vh]"
+        className={`absolute right-[1vw] z-10 ${
+          Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"
         }`}
         onPress={handlePress}
       >
         <Image source={icons.locationBtn} style={{ width: 80, height: 80 }} />
       </TouchableOpacity>
       {charging.state ? (
-        <TouchableOpacity
-          style={styles.chargeButton}
-          className={`absolute mb-[15vh] bg-secondary justify-center items-center rounded-lg ${
-            Platform.OS === "android" ? "mb-[12.8vh]" : "mb-[16.8vh]"
-          }`}
-        >
-          <Text className="text-white font-robotoRegular text-xl pl-[1vw] pb-[0.2vw]">
-            {charging.sum}%
-          </Text>
-        </TouchableOpacity>
+        <AnimatedButton />
+        // <TouchableOpacity
+        //   className={`absolute z-[10] ${
+        //     Platform.OS === "android" ? "bottom-[13vh]" : "bottom-[10vh]"
+        //   } left-[5vw] bg-secondary justify-center items-center rounded-lg w-[14vw] h-[9vw]`}
+        // >
+        //   <Text className="text-white font-robotoRegular text-xl pl-[1vw] pb-[0.2vw]">
+        //     {charging.sum}%
+        //   </Text>
+        // </TouchableOpacity>
       ) : null}
       <TouchableOpacity
-        style={styles.screenButton}
-        className={`absolute mb-[15vh] ${
-          Platform.OS === "android" ? "mb-[10vh]" : "mb-[14.5vh]"
+        className={`absolute z-[10] right-[17vw] ${
+          Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"
         }`}
         onPress={handleScanPress}
       >
@@ -348,17 +347,9 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  container: {
-    flex: 1,
-    justifyContent: "start",
-    zIndex: 99,
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  },
   followButton: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 35 : 95,
+    bottom: Platform.OS === "android" ? 0 : 20,
     right: 0,
     zIndex: 1,
     width: 80,
@@ -366,7 +357,7 @@ const styles = StyleSheet.create({
   },
   screenButton: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 35 : 95,
+    bottom: Platform.OS === "android" ? 0 : 20,
     right: 60,
     zIndex: 1,
     width: 80,
@@ -374,7 +365,7 @@ const styles = StyleSheet.create({
   },
   chargeButton: {
     position: "absolute",
-    bottom: Platform.OS === "android" ? 35 : 95,
+    bottom: Platform.OS === "android" ? 0 : 20,
     left: 15,
     zIndex: 1,
     width: 60,
