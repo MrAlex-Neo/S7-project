@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, Animated, Easing } from "react-native";
-import { useState } from "react";
+import { useState, useId } from "react";
 import { icons } from "../constants";
 import React, { useRef } from "react";
 
@@ -7,6 +7,7 @@ const FaqItem = ({ question, answer }) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const spinValue = useRef(new Animated.Value(0)).current;
   const fadeInValue = useRef(new Animated.Value(0)).current;
+  const id = useId()
 
   const toggleAnswer = () => {
     setShowAnswer(prev => !prev);

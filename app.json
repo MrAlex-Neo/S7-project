@@ -23,7 +23,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.myapp.s7",
-      "buildNumber": "1.0.2",
+      "buildNumber": "1.0.5",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes.",
         "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
@@ -74,9 +74,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "2506acbd-d403-4809-aeb0-e9308f26565b"
+        "projectId": "d92f7fe5-a32a-457e-98e8-d40cd2d4fdff"
       }
     },
-    "owner": "alex_neo_2028"
+    "owner": "alex_neo_2030"
   }
 }

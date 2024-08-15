@@ -28,7 +28,7 @@ const initialRegion = {
   longitudeDelta: 0.0421,
 };
 
-const MapComponent = ({  }) => {
+const MapComponent = ({}) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.stations.stations.items);
   const { t } = useTranslation();
@@ -63,11 +63,11 @@ const MapComponent = ({  }) => {
   //   }
   //   return true;
   // };
-  
+
   useEffect(() => {
     dispatch(fetchStations());
   }, []);
-  
+
   useEffect(() => {
     try {
       // console.log('data.results', data.results)
@@ -157,17 +157,41 @@ const MapComponent = ({  }) => {
 
   const getMarkerImageSource = (state) => {
     if (state[0] === true && state[1] === true) {
-      return icons.marker_active_active;
+      let icon =
+        Platform.OS === "android"
+          ? icons.marker_active_active
+          : icons.marker_active_active_IOS;
+      return icon;
     } else if (state[0] === false && state[1] === false) {
-      return icons.marker_busy_busy;
+      let icon =
+        Platform.OS === "android"
+          ? icons.marker_busy_busy
+          : icons.marker_busy_busy_IOS;
+      return icon;
     } else if (state[0] === "not_working" && state[1] === "not_working") {
-      return icons.marker_notWorking_notWorking;
+      let icon =
+        Platform.OS === "android"
+          ? icons.marker_notWorking_notWorking
+          : icons.marker_notWorking_notWorking_IOS;
+      return icon;
     } else if (state[0] === true && state[1] === "not_working") {
-      return icons.marker_active_notWorking;
+      let icon =
+        Platform.OS === "android"
+          ? icons.marker_active_notWorking
+          : icons.marker_active_notWorking_IOS;
+      return icon;
     } else if (state[0] === false && state[1] === "not_working") {
-      return icons.marker_notWorking_busy;
+      let icon =
+        Platform.OS === "android"
+          ? icons.marker_notWorking_busy
+          : icons.marker_notWorking_busy_IOS;
+      return icon;
     } else {
-      return icons.marker_active_busy;
+      let icon =
+        Platform.OS === "android"
+          ? icons.marker_active_busy
+          : icons.marker_active_busy_IOS;
+      return icon;
     }
   };
 
@@ -179,47 +203,47 @@ const MapComponent = ({  }) => {
 
     return (
       <>
-        {Platform.OS === "android"
-          && isFocused ? (
-              <Marker
-                key={marker.key}
-                coordinate={marker.coordinate}
-                title={marker.title}
-                image={markerImage}
-                className="bg-black"
-                onPress={() => {
-                  setActive((prev) => ({
-                    ...prev,
-                    id: marker.charge_point_id,
-                  }));
-                  setIsFocused((prevUserState) => ({
-                    ...prevUserState,
-                    map: false,
-                    station: true,
-                  }));
-                }}
-              />
-            )
-          : isFocused && (
-              <Marker
-                key={marker.key}
-                coordinate={marker.coordinate}
-                title={marker.title}
-                onPress={() => {
-                  setActive((prev) => ({
-                    ...prev,
-                    id: marker.charge_point_id,
-                  }));
-                  setIsFocused((prevUserState) => ({
-                    ...prevUserState,
-                    map: false,
-                    station: true,
-                  }));
-                }}
-              >
-                <Image source={markerImage} className="w-[15vw] h-[15vw]" />
-              </Marker>
-            )}
+        {Platform.OS === "android" && isFocused ? (
+          <Marker
+            key={marker.key}
+            coordinate={marker.coordinate}
+            title={marker.title}
+            image={markerImage}
+            className="bg-black"
+            onPress={() => {
+              setActive((prev) => ({
+                ...prev,
+                id: marker.charge_point_id,
+              }));
+              setIsFocused((prevUserState) => ({
+                ...prevUserState,
+                map: false,
+                station: true,
+              }));
+            }}
+          />
+        ) : (
+          isFocused && (
+            <Marker
+              key={marker.key}
+              coordinate={marker.coordinate}
+              title={marker.title}
+              onPress={() => {
+                setActive((prev) => ({
+                  ...prev,
+                  id: marker.charge_point_id,
+                }));
+                setIsFocused((prevUserState) => ({
+                  ...prevUserState,
+                  map: false,
+                  station: true,
+                }));
+              }}
+            >
+              <Image source={markerImage} className="w-[30vw] h-[30vw]" />
+            </Marker>
+          )
+        )}
       </>
       // <Marker
       //   key={marker.key}
@@ -261,6 +285,15 @@ const MapComponent = ({  }) => {
     }));
   };
 
+  const handleMapPress = (event) => {
+    if (!event.nativeEvent.action) {
+      setIsFocused((prevUserState) => ({
+        ...prevUserState,
+        station: false,
+      }));
+    }
+  };
+
   return (
     <View className="absolute b-0 w-[100vw] h-[100%] z-1">
       <TouchableOpacity
@@ -273,16 +306,16 @@ const MapComponent = ({  }) => {
       </TouchableOpacity>
       {charging.state ? (
         <AnimatedButton />
-        // <TouchableOpacity
-        //   className={`absolute z-[10] ${
-        //     Platform.OS === "android" ? "bottom-[13vh]" : "bottom-[10vh]"
-        //   } left-[5vw] bg-secondary justify-center items-center rounded-lg w-[14vw] h-[9vw]`}
-        // >
-        //   <Text className="text-white font-robotoRegular text-xl pl-[1vw] pb-[0.2vw]">
-        //     {charging.sum}%
-        //   </Text>
-        // </TouchableOpacity>
-      ) : null}
+      ) : // <TouchableOpacity
+      //   className={`absolute z-[10] ${
+      //     Platform.OS === "android" ? "bottom-[13vh]" : "bottom-[10vh]"
+      //   } left-[5vw] bg-secondary justify-center items-center rounded-lg w-[14vw] h-[9vw]`}
+      // >
+      //   <Text className="text-white font-robotoRegular text-xl pl-[1vw] pb-[0.2vw]">
+      //     {charging.sum}%
+      //   </Text>
+      // </TouchableOpacity>
+      null}
       <TouchableOpacity
         className={`absolute z-[10] right-[17vw] ${
           Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"
@@ -299,6 +332,7 @@ const MapComponent = ({  }) => {
         provider={PROVIDER_OSM} // Использование OSM вместо Google Maps
         showsUserLocation={locationPermissionGranted}
         showsMyLocationButton={false}
+        onPress={handleMapPress}
         onUserLocationChange={(userLocation) => {
           if (followUser) {
             mapRef.current.animateToRegion(
@@ -328,7 +362,7 @@ const MapComponent = ({  }) => {
             });
           }
         }}
-        mapPadding={{ top: 20, right: 0, bottom: 40, left: 20 }}
+        // mapPadding={{ top: 20, right: 0, bottom: 40, left: 20 }}
       >
         {markers.map((marker) => (
           <CustomMarker

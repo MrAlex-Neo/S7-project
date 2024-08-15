@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import React from "react";
 import { useAtom } from "jotai";
 import { error } from "../values/atom/myAtoms";
@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1000,
     width: "100%",
-    height: "100%",
+    height: "110%",
+    bottom: 0,
     backgroundColor: "rgba(40, 40, 40, 0.6)",
   },
 });

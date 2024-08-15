@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorBox from "../../components/ErrorBox";
+import MistakeMap from "../../components/MistakeMap";
 
 const TabIcon = ({ icon, color, name, focused }) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -130,6 +131,7 @@ const TabsLayout = () => {
 
   return (
     <SafeAreaView className="bg-white h-[100%] absolute w-[100vw] bottom-0">
+      {isMistake.badToken && <MistakeMap />}
       {isError.state && <ErrorBox />}
       <Tabs
         screenOptions={{

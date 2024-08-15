@@ -9,9 +9,11 @@ import React from "react";
 import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
 import { mistake } from "../values/atom/myAtoms";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const MistakeMap = () => {
+  const { t } = useTranslation();
   const [isFocused, setIsFocused] = useAtom(focus);
   const [isMistake, setIsMistake] = useAtom(mistake);
   const navigation = useNavigation();
@@ -25,7 +27,12 @@ const MistakeMap = () => {
       map: false,
     }));
     if (state) {
-      navigation.popToTop();
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "index", params: { screen: "/" } }], // Сброс стека и переход на вкладку "profile"
+        })
+      );
     }
 
     // e.preventDefault();
@@ -42,10 +49,10 @@ const MistakeMap = () => {
     <View style={styles.mistake} className="justify-center items-center">
       <View className="bg-grayColor-400 pt-[5vw] w-[90vw] rounded-2xl">
         <Text className="font-robotoRegular text-center text-lg px-[5vw]">
-          Вы не зарегистрированны!
+          {t('mistake_win')}
         </Text>
         <Text className="font-robotoRegular text-center text-sm pb-[5vw] px-[5vw]">
-          Зарегистрируйтесть или войдите в систему
+          {t('mistake_win_1')}
         </Text>
         <View className="w-[90vw] flex-row">
           <TouchableOpacity
@@ -53,7 +60,7 @@ const MistakeMap = () => {
             onPress={() => handlePress(false)}
           >
             <Text className="text-blue-200 font-robotoRegular text-lg">
-              Отмена
+              {t('cancel')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -61,7 +68,7 @@ const MistakeMap = () => {
             onPress={() => handlePress(true)}
           >
             <Text className="text-blue-200 font-robotoRegular text-lg">
-              Войти
+              {t('log_in')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -75,7 +82,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 99,
     width: "100%",
-    height: "100%",
+    height: "110%",
     backgroundColor: "rgba(60, 60, 60, 0.9)",
   },
 });

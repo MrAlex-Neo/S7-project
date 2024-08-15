@@ -129,7 +129,7 @@ const Settings = () => {
               {exit ? (
                 <View>
                   <Text className="font-robotoRegular text-xl color-red text-center">
-                    Выход
+                    {t('exit_1')}
                   </Text>
                   <View
                     style={{
@@ -140,8 +140,8 @@ const Settings = () => {
                     }}
                     className="my-[4vh]"
                   ></View>
-                  <Text className="font-robotoBold text-lg text-center mb-[2vh]">
-                    Вы хотите выйте из аккаунта
+                  <Text className="font-robotoBold text-lg text-center mb-[3vh] mx-[2vw]">
+                    {t('exit_2')}
                   </Text>
                   <View className="w-full flex-row justify-between">
                     <PrimaryButton

@@ -61,6 +61,7 @@ const FAQ = () => {
               list.map((elem, id) => {
                 return (
                   <FaqItem
+                    key={id}
                     question={elem.question}
                     answer={elem.answer}
                   />

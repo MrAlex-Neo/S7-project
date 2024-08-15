@@ -56,6 +56,12 @@ import marker_active_notWorking from "../assets/s7/icons/markers/marker_active_n
 import marker_busy_busy from "../assets/s7/icons/markers/marker_busy_busy.png"
 import marker_notWorking_busy from "../assets/s7/icons/markers/marker_notWorking_busy.png"
 import marker_notWorking_notWorking from "../assets/s7/icons/markers/marker_notWorking_notWorking.png"
+import marker_active_active_IOS from "../assets/s7/icons/markers/marker_active_active_IOS.png"
+import marker_active_busy_IOS from "../assets/s7/icons/markers/marker_active_busy_IOS.png"
+import marker_active_notWorking_IOS from "../assets/s7/icons/markers/marker_active_notWorking_IOS.png"
+import marker_busy_busy_IOS from "../assets/s7/icons/markers/marker_busy_busy_IOS.png"
+import marker_notWorking_busy_IOS from "../assets/s7/icons/markers/marker_notWorking_busy_IOS.png"
+import marker_notWorking_notWorking_IOS from "../assets/s7/icons/markers/marker_notWorking_notWorking_IOS.png"
 
 
 
@@ -103,6 +109,12 @@ export default {
   marker_active_notWorking,
   marker_notWorking_busy,
   marker_notWorking_notWorking,
+  marker_active_active_IOS,
+  marker_active_busy_IOS,
+  marker_busy_busy_IOS,
+  marker_active_notWorking_IOS,
+  marker_notWorking_busy_IOS,
+  marker_notWorking_notWorking_IOS,
   locationBtn,
   screenBtn,
   backBtnWhite,

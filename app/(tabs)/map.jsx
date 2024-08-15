@@ -23,7 +23,6 @@ import RouteChoose from "../../components/RouteChoose";
 import MistakeMap from "../../components/MistakeMap";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 
-
 const Map = () => {
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useAtom(focus);
@@ -33,7 +32,22 @@ const Map = () => {
   const [longitudeRoute, setLongitudeRoute] = useState(null);
   const navigation = useNavigation();
 
- 
+  useEffect(() => {
+    // Получите состояние навигации
+    const state = navigation.getState();
+
+    // Выведите количество страниц в истории
+    const routeCount = state.routes.length;
+    console.log("Number of pages in history:", routeCount);
+
+    // Или для более детализированного вывода
+    console.log("Navigation state:", state);
+    console.log("Routes:", state.routes);
+  }, [navigation]);
+
+  useEffect(() => {
+    setSearchMap(isFocused.map);
+  }, [isFocused.map]);
 
   useEffect(() => {
     setIsFocused((prevUserState) => ({
@@ -117,7 +131,6 @@ const Map = () => {
             <RouteChoose latitude={latitudeRoute} longitude={longitudeRoute} />
           </View>
         )}
-        {isMistake.badToken && <MistakeMap />}
       </View>
     </SafeAreaView>
   );

@@ -1,6 +1,7 @@
 // i18n.js
 import 'intl-pluralrules'
 
+
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
@@ -57,6 +58,8 @@ const resources = {
       personal_data: 'Personal Information',
       change_lang: 'Change the language',
       exit: 'Exit',
+      exit_1: 'Exit',
+      exit_2: 'Do you want to log out of your account?',
       cancel: 'Cancel',
       save: 'Save',
       contactUs: 'Contact us',
@@ -105,6 +108,9 @@ const resources = {
       permission_1: 'We need your permission to show the camera',
       error: 'An error has occurred, please write to the support service in a telegram',
       error_1: 'Error',
+      mistake_win: 'You are not registered!',
+      mistake_win_1: 'Register or log in',
+
     },
   },
   ru: {
@@ -158,6 +164,8 @@ const resources = {
       personal_data: 'Личная информация',
       change_lang: 'Изменить язык',
       exit: 'Выйти',
+      exit_1: 'Выход',
+      exit_2: 'Вы хотите выйти из аккаунта?',
       cancel: 'Отменить',
       save: 'Сохранить',
       contactUs: 'Связаться с нами',
@@ -206,6 +214,9 @@ const resources = {
       permission_1: 'Нам нужно ваше разрешение, чтобы показать камеру',
       error: 'Возникла ошибка, пожалуйста напишите в службу поддержки в телеграме',
       error_1: 'Ошибка',
+      mistake_win: 'Вы не зарегистрированны!',
+      mistake_win_1: 'Зарегистрируйтесть или войдите в систему',
+
     },
   },
   uz: {
@@ -259,6 +270,8 @@ const resources = {
       personal_data: "Shaxsiy ma'lumotlar",
       change_lang: "Tilni o'zgartirish",
       exit: 'Chiqish',
+      exit_1: 'Chiqish',
+      exit_2: 'Hisobingizdan chiqishni xohlaysizmi?',
       cancel: 'Bekor qilish',
       save: 'Saqlash',
       contactUs: "Biz bilan bog'laning",
@@ -306,19 +319,49 @@ const resources = {
       permission_1: "Kamerani ko'rsatish uchun sizga ruxsat kerak",
       error: "Xatolik yuz berdi, iltimos, qo'llab-quvvatlash xizmatiga telegramda yozing",
       error_1: 'Xato',
+      mistake_win: "Siz ro'yxatdan o'tmagansiz!",
+      mistake_win_1: "Ro'yxatdan o'ting yoki tizimga kiring",
+
     },
   },
 };
+
+let language = 'en'
+const checkLang = async () => {
+  try {
+    const lang = await AsyncStorage.getItem("lang");
+    console.log("lang", lang);
+    if (lang) {
+      language = lang
+    } else {
+      language = 'en'
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+checkLang();
 
 i18next
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // начальный язык
-    fallbackLng: 'en', // язык по умолчанию
+    lng: language, // начальный язык
+    fallbackLng: language, // язык по умолчанию
     interpolation: {
       escapeValue: false, // не требуется экранирование для React Native
     },
   });
+// i18next
+//   .use(initReactI18next)
+//   .init({
+//     resources,
+//     lng: 'en', // начальный язык
+//     fallbackLng: 'en', // язык по умолчанию
+//     interpolation: {
+//       escapeValue: false, // не требуется экранирование для React Native
+//     },
+//   });
 
 export default i18next;
