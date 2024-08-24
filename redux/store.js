@@ -4,6 +4,7 @@ import { stationsReducer } from "./slices/stations";
 import imageUploadSlice from "./slices/imageUploadSlice";
 import { favouriteReducer } from "./slices/favourites";
 import { faqReducer } from "./slices/faq";
+import { payReducer } from "./slices/pay";
 
 const store = configureStore({
     reducer: {
@@ -12,7 +13,7 @@ const store = configureStore({
         imageUpload: imageUploadSlice,
         favourites: favouriteReducer,
         questions: faqReducer,
-
+        pay: payReducer,
 
     }
 });

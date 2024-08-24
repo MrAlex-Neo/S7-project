@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  Linking
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -25,18 +26,46 @@ import { useEffect } from "react";
 import LottieView from "lottie-react-native";
 import animation from "../../assets/s7/animation.json";
 import animation_1 from "../../assets/s7/animation_1.json";
-
+import { useDispatch } from "react-redux";
+import { fetchPayme } from "../../redux/slices/pay";
 const Wallet = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { t, i18 } = useTranslation();
   const [activeButton, setActiveButton] = useState(null); // Индекс активной кнопки
   const [part, setPart] = useState(0);
   const [sum, setSum] = useState("30000");
   const [inputValue, setInputValue] = useState("");
   const [inputValueNumber, setInputValueNumber] = useState("");
+  const [payCompany, setPayCompany] = useState("");
 
-  const handlePress = (index) => {
+  const handlePress = (index, item) => {
     setActiveButton(index);
+    setPayCompany(item);
+  };
+  const handlePartProcess = async () => {
+    if (part === 0) {
+      setPart((prev) => prev + 1);
+    } else if (part === 1) {
+      console.log(payCompany);
+      if (payCompany === "payme") {
+        let obj = {
+          amount: sum * 100,
+        };
+        const response = await dispatch(fetchPayme(obj));
+        if (response.payload.link) {
+          console.log(response.payload.link);
+          Linking.canOpenURL(response.payload.link).then((supported) => {
+            if (supported) {
+              return Linking.openURL(response.payload.link);
+            } else {
+              const storeURL = Platform.OS !== 'android' ?  `https://apps.apple.com/us/app/payme/id1463062628` : 'https://play.google.com/store/apps/details?id=uz.dida.payme&hl=ru'; // URL для Google Play
+              return Linking.openURL(storeURL);
+            }
+          });
+        }
+      }
+    }
   };
   const resetStack = () => {
     navigation.dispatch(
@@ -50,15 +79,15 @@ const Wallet = () => {
   const isDisabled = activeButton === null;
 
   useEffect(() => {
-    setInputValueNumber(sum)
+    setInputValueNumber(sum);
     setInputValue(sum);
   }, [sum]);
   useEffect(() => {
     setInputValue(sum);
   }, [sum]);
   const handleValueChange = (newValue) => {
-    setInputValueNumber(Number(newValue.replace(/\D/g, "")))
-    console.log(Number(newValue.replace(/\D/g, "")))
+    setInputValueNumber(Number(newValue.replace(/\D/g, "")));
+    console.log(Number(newValue.replace(/\D/g, "")));
     setInputValue(newValue);
   };
 
@@ -97,19 +126,19 @@ const Wallet = () => {
             <View className="py-[1vh]">
               <ScrollView vertical showsVerticalScrollIndicator={false}>
                 {[
-                  { icon: icons.click,  },
-                  { icon: icons.payme,  },
-                  { icon: icons.paynet,  },
-                  { icon: icons.kaspi, },
-                // {[
-                //   { icon: icons.click, height: "140%", width: "30vw" },
-                //   { icon: icons.payme, height: Platform.OS === 'android' ?"110%" : "100%", width: "30vw" },
-                //   { icon: icons.paynet, height: Platform.OS === 'android' ? "4.1vh" : "7vw", width: Platform.OS === 'android' ? "38vw" : "33vw" },
-                //   { icon: icons.kaspi, height: Platform.OS === 'android' ? "5vh" : "5vh", width: Platform.OS === 'android' ? "30vw" : "33vw"},
+                  // { icon: icons.click, name: "click" },
+                  { icon: icons.payme, name: "payme" },
+                  // { icon: icons.paynet, name: "paynet" },
+                  // { icon: icons.kaspi, name: "kaspi" },
+                  // {[
+                  //   { icon: icons.click, height: "140%", width: "30vw" },
+                  //   { icon: icons.payme, height: Platform.OS === 'android' ?"110%" : "100%", width: "30vw" },
+                  //   { icon: icons.paynet, height: Platform.OS === 'android' ? "4.1vh" : "7vw", width: Platform.OS === 'android' ? "38vw" : "33vw" },
+                  //   { icon: icons.kaspi, height: Platform.OS === 'android' ? "5vh" : "5vh", width: Platform.OS === 'android' ? "30vw" : "33vw"},
                 ].map((item, index) => (
                   <TouchableOpacity
                     key={index}
-                    onPress={() => handlePress(index)}
+                    onPress={() => handlePress(index, item.name)}
                   >
                     <View
                       className={`flex-row justify-between items-center p-[2vh] border-2 border-grayColor-400 rounded-2xl mt-[2vh]
@@ -131,7 +160,7 @@ const Wallet = () => {
                 ))}
               </ScrollView>
             </View>
-          ) : (
+          ) : part === 1 ? (
             <>
               <View>
                 <WalletInput sum={sum} onValueChange={handleValueChange} />
@@ -141,9 +170,9 @@ const Wallet = () => {
                   {`1${t("kw")}. 1000 ${t("sum")}`}
                 </Text>
                 <Text className="font-robotoMedium text-xs">
-                  {`${inputValue} ${t("sum")} ≈ ${(inputValueNumber / 1000).toFixed(
-                    1
-                  )}${t("kw")}.`}
+                  {`${inputValue} ${t("sum")} ≈ ${(
+                    inputValueNumber / 1000
+                  ).toFixed(1)}${t("kw")}.`}
                 </Text>
               </View>
               <View className="flex-row justify-between mt-[2vh] flex-wrap">
@@ -163,15 +192,14 @@ const Wallet = () => {
                 ))}
               </View>
             </>
-          )}
+          ) : null}
         </View>
         <PrimaryButton
           title={t("next")}
           containerStyles="bg-secondary w-[90%] mx-auto"
           textStyles="text-white"
           handlePress={() => {
-            console.log("save");
-            setPart((prev) => prev + 1);
+            handlePartProcess();
           }}
           isLoading={part === 0 ? isDisabled : false} // Управляем состоянием disabled
         />
