@@ -9,7 +9,7 @@ import {
 import MapView, { PROVIDER_OSM, Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import * as Location from "expo-location";
 import { useAtom } from "jotai";
 import { focus } from "../values/atom/myAtoms";
@@ -21,6 +21,7 @@ import { error } from "../values/atom/myAtoms";
 import { activeStation } from "../values/atom/myAtoms";
 import AnimatedButton from "./AnimatedButton";
 import { router } from "expo-router";
+import Marker_map from "./Marker_map";
 
 const initialRegion = {
   latitude: 41.2995,
@@ -43,6 +44,9 @@ const MapComponent = ({}) => {
   const [charging, setCharging] = useAtom(charge);
   const [isError, setIsError] = useAtom(error);
   const [active, setActive] = useAtom(activeStation);
+
+  const memoizedMarkers = useMemo(() => markers, [markers]);
+
 
   // const areStationsEqual = (oldStations, newStations) => {
   //   if (oldStations.length !== newStations.length) {
@@ -88,11 +92,7 @@ const MapComponent = ({}) => {
             state: [true, "not_working"],
           });
         }
-        // console.log("array", array);
-        // console.log('array', array)
         setStations(array);
-        // if (!areStationsEqual(stations, array)) {
-        // }
       }
     } catch (error) {
       console.log(error);
@@ -157,54 +157,21 @@ const MapComponent = ({}) => {
   }, [stations]);
 
   const getMarkerImageSource = (state) => {
-    if (state[0] === true && state[1] === true) {
-      let icon =
-        Platform.OS === "android"
-          ? icons.marker_active_active
-          : icons.marker_active_active_IOS;
-      return icon;
-    } else if (state[0] === false && state[1] === false) {
-      let icon =
-        Platform.OS === "android"
-          ? icons.marker_busy_busy
-          : icons.marker_busy_busy_IOS;
-      return icon;
-    } else if (state[0] === "not_working" && state[1] === "not_working") {
-      let icon =
-        Platform.OS === "android"
-          ? icons.marker_notWorking_notWorking
-          : icons.marker_notWorking_notWorking_IOS;
-      return icon;
-    } else if (state[0] === true && state[1] === "not_working") {
-      let icon =
-        Platform.OS === "android"
-          ? icons.marker_active_notWorking
-          : icons.marker_active_notWorking_IOS;
-      return icon;
-    } else if (state[0] === false && state[1] === "not_working") {
-      let icon =
-        Platform.OS === "android"
-          ? icons.marker_notWorking_busy
-          : icons.marker_notWorking_busy_IOS;
-      return icon;
-    } else {
-      let icon =
-        Platform.OS === "android"
-          ? icons.marker_active_busy
-          : icons.marker_active_busy_IOS;
-      return icon;
+    let obj = {
+      one: state[0],
+      two: state[1]
     }
+    return obj
   };
 
   const CustomMarker = ({ marker, getMarkerImageSource }) => {
     const isFocused = useIsFocused();
-    // console.log("Координаты маркера:", marker.coordinate);
-    // console.log(marker.charge_point_id);
-    const markerImage = getMarkerImageSource(marker.state);
+    const obj = getMarkerImageSource(marker.state);
+    console.log('marker', marker)
 
     return (
       <>
-        {Platform.OS === "android" && isFocused ? (
+        {/* {Platform.OS === "android" && isFocused ? (
           <Marker
             key={marker.key}
             coordinate={marker.coordinate}
@@ -223,28 +190,29 @@ const MapComponent = ({}) => {
               }));
             }}
           />
-        ) : (
-          isFocused && (
-            <Marker
-              key={marker.key}
-              coordinate={marker.coordinate}
-              title={marker.title}
-              onPress={() => {
-                setActive((prev) => ({
-                  ...prev,
-                  id: marker.charge_point_id,
-                }));
-                setIsFocused((prevUserState) => ({
-                  ...prevUserState,
-                  map: false,
-                  station: true,
-                }));
-              }}
-            >
-              <Image source={markerImage} className="w-[30vw] h-[30vw]" />
-            </Marker>
-          )
+        ) : ( */}
+        {isFocused && (
+          <Marker
+            key={marker.key}
+            coordinate={marker.coordinate}
+            title={marker.title}
+            onPress={() => {
+              setActive((prev) => ({
+                ...prev,
+                id: marker.charge_point_id,
+              }));
+              setIsFocused((prevUserState) => ({
+                ...prevUserState,
+                map: false,
+                station: true,
+              }));
+            }}
+          >
+            {/* <Image source={markerImage} className="w-[30vw] h-[30vw]" /> */}
+            <Marker_map state={obj} power={20}/>
+          </Marker>
         )}
+        {/* )} */}
       </>
       // <Marker
       //   key={marker.key}
@@ -278,7 +246,6 @@ const MapComponent = ({}) => {
       );
     }
   };
-
 
   const handleMapPress = (event) => {
     Platform.OS !== "android"
@@ -363,7 +330,7 @@ const MapComponent = ({}) => {
         }}
         // mapPadding={{ top: 20, right: 0, bottom: 40, left: 20 }}
       >
-        {markers.map((marker) => (
+        {memoizedMarkers.map((marker) => (
           <CustomMarker
             key={marker.key} // и здесь
             marker={marker}

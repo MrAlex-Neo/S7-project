@@ -67,9 +67,7 @@ const CameraPage = () => {
       style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
     >
       <TouchableOpacity
-        className={`bg-grayColor-300 w-[15vw] h-[15vw] absolute ${
-          Platform.OS === "android" ? "top-[10vh]" : "top-[5vh]"
-        } mx-[5vw] rounded-full justify-center items-center`}
+        className={`bg-grayColor-300 w-[15vw] h-[15vw] absolute top-[10vh] mx-[5vw] rounded-full justify-center items-center`}
         style={{ zIndex: 1 }}
         onPress={() => {
           navigation.dispatch(

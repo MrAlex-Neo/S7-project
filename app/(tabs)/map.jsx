@@ -17,7 +17,6 @@ import { mistake } from "../../values/atom/myAtoms";
 import StationMap from "../../components/StationMap";
 import SearchMap from "../../components/SearchMap";
 import { icons, images } from "../../constants";
-import CameraModal from "../../components/CameraModal"; // Изменили импорт
 import MapComponent from "../../components/MapComponent";
 import RouteChoose from "../../components/RouteChoose";
 import MistakeMap from "../../components/MistakeMap";
