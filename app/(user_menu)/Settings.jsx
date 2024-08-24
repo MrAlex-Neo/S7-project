@@ -129,7 +129,7 @@ const Settings = () => {
               {exit ? (
                 <View>
                   <Text className="font-robotoRegular text-xl color-red text-center">
-                    {t('exit_1')}
+                    {t("exit_1")}
                   </Text>
                   <View
                     style={{
@@ -141,7 +141,7 @@ const Settings = () => {
                     className="my-[4vh]"
                   ></View>
                   <Text className="font-robotoBold text-lg text-center mb-[3vh] mx-[2vw]">
-                    {t('exit_2')}
+                    {t("exit_2")}
                   </Text>
                   <View className="w-full flex-row justify-between">
                     <PrimaryButton
@@ -169,19 +169,26 @@ const Settings = () => {
                     containerStyles="w-full mb-[2vh]"
                     handlePress={() => {
                       changeLanguage("uz");
+                      AsyncStorage.setItem("lang", "uz");
                     }}
                     img={images.uz_flag}
                   />
                   <LangChangeBtn
                     title="Русский"
                     containerStyles="w-full mb-[2vh]"
-                    handlePress={() => changeLanguage("ru")}
+                    handlePress={() => {
+                      changeLanguage("ru");
+                      AsyncStorage.setItem("lang", "ru");
+                    }}
                     img={images.ru_flag}
                   />
                   <LangChangeBtn
                     title="English"
                     containerStyles="w-full mb-[2vh]"
-                    handlePress={() => changeLanguage("en")}
+                    handlePress={() => {
+                      changeLanguage("en");
+                      AsyncStorage.setItem("lang", "en");
+                    }}
                     img={images.us_flag}
                   />
                 </>

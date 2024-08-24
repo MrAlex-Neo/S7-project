@@ -51,6 +51,16 @@ export default function App() {
       } catch (error) {
         console.log(error);
       }
+      try {
+        const lang = await AsyncStorage.getItem("lang");
+        if (lang) {
+          changeLanguage(lang);
+        } else {
+          console.log("lang none");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     checkToken();

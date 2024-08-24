@@ -29,6 +29,12 @@ const UserMenuLayout = () => {
             headerShown: false
           }}
         />
+        <Stack.Screen 
+          name="CameraPage"
+          options={{
+            headerShown: false
+          }}
+        />
       </Stack>
       <StatusBar backgroundColor="#FFFFFF" style="dark" />
     </>

@@ -20,6 +20,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { error } from "../values/atom/myAtoms";
 import { activeStation } from "../values/atom/myAtoms";
 import AnimatedButton from "./AnimatedButton";
+import { router } from "expo-router";
 
 const initialRegion = {
   latitude: 41.2995,
@@ -278,20 +279,18 @@ const MapComponent = ({}) => {
     }
   };
 
-  const handleScanPress = () => {
-    setIsFocused((prevUserState) => ({
-      ...prevUserState,
-      camera: true,
-    }));
-  };
 
   const handleMapPress = (event) => {
-    if (!event.nativeEvent.action) {
-      setIsFocused((prevUserState) => ({
-        ...prevUserState,
-        station: false,
-      }));
-    }
+    Platform.OS !== "android"
+      ? !event.nativeEvent.action &&
+        setIsFocused((prevUserState) => ({
+          ...prevUserState,
+          station: false,
+        }))
+      : setIsFocused((prevUserState) => ({
+          ...prevUserState,
+          station: false,
+        }));
   };
 
   return (
@@ -320,7 +319,7 @@ const MapComponent = ({}) => {
         className={`absolute z-[10] right-[17vw] ${
           Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"
         }`}
-        onPress={handleScanPress}
+        onPress={() => router.push("/CameraPage")}
       >
         <Image source={icons.screenBtn} style={{ width: 80, height: 80 }} />
       </TouchableOpacity>

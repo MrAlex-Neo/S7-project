@@ -8,21 +8,20 @@ import {
   Modal,
   TouchableOpacity,
   Image,
-  Platform
+  Platform,
 } from "react-native";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "../../components/PrimaryButton";
 import { useTranslation } from "react-i18next";
-import { icons, images } from "../constants";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import { icons, images } from "../../constants";
 
-
-export default function App() {
+const CameraPage = () => {
   const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
   const [flashlightEnabled, setFlashlightEnabled] = useState(false);
-
-
+  const navigation = useNavigation();
 
   if (!permission) {
     return <View />;
@@ -59,17 +58,37 @@ export default function App() {
     setFlashlightEnabled((prev) => !prev);
   };
   const toggleFlashMode = () => {
-    setFlashMode(flashMode === FLASH_MODE.on ? FLASH_MODE.off : FLASH_MODE.on)
-  }
+    setFlashMode(flashMode === FLASH_MODE.on ? FLASH_MODE.off : FLASH_MODE.on);
+  };
 
   return (
     <View
       className="flex-1 justify-center absolute w-[100vw] h-[100%]"
-      style={{backgroundColor: 'rgba(0, 0, 0, 0.8)'}}
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
     >
+      <TouchableOpacity
+        className={`bg-grayColor-300 w-[15vw] h-[15vw] absolute ${
+          Platform.OS === "android" ? "top-[10vh]" : "top-[5vh]"
+        } mx-[5vw] rounded-full justify-center items-center`}
+        style={{ zIndex: 1 }}
+        onPress={() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "(tabs)", params: { screen: "map" } }], // Сброс стека и переход на вкладку "profile"
+            })
+          );
+        }}
+      >
+        <Image source={icons.backBtnWhite} className="w-[6vw] h-[6vw]" />
+      </TouchableOpacity>
       <View className="mx-[20vw]">
-        <Text className="text-white text-center font-robotoMedium text-base mb-[1vh]">Отсканируйте QR код</Text>
-        <Text className="text-white text-center font-robotoRegular text-xs mb-[2vh]">Поднесите телефон к QR коду на зарядной станции</Text>
+        <Text className="text-white text-center font-robotoMedium text-base mb-[1vh]">
+          Отсканируйте QR код
+        </Text>
+        <Text className="text-white text-center font-robotoRegular text-xs mb-[2vh]">
+          Поднесите телефон к QR коду на зарядной станции
+        </Text>
       </View>
       <View
         style={styles.scannerFrame}
@@ -85,11 +104,15 @@ export default function App() {
         {/* Pulsating QR Code Scanning Frame */}
       </View>
       {/* Flashlight Button */}
-      <TouchableOpacity
-        onPress={toggleFlashlight}
-        className="items-center"
-      >
-        <Image source={flashlightEnabled ? icons.flash : icons.flash_disabled} className={`${Platform.OS === 'android' ? 'w-[16vw] h-[16.12vw]': 'w-[16vw] h-[16vw]'}`}/>
+      <TouchableOpacity onPress={toggleFlashlight} className="items-center">
+        <Image
+          source={flashlightEnabled ? icons.flash : icons.flash_disabled}
+          className={`${
+            Platform.OS === "android"
+              ? "w-[16vw] h-[16.12vw]"
+              : "w-[16vw] h-[16vw]"
+          }`}
+        />
       </TouchableOpacity>
       {scanned && (
         <Modal transparent={true} animationType="slide" visible={scanned}>
@@ -109,7 +132,9 @@ export default function App() {
       )}
     </View>
   );
-}
+};
+
+export default CameraPage;
 
 const styles = StyleSheet.create({
   permissionContainer: {
@@ -117,6 +142,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
+    backgroundColor: "white",
     justifyContent: "center",
   },
   permissionBox: {
@@ -157,5 +183,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-
-

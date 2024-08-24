@@ -104,28 +104,6 @@ const Map = () => {
         )} */}
 
         <MapComponent />
-        {isFocused.camera && (
-          <View style={styles.container}>
-            <TouchableOpacity
-              className={`bg-grayColor-300 w-[15vw] h-[15vw] ${
-                Platform.OS === "android" ? "mt-[10vh]" : "mt-[5vh]"
-              } mx-[5vw] rounded-full justify-center items-center`}
-              style={{ zIndex: 1 }}
-              onPress={() => {
-                setIsFocused((prevUserState) => ({
-                  ...prevUserState,
-                  camera: false,
-                }));
-              }}
-            >
-              <Image source={icons.backBtnWhite} className="w-[6vw] h-[5vw]" />
-            </TouchableOpacity>
-
-            <CameraModal // Используем CameraModal для сканирования
-              modalVisible={isFocused.camera}
-            />
-          </View>
-        )}
         {isFocused.route && (
           <View style={styles.container}>
             <RouteChoose latitude={latitudeRoute} longitude={longitudeRoute} />
