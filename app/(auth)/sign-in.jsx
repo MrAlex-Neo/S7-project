@@ -231,7 +231,8 @@ const SignIn = () => {
                 <Text className="font-robotoRegular text-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
                   {`${t("checkCode")} --- --- --- -${number[10]}${
                     number[11]
-                  } ${t("checkCode1")} ${regData.response_code}`}
+                  } ${t("checkCode1")}`}
+                  {/* } ${t("checkCode1")} ${regData.response_code}`} */}
                 </Text>
                 <CodeInput
                   state="reg"

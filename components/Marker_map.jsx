@@ -43,8 +43,8 @@ const Marker_map = ({ state, power }) => {
           Platform.OS !== "android" ? "rounded-full w-[14vw] h-[14vw] " : ""
         } absolute z-10 justify-center items-center`}
       ></View>
-        <View className="bg-white w-[1vw] h-[2vw] absolute z-50 top-0"></View>
-        <View className="bg-white w-[1vw] h-[2vw] absolute z-50 bottom-0"></View>
+        <View style={styles.dash} className="bg-white w-[1vw] h-[2vw] absolute z-50 top-0"></View>
+        <View style={styles.dash} className="bg-white w-[1vw] h-[2vw] absolute z-50 bottom-0"></View>
       <View
         style={[Platform.OS === "android" ? styles.child : '']}
         className={`bg-white ${
@@ -70,7 +70,15 @@ const styles = StyleSheet.create({
     transform: "rotate(45deg)",
     backgroundColor: "rgba(0, 0, 0, 0.0)",
     borderRadius: 25,
+    shadowColor: "#000", // Цвет тени
+    shadowOffset: { width: 0, height: 0 }, // Смещение тени
+    shadowOpacity: 0.3, // Прозрачность тени
+    shadowRadius: 2.84, // Радиус размытия тени
+    elevation: 5, // Высота тени для Android
   },
+  dash: {
+    zIndex: 50,
+  }, 
   child: {
     width: 50,
     height: 50,
@@ -90,6 +98,6 @@ const styles = StyleSheet.create({
     color: "red", // Красный цвет
   },
   gray: {
-    color: "#DADADA", // Серый цвет
+    color: "#DCDCDC", // Серый цвет
   },
 });

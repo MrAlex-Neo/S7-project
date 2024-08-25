@@ -196,6 +196,7 @@ const MapComponent = ({}) => {
             key={marker.key}
             coordinate={marker.coordinate}
             title={marker.title}
+            tracksViewChanges={false}
             onPress={() => {
               setActive((prev) => ({
                 ...prev,

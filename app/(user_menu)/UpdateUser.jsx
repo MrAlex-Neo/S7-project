@@ -27,9 +27,8 @@ import { useAtom } from "jotai";
 import { userData } from "../../values/atom/myAtoms";
 import { router } from "expo-router";
 
-
 const UpdateUser = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
   const [number, setNumber] = useState("+998");
@@ -37,10 +36,10 @@ const UpdateUser = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   const [badName, setBadName] = useState(false);
   const [badSurname, setBadSurname] = useState(false);
-  const [user, ] = useAtom(userData)
+  const [user,] = useAtom(userData);
   const [name, setName] = useState(user.name);
   const [surname, setSurname] = useState(user.surname);
-
+  const [loadingImage, setLoadingImage] = useState(true); // Состояние для управления загрузкой изображения
 
   const resetStack = () => {
     navigation.dispatch(
@@ -50,7 +49,7 @@ const UpdateUser = () => {
       })
     );
   };
-  console.log(user)
+
   const handleGesture = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
     { useNativeDriver: true }
@@ -80,7 +79,7 @@ const UpdateUser = () => {
     if (name.length < 3) {
       return setBadName(true);
     } else if (surname.length < 3) {
-      return setName(true);
+      return setBadSurname(true);
     } else {
       setBadName(false);
       setBadSurname(false);
@@ -90,13 +89,22 @@ const UpdateUser = () => {
         first_name: name,
         last_name: surname,
       };
-      const response = await dispatch(fetchUpdate(obj))
+      const response = await dispatch(fetchUpdate(obj));
       console.log(response);
-      resetStack()
+      resetStack();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
+
+  const handleImageLoad = () => {
+    setLoadingImage(false); // Изображение с сервера успешно загружено
+  };
+
+  const handleImageError = () => {
+    setLoadingImage(true); // Ошибка загрузки изображения, показать заглушку
+  };
+
   return (
     <SafeAreaView className="bg-white h-[100vh] w-[100vw] absolute bottom-0">
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -136,8 +144,10 @@ const UpdateUser = () => {
                 style={{ alignSelf: "flex-start" }}
               >
                 <Image
-                  source={user.picture}
+                  source={loadingImage ? images.user : { uri: user.picture.uri }} // Показываем заглушку пока загружается
                   className="w-[15vh] h-[15vh] rounded-full"
+                  onLoad={handleImageLoad} // Обработчик успешной загрузки
+                  onError={handleImageError} // Обработчик ошибки загрузки
                 />
               </View>
             </View>
