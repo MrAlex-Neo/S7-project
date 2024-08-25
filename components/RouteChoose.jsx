@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Linking } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, Platform } from "react-native";
 import PrimaryButton from "./PrimaryButton";
 import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai";
@@ -11,36 +11,56 @@ const RouteChoose = ({ latitude, longitude }) => {
   const [isFocused, setIsFocused] = useAtom(focus);
 
   const openYandexMaps = () => {
-    const yandexMapsURL = `yandexmaps://maps.yandex.ru/?ll=${longitude},${latitude}`;
+    const yandexMapsURL = Platform.select({
+      ios: `https://yandex.ru/navi/?whatshere%5Bzoom%5D=18&whatshere%5Bpoint%5D=${longitude}%2C${latitude}&lang=ru&from=navi`,
+      android: `yandexnavi://build_route_on_map?lat_to=${latitude}&lon_to=${longitude}`
+    });
+    
     Linking.canOpenURL(yandexMapsURL).then((supported) => {
       if (supported) {
         return Linking.openURL(yandexMapsURL);
       } else {
-        const storeURL = `https://apps.apple.com/ru/app/yandex-maps/id313877526`; // URL для App Store или Google Play
+        const storeURL = Platform.select({
+          ios: `https://apps.apple.com/us/app/yandex-navi-navigation-maps/id474500851`,
+          android: `https://play.google.com/store/apps/details?id=ru.yandex.yandexnavi&pcampaignid=web_share`
+        });
         return Linking.openURL(storeURL);
       }
     });
   };
+  
 
   const openGoogleMaps = () => {
-    const googleMapsURL = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    const googleMapsURL = Platform.select({
+      ios: `https://www.google.com/maps/place/${latitude},${longitude}`,
+      android: `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`
+    });
     Linking.canOpenURL(googleMapsURL).then((supported) => {
       if (supported) {
         return Linking.openURL(googleMapsURL);
       } else {
-        const storeURL = `https://play.google.com/store/apps/details?id=com.google.android.apps.maps`; // URL для Google Play
+        const storeURL = Platform.select({
+          ios: `https://apps.apple.com/us/app/google-maps/id585027354`,
+          android: `https://play.google.com/store/apps/details?id=com.google.android.apps.maps`
+        });
         return Linking.openURL(storeURL);
       }
     });
   };
 
   const open2GIS = () => {
-    const twoGisURL = `dgis://2gis.ru/routeSearch/rsType/car/to/${longitude},${latitude}`;
+    const twoGisURL = Platform.select({
+      ios: `https://2gis.ru/routeSearch/rsType/car/to/${longitude},${latitude}`,
+      android: `dgis://2gis.ru/routeSearch/rsType/car/to/${longitude},${latitude}`
+    });
     Linking.canOpenURL(twoGisURL).then((supported) => {
       if (supported) {
         return Linking.openURL(twoGisURL);
       } else {
-        const storeURL = `https://apps.apple.com/ru/app/2gis-карты-городской-путеводитель/id481627348`; // URL для App Store или Google Play
+        const storeURL = Platform.select({
+          ios: `https://apps.apple.com/ru/app/2gis-карты-городской-путеводитель/id481627348`,
+          android: `https://play.google.com/store/apps/details?id=ru.dublgis.dgismobile&pcampaignid=web_share`
+        });
         return Linking.openURL(storeURL);
       }
     });
