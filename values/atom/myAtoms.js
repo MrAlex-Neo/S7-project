@@ -57,7 +57,10 @@ export const authAtom = atom({
 
 
 export const activeStation = atom({
-    id: ''
+    id: '',
+    websocket_url: '',
+    manufacturer: '',
+    model: '',
 });
 export const focus = atom({
     search: false,

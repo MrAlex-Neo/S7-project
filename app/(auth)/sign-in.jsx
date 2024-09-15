@@ -166,10 +166,10 @@ const SignIn = () => {
           handlePress={() => (part === 0 ? router.push("/") : setPart(0))}
         />
         <View
-          className={`flex-1 justify-between  px-[4vw] py-[3vh] ${
-            Platform.OS !== "android" ? "pb-[2vh] h-[85vh]" : "pb-[4vh] h-[95vh]"
-          }`}
-        >
+            className={`w-full  flex-col flex-1 box-border justify-between items-center px-[4vw]   ${
+              Platform.OS !== "android" ? "pb-[4vh] h-[85vh] pt-[2vh]" : "pb-[0vh] h-[90vh] pt-[4vh]"
+            }`}
+          >
           {part === 0 ? (
             <>
               <Image
@@ -231,8 +231,8 @@ const SignIn = () => {
                 <Text className="font-robotoRegular text-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
                   {`${t("checkCode")} --- --- --- -${number[10]}${
                     number[11]
-                  } ${t("checkCode1")}`}
-                  {/* } ${t("checkCode1")} ${regData.response_code}`} */}
+                  // } ${t("checkCode1")}`}
+                  } ${t("checkCode1")} ${regData.response_code}`}
                 </Text>
                 <CodeInput
                   state="reg"

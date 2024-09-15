@@ -23,14 +23,15 @@ import StationSlider from "../../components/StationSlider";
 import { CommonActions } from "@react-navigation/native";
 import { fetchAuthMe } from "../../redux/slices/auth";
 import { useSelector, useDispatch } from "react-redux";
+import { activeStation } from "../../values/atom/myAtoms";
 
 const Station_info = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
   const [, setToward] = useAtom(towardPage);
   const user = useSelector((state) => state.auth?.data);
-  
+
   useEffect(() => {
     dispatch(fetchAuthMe());
   }, []);
@@ -39,7 +40,7 @@ const Station_info = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: '(tabs)', params: { screen: 'map' } }], // Сброс стека и переход на вкладку "map"
+        routes: [{ name: "(tabs)", params: { screen: "map" } }], // Сброс стека и переход на вкладку "map"
       })
     );
   };
@@ -48,7 +49,7 @@ const Station_info = () => {
     <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute bottom-0">
       <View className="w-full flex-1 pb-[1vh] px-[5vw]">
         <View className="flex-row items-center">
-           <ImgButton
+          <ImgButton
             containerStyles="p-0"
             imgStyles="w-[4vh] h-[4vh]"
             textStyles="text-white"
@@ -58,20 +59,24 @@ const Station_info = () => {
         <View className="py-[2vh] flex-col justify-between h-full">
           <View>
             <Text className="font-robotoMedium text-xl">
-              {t('station_info_1')}
+              {t("station_info_1")}
             </Text>
             <StationInfoItem />
-            <StationSlider/>
+            <StationSlider />
           </View>
           <View>
-            <Text className="font-robotoMedium text-xl">{t('station_info_3')}:</Text>
+            <Text className="font-robotoMedium text-xl">
+              {t("station_info_3")}:
+            </Text>
             <View className="flex-row border-2 border-grayColor-600 mt-[2vh] rounded-2xl py-[3vh] px-[3vw]">
               <Image source={icons.green_purse} className="w-[6vh] h-[6vh]" />
               <View className="flex-col justify-between w-[66vw] ml-[3vw]">
                 <View className="flex-row justify-between ">
-                  <Text className="font-robotoRegular text-base">{t('station_info_2')}</Text>
+                  <Text className="font-robotoRegular text-base">
+                    {t("station_info_2")}
+                  </Text>
                   <Text className="font-robotoMedium text-base">
-                    {user?.data?.balance} {t('sum')}
+                    {user?.data?.balance} {t("sum")}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -83,7 +88,7 @@ const Station_info = () => {
                     router.push("/Wallet");
                   }}
                 >
-                  <Text className="color-secondary">{t('pursebtn')}</Text>
+                  <Text className="color-secondary">{t("pursebtn")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -92,7 +97,7 @@ const Station_info = () => {
               containerStyles="bg-secondary w-full my-[2vh]"
               textStyles="text-white"
               isLoading={false}
-              handlePress={() => router.push('Charge_page')}
+              handlePress={() => router.push("Charge_page")}
             />
           </View>
         </View>

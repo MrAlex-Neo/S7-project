@@ -24,13 +24,13 @@ const Profile = () => {
   const data = useSelector((state) => state.auth?.data);
   const [toward, setToward] = useAtom(towardPage);
   const [user, setUser] = useAtom(userData);
-  const [loadingImage, setLoadingImage] = useState(true); // Состояние для управления загрузкой изображения
 
   useEffect(() => {
     dispatch(fetchAuthMe());
   }, []);
 
   useEffect(() => {
+    console.log("profile", data?.data);
     if (data?.data?.first_name) {
       setUser((prev) => ({
         ...prev,
@@ -57,14 +57,6 @@ const Profile = () => {
     }
   }, [data]);
 
-  const handleImageLoad = () => {
-    setLoadingImage(false); // Изображение с сервера успешно загружено
-  };
-
-  const handleImageError = () => {
-    setLoadingImage(true); // Ошибка загрузки изображения, показать заглушку
-  };
-
   return (
     <SafeAreaView className="bg-white h-[100%] pt-[4vh] pb-[9vh] absolute top-0">
       <View className="w-full flex-1 px-[5vw] bg-white">
@@ -77,13 +69,11 @@ const Profile = () => {
               <View className="flex-row items-center gap-2">
                 <Image
                   source={
-                    loadingImage
-                      ? images.user // Показывать стандартную картинку пока загружается
-                      : { uri: "http://91.228.152.152" + data?.data?.picture }
+                    data && data?.data?.picture
+                      ? { uri: "http://91.228.152.152" + data.data.picture }
+                      : images.user
                   }
                   className="w-[10vh] h-[10vh] rounded-full"
-                  onLoad={handleImageLoad} // Обработчик успешной загрузки
-                  onError={handleImageError} // Обработчик ошибки загрузки
                 />
                 <View>
                   {data && data?.data?.first_name && data?.data?.last_name ? (
@@ -185,3 +175,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
+const styles = StyleSheet.create({});

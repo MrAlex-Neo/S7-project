@@ -18,8 +18,6 @@ import ImgButton from "../../components/ImgButton";
 import PhoneInputSecond from "../../components/PhoneInputSecond";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 
-
-
 const SignUp = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -153,8 +151,8 @@ const SignUp = () => {
           </View>
         ) : (
           <View
-            className={`w-full h-[95vh] flex-col flex-1 box-border justify-between items-center px-[4vw]   ${
-              Platform.OS !== "android" ? "pb-[15vh]" : "pb-[5vh]"
+            className={`w-full  flex-col flex-1 box-border justify-between items-center px-[4vw]   ${
+              Platform.OS !== "android" ? "pb-[4vh] h-[85vh]" : "pb-[0vh] h-[90vh]"
             }`}
           >
             <View>
@@ -164,8 +162,9 @@ const SignUp = () => {
                 {t("enterTheCode")}
               </Text>
               <Text className="font-robotoRegular color-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
-                {`${t("checkCode")} --- --- --- -${number[10]}${number[11]} ${t("checkCode1")}`}
-                {/* )} ${authData.response_code}`} */}
+                {`${t("checkCode")} --- --- --- -${number[10]}${number[11]} ${t(
+                  "checkCode1"
+                )} ${authData.response_code}`}
               </Text>
               <CodeInput state="auth" startTimer={btnFirst} />
               {authData.badCode && (

@@ -23,6 +23,9 @@ const StationCard = ({ busy, station }) => {
     setActive((prev) => ({
       ...prev,
       id: station.charge_point_id,
+      websocket_url: station.websocket_url,
+      manufacturer: station.manufacturer,
+      model: station.model,
     }));
     setIsFocused((prevUserState) => ({
       ...prevUserState,

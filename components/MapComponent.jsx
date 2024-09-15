@@ -47,7 +47,6 @@ const MapComponent = ({}) => {
 
   const memoizedMarkers = useMemo(() => markers, [markers]);
 
-
   // const areStationsEqual = (oldStations, newStations) => {
   //   if (oldStations.length !== newStations.length) {
   //     return false;
@@ -85,6 +84,9 @@ const MapComponent = ({}) => {
             charge_point_id: station.charge_point_id,
             key: station.charge_point_id,
             title: station.location.name,
+            websocket_url: station.websocket_url,
+            manufacturer: station.manufacturer,
+            model: station.model,
             coordinate: {
               latitude: parseFloat(station.latitude), // Преобразуем в float, если это строки
               longitude: parseFloat(station.longitude),
@@ -144,6 +146,9 @@ const MapComponent = ({}) => {
       // console.log('stations', stations)
       const formattedMarkers = stations.map((station) => ({
         charge_point_id: station.charge_point_id,
+        websocket_url: station.websocket_url,
+        manufacturer: station.manufacturer,
+        model: station.model,
         key: station.key,
         title: station.title,
         coordinate: {
@@ -159,15 +164,15 @@ const MapComponent = ({}) => {
   const getMarkerImageSource = (state) => {
     let obj = {
       one: state[0],
-      two: state[1]
-    }
-    return obj
+      two: state[1],
+    };
+    return obj;
   };
 
   const CustomMarker = ({ marker, getMarkerImageSource }) => {
     const isFocused = useIsFocused();
     const obj = getMarkerImageSource(marker.state);
-    console.log('marker', marker)
+    // console.log("marker", marker);
 
     return (
       <>
@@ -201,6 +206,9 @@ const MapComponent = ({}) => {
               setActive((prev) => ({
                 ...prev,
                 id: marker.charge_point_id,
+                websocket_url: marker.websocket_url,
+                manufacturer: marker.manufacturer,
+                model: marker.model,
               }));
               setIsFocused((prevUserState) => ({
                 ...prevUserState,
@@ -210,7 +218,7 @@ const MapComponent = ({}) => {
             }}
           >
             {/* <Image source={markerImage} className="w-[30vw] h-[30vw]" /> */}
-            <Marker_map state={obj} power={20}/>
+            <Marker_map state={obj} power={20} />
           </Marker>
         )}
         {/* )} */}
@@ -315,7 +323,7 @@ const MapComponent = ({}) => {
           setFollowUser(false);
         }}
         onMapReady={() => {
-          console.log("Карта готова");
+          // console.log("Карта готова");
           if (locationPermissionGranted) {
             getCurrentLocation().then((coords) => {
               if (coords && mapRef.current) {

@@ -1,38 +1,19 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
-import { useState, useEffect } from "react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
 const Marker_map = ({ state, power }) => {
   const { t, i18n } = useTranslation();
-  const [one, setOne] = useState("");
-  const [two, setTwo] = useState("");
 
-  useEffect(() => {
-    console.log(state);
-    if (state.one === true) {
-      setOne("secondary");
-    } else if (state.one === false) {
-      setOne("red");
-    } else {
-      setOne("gray");
-    }
+  // Определение цвета прямо в рендере
+  const oneColor = state.one === true ? styles.secondary.color : state.one === false ? styles.red.color : styles.gray.color;
+  const twoColor = state.two === true ? styles.secondary.color : state.two === false ? styles.red.color : styles.gray.color;
 
-    if (state.two === true) {
-      setTwo("secondary");
-    } else if (state.two === false) {
-      setTwo("red");
-    } else {
-      setTwo("gray");
-    }
-  }, [state]);
-
-  // Здесь создаем динамический стиль на основе текущего состояния
   const dynamicStyles = {
-    borderRightColor: styles[one] ? styles[one].color : "gray",
-    borderLeftColor: styles[two] ? styles[two].color : "gray",
-    borderTopColor: styles[one] ? styles[one].color : "gray",
-    borderBottomColor: styles[two] ? styles[two].color : "gray",
+    borderRightColor: oneColor,
+    borderLeftColor: twoColor,
+    borderTopColor: oneColor,
+    borderBottomColor: twoColor,
   };
 
   return (
@@ -43,8 +24,8 @@ const Marker_map = ({ state, power }) => {
           Platform.OS !== "android" ? "rounded-full w-[14vw] h-[14vw] " : ""
         } absolute z-10 justify-center items-center`}
       ></View>
-        <View style={styles.dash} className="bg-white w-[1vw] h-[2vw] absolute z-50 top-0"></View>
-        <View style={styles.dash} className="bg-white w-[1vw] h-[2vw] absolute z-50 bottom-0"></View>
+      <View style={styles.dash} className="bg-white w-[1vw] h-[2vw] absolute z-50 top-0"></View>
+      <View style={styles.dash} className="bg-white w-[1vw] h-[2vw] absolute z-50 bottom-0"></View>
       <View
         style={[Platform.OS === "android" ? styles.child : '']}
         className={`bg-white ${
@@ -68,12 +49,12 @@ const styles = StyleSheet.create({
   marker: {
     borderWidth: 5,
     transform: "rotate(45deg)",
-    backgroundColor: "rgba(0, 0, 0, 0.0)",
+    backgroundColor: "rgba(255, 255, 255, 0.0)", // Цвет фона для тени
     borderRadius: 25,
-    shadowColor: "#000", // Цвет тени
-    shadowOffset: { width: 0, height: 0 }, // Смещение тени
-    shadowOpacity: 0.3, // Прозрачность тени
-    shadowRadius: 2.84, // Радиус размытия тени
+    shadowColor: "#000", // Цвет тени для iOS
+    shadowOffset: { width: 0, height: 0 }, // Смещение тени для iOS
+    shadowOpacity: 0.3, // Прозрачность тени для iOS
+    shadowRadius: 2.84, // Радиус размытия тени для iOS
     elevation: 5, // Высота тени для Android
   },
   dash: {

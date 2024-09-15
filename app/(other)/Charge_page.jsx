@@ -7,20 +7,86 @@ import { images } from "../../constants";
 import { useNavigation } from "expo-router";
 import { CommonActions } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { activeStation } from "../../values/atom/myAtoms";
+import { useAtom } from "jotai";
 
 const Charge_page = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
   const [step, setStep] = useState(2);
   const [popup, setPopup] = useState(false);
+  const [active, setActive] = useAtom(activeStation);
+  // const websocketUrl = active.websocket_url.replace("localhost", "s7energy.uz");
+  const [webSocket, setWebSocket] = useState(null); // Состояние для хранения WebSocket
+  const [message, setMessage] = useState("");
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setStep((prevStep) => (prevStep === 2 ? 0 : prevStep + 1));
-  //   }, 2000);
-  //   return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
-  // }, []);
+  useEffect(() => {
+    if (!active || !active.websocket_url) {
+      console.error("WebSocket URL not found");
+      return;
+    }
+
+    const websocketUrl = active.websocket_url.replace(
+      "localhost",
+      "s7energy.uz"
+    );
+
+    const ws = new WebSocket(websocketUrl);
+      setWebSocket(ws);
+
+    ws.onopen = () => {
+      console.log("WebSocket соединение установлено");
+      // Можно отправить сообщение на сервер, если нужно
+      ws.send(JSON.stringify({ type: "START_CHARGING" }));
+      ws.send(JSON.stringify([{ id: 2 }]));
+
+      console.log("ws.readyState", ws.readyState === WebSocket.OPEN);
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Получено сообщение от WebSocket:", data);
+
+      // Пример обработки сообщения
+      if (data.type === "CHARGE_STATUS") {
+        setStep(data.step); // Обновляем шаг процесса зарядки
+      }
+    };
+    ws.onclose = (event) => {
+      console.log("WebSocket закрыт, код:", event.code, "причина:", event.reason);
+    };
+    
+    ws.onerror = (error) => {
+      console.error("Ошибка WebSocket:", error);
+    };
+
+    // Здесь мы не закрываем WebSocket автоматически при размонтировании компонента
+    // return () => {
+    //   ws.close();
+    // };
+  }, [active.websocket_url]);
+
+  const sendMessage = (messageToSend) => {
+    if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+      webSocket.send(JSON.stringify(messageToSend));
+      console.log("Сообщение отправлено:", messageToSend);
+    } else {
+      console.log("WebSocket не подключен или не готов к отправке сообщений");
+    }
+  };
+
+  // Функция для закрытия WebSocket соединения
+  const closeWebSocketConnection = () => {
+    if (webSocket) {
+      webSocket.close();
+      console.log("WebSocket соединение закрыто вручную");
+      setWebSocket(null); // Сбрасываем состояние
+    }
+  };
+
   const resetStack = () => {
+    console.log("resetStack")
+    closeWebSocketConnection();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -32,14 +98,16 @@ const Charge_page = () => {
 
   return (
     <SafeAreaView className="bg-white absolute bottom-0 h-[100vh]">
-      <View className={`justify-between w-full flex-1 pb-[2vh] px-[5vw] bg-white ${
+      <View
+        className={`justify-between w-full flex-1 pb-[2vh] px-[5vw] bg-white ${
           Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
-        }`}>
+        }`}
+      >
         <View className="flex-row justify-between">
           <Text className="font-robotoMedium text-xl">
             {t("charging_process")}
           </Text>
-          <Image source={icons.chat}  className="w-[6vw] h-[6vw]"/>
+          <Image source={icons.chat} className="w-[6vw] h-[6vw]" />
         </View>
         <CircleAnimation step={step} kw="30" />
         <View className="p-[5vw] border-2 border-grayColor-600 rounded-xl bg-grayColor-200">
@@ -69,16 +137,19 @@ const Charge_page = () => {
           </View>
         </View>
         <PrimaryButton
-          title={t('charge_page_4')}
+          title={t("charge_page_4")}
           containerStyles="bg-secondary w-full mr-2"
           textStyles="text-white"
           isLoading={false}
-          handlePress={() => setPopup(true)}
+          handlePress={() => {
+            sendMessage(JSON.stringify({ id: 2 }));
+            setPopup(true);
+          }}
         />
       </View>
       {popup ? (
         <View
-          className="absolute justify-center w-full h-[100%] z-20"
+          className="absolute bottom-0 justify-center w-full h-[100vh] z-20"
           style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
         >
           <View className="bg-white w-[90vw] mx-[5vw] items-center px-[5vw] py-[10vw] rounded-xl">
@@ -94,13 +165,13 @@ const Charge_page = () => {
             </Text>
             <View className="w-full flex-row justify-between mx-4">
               <PrimaryButton
-                title={t('cancel')}
+                title={t("cancel")}
                 containerStyles="bg-secondary w-[38vw] px-[0] py-[1.4vh] mr-[1vw]"
                 textStyles="text-white text-center font-robotoRegular text-sm"
                 handlePress={() => setPopup(false)}
               />
               <PrimaryButton
-                title={t('charge_page_3')}
+                title={t("charge_page_3")}
                 containerStyles="bg-white border-red border-2 w-[38vw] px-[0] py-[1.4vh] ml-[1vw]"
                 textStyles="text-red text-center font-robotoRegular text-sm"
                 handlePress={resetStack}
