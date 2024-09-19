@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   Platform,
+  ActivityIndicator, // Импортируйте компонент ActivityIndicator
+  ImageBackground,
 } from "react-native";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +19,9 @@ import {
   reset as resetImageUpload,
 } from "../../redux/slices/imageUploadSlice";
 import { icons, images } from "../../constants";
+import { userData } from "../../values/atom/myAtoms";
+import { useAtom } from "jotai";
+import { fetchUpdate } from "../../redux/slices/auth";
 
 const DownloadIMG = () => {
   const dispatch = useDispatch();
@@ -25,6 +30,26 @@ const DownloadIMG = () => {
   const data = useSelector((state) => state.auth?.data);
   const imageUploadState = useSelector((state) => state.imageUpload);
   const [image, setImage] = useState(data?.data?.picture);
+  const [user, setUser] = useAtom(userData);
+  const [loading, setLoading] = useState(false); // Состояние для загрузки
+
+  const deleteImgHandler = async () => {
+    try {
+      const obj = {
+        first_name: user.name,
+        picture: null,
+        last_name: user.surname,
+      };
+      const response = await dispatch(fetchUpdate(obj));
+      console.log("update", response);
+      setUser((prev) => ({
+        ...prev,
+        picture: images.user,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchAuthMe());
@@ -64,24 +89,28 @@ const DownloadIMG = () => {
 
     const formData = {
       uri: image.uri,
-      name: `photo.jpg`,
+      name: "photo.jpg",
       type: mimeType,
     };
+
+    setLoading(true); // Установите состояние загрузки в true перед началом загрузки
 
     try {
       const response = await dispatch(uploadImage(formData));
       console.log("70", response);
-      // Проверка формата ответа
       if (response && response.meta.requestStatus === "fulfilled") {
         console.log("Response data:", response.payload);
-        dispatch(fetchAuthMe())
+        dispatch(fetchAuthMe());
       } else {
         console.error("Unexpected response format:", response);
       }
     } catch (err) {
       console.error("FS Err: ", err);
+    } finally {
+      setLoading(false); // Установите состояние загрузки в false после завершения
     }
   };
+
   useEffect(() => {
     console.log(image);
   }, [image]);
@@ -111,16 +140,23 @@ const DownloadIMG = () => {
           </Text>
         </View>
       </View>
-      <View className="w-[100vw] h-[40vh] items-center bg-grayColor-900">
-        <Image
-          source={
-            data && data?.data?.picture
-              ? { uri: "http://91.228.152.152" + data?.data?.picture }
-              : images.userPhotoDefault
-          }
-          className="w-[40vh] h-[40vh] rounded-full"
-        />
-      </View>
+      <ImageBackground
+        source={images.userPhotoDefault}
+        className="w-[100vw] h-[40vh] justify-center items-center bg-grayColor-900"
+      >
+        {loading ? ( // Показываем индикатор загрузки, если состояние загрузки истинно
+          <ActivityIndicator size="large" color="green" />
+        ) : (
+          <Image
+            source={
+              data && data?.data?.picture
+                ? { uri: "https://s7energy.uz" + data?.data?.picture }
+                : images.userPhotoDefault
+            }
+            className="w-[40vh] h-[40vh] rounded-full"
+          />
+        )}
+      </ImageBackground>
       <View
         className={`flex-row justify-around ${
           Platform.OS !== "android" ? "mb-[2vh]" : ""
@@ -139,7 +175,7 @@ const DownloadIMG = () => {
         <TouchableOpacity
           className="items-center mb-[4vh] justify-between"
           id="btn_for_delete_img"
-          onPress={console.log("this btn is for delete")}
+          onPress={deleteImgHandler}
         >
           <Image source={icons.delete_photo} className="w-[8vw] h-[8vw]" />
           <Text className="color-white font-robotoMedium text-xs text-center mt-[1vh]">
@@ -152,16 +188,3 @@ const DownloadIMG = () => {
 };
 
 export default DownloadIMG;
-
-{
-  /* <TouchableOpacity
-  className="items-center mb-[4vh] justify-between"
-  id="btn_for_delete_img"
-  onPress={console.log("this btn is for delete")}
->
-  <Image source={icons.delete_photo} className="w-[8vw] h-[8vw]" />
-  <Text className="color-white font-robotoMedium text-xs text-center mt-[1vh]">
-    {t("download_img_3")}
-  </Text>
-</TouchableOpacity>; */
-}

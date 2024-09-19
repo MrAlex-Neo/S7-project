@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Animated,
   Platform,
+  ImageBackground,
 } from "react-native";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import ImgButton from "../../components/ImgButton";
@@ -27,9 +28,8 @@ import { useAtom } from "jotai";
 import { userData } from "../../values/atom/myAtoms";
 import { router } from "expo-router";
 
-
 const UpdateUser = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
   const [number, setNumber] = useState("+998");
@@ -37,10 +37,9 @@ const UpdateUser = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   const [badName, setBadName] = useState(false);
   const [badSurname, setBadSurname] = useState(false);
-  const [user, ] = useAtom(userData)
+  const [user] = useAtom(userData);
   const [name, setName] = useState(user.name);
   const [surname, setSurname] = useState(user.surname);
-
 
   const resetStack = () => {
     navigation.dispatch(
@@ -50,7 +49,7 @@ const UpdateUser = () => {
       })
     );
   };
-  console.log(user)
+  console.log(user);
   const handleGesture = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
     { useNativeDriver: true }
@@ -90,11 +89,11 @@ const UpdateUser = () => {
         first_name: name,
         last_name: surname,
       };
-      const response = await dispatch(fetchUpdate(obj))
+      const response = await dispatch(fetchUpdate(obj));
       console.log(response);
-      resetStack()
+      resetStack();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   return (
@@ -106,7 +105,11 @@ const UpdateUser = () => {
           keyboardOpeningTime={50}
           enableAutomaticScroll={true}
         >
-          <View className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white  ${Platform.OS === 'android' ? 'pt-[4vh]' : 'pt-[2vh]'}`}>
+          <View
+            className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white  ${
+              Platform.OS === "android" ? "pt-[4vh]" : "pt-[2vh]"
+            }`}
+          >
             <View className="flex-row items-center">
               <ImgButton
                 containerStyles="p-0"
@@ -131,15 +134,16 @@ const UpdateUser = () => {
                   className="h-[4vh] w-[4vh] rounded-sm"
                 />
               </TouchableOpacity>
-              <View
-                className="border-2 border-secondary rounded-full z-0"
+              <ImageBackground
+                source={images.user}
+                className="border-2 border-secondary rounded-full z-0 overflow-hidden"
                 style={{ alignSelf: "flex-start" }}
               >
                 <Image
                   source={user.picture}
                   className="w-[15vh] h-[15vh] rounded-full"
                 />
-              </View>
+              </ImageBackground>
             </View>
             <View className="mt-[4vh]">
               <PhoneInputFirst

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
+  ImageBackground,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -52,7 +53,7 @@ const Profile = () => {
     if (data?.data?.picture) {
       setUser((prev) => ({
         ...prev,
-        picture: { uri: "http://91.228.152.152" + data.data.picture },
+        picture: { uri: "https://s7energy.uz" + data.data.picture },
       }));
     }
   }, [data]);
@@ -67,14 +68,19 @@ const Profile = () => {
           <View className="flex-col gap-5">
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-2">
-                <Image
-                  source={
-                    data && data?.data?.picture
-                      ? { uri: "http://91.228.152.152" + data.data.picture }
-                      : images.user
-                  }
-                  className="w-[10vh] h-[10vh] rounded-full"
-                />
+                <ImageBackground
+                  source={images.user}
+                  className="border-2 border-secondary rounded-full z-0 overflow-hidden"
+                >
+                  <Image
+                    source={
+                      data && data?.data?.picture
+                        ? { uri: "https://s7energy.uz" + data.data.picture }
+                        : images.user
+                    }
+                    className="w-[10vh] h-[10vh] rounded-full"
+                  />
+                </ImageBackground>
                 <View>
                   {data && data?.data?.first_name && data?.data?.last_name ? (
                     <Text className="font-robotoMedium text-xl">
