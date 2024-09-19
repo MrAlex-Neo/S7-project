@@ -32,6 +32,7 @@ const Stations = () => {
     try {
       const response = await dispatch(fetchStationSearch(value));
       console.log(response)
+      console.log(response.payload.results)
       setList(response.payload.results); // Assuming response.payload contains the stations list
     } catch (error) {
       console.log(error)

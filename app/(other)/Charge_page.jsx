@@ -19,27 +19,34 @@ const Charge_page = () => {
   // const websocketUrl = active.websocket_url.replace("localhost", "s7energy.uz");
   const [webSocket, setWebSocket] = useState(null); // Состояние для хранения WebSocket
   const [message, setMessage] = useState("");
-
+  const [socetActive, setSocetActive] = useState("");
+  console.log(active);
   useEffect(() => {
     if (!active || !active.websocket_url) {
       console.error("WebSocket URL not found");
       return;
     }
-
+    console.log("active.websocket_url", active.websocket_url);
     const websocketUrl = active.websocket_url.replace(
       "localhost",
       "s7energy.uz"
     );
+    console.log("websocketUrl", websocketUrl);
+
+    if (webSocket) {
+      webSocket.close(); // Закрываем текущее WebSocket соединение перед созданием нового
+      setSocetActive(false);
+    }
 
     const ws = new WebSocket(websocketUrl);
-      setWebSocket(ws);
+    setWebSocket(ws);
 
     ws.onopen = () => {
       console.log("WebSocket соединение установлено");
       // Можно отправить сообщение на сервер, если нужно
-      ws.send(JSON.stringify({ type: "START_CHARGING" }));
-      ws.send(JSON.stringify([{ id: 2 }]));
-
+      // ws.send(JSON.stringify({ type: "START_CHARGING" }));
+      // ws.send(JSON.stringify([{ id: 2 }]));
+      setSocetActive(true);
       console.log("ws.readyState", ws.readyState === WebSocket.OPEN);
     };
 
@@ -53,9 +60,14 @@ const Charge_page = () => {
       }
     };
     ws.onclose = (event) => {
-      console.log("WebSocket закрыт, код:", event.code, "причина:", event.reason);
+      console.log(
+        "WebSocket закрыт, код:",
+        event.code,
+        "причина:",
+        event.reason
+      );
     };
-    
+
     ws.onerror = (error) => {
       console.error("Ошибка WebSocket:", error);
     };
@@ -66,7 +78,25 @@ const Charge_page = () => {
     // };
   }, [active.websocket_url]);
 
+  useEffect(() => {
+    if (socetActive) {
+      let message = [
+        2,
+        "05b7e2ba-0001-76c1-98eb-d24170053f9a",
+        "BootNotification",
+        {
+          chargePointVendor: active.manufacturer,
+          chargePointModel: active.model,
+          chargePointSerialNumber: active.id,
+          firmwareVersion: "V1.3@cbe040c+58,F0.gl,ws,ESP32",
+        },
+      ];
+      sendMessage(message);
+    }
+  }, [socetActive]);
+
   const sendMessage = (messageToSend) => {
+    console.log("sendMessage");
     if (webSocket && webSocket.readyState === WebSocket.OPEN) {
       webSocket.send(JSON.stringify(messageToSend));
       console.log("Сообщение отправлено:", messageToSend);
@@ -85,7 +115,7 @@ const Charge_page = () => {
   };
 
   const resetStack = () => {
-    console.log("resetStack")
+    console.log("resetStack");
     closeWebSocketConnection();
     navigation.dispatch(
       CommonActions.reset({

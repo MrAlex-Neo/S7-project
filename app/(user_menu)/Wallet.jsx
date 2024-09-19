@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  Linking
+  Linking,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -49,19 +49,38 @@ const Wallet = () => {
     } else if (part === 1) {
       console.log(payCompany);
       if (payCompany === "payme") {
-        console.log('sum * 100', sum * 100)
+        console.log("sum * 100", sum * 100);
         let obj = {
           amount: sum * 100,
         };
         const response = await dispatch(fetchPayme(obj));
         if (response.payload.link) {
-          console.log('response.payload.link', response.payload.link);
+          console.log("response.payload.link", response.payload.link);
+
           Linking.canOpenURL(response.payload.link).then((supported) => {
             if (supported) {
-              return Linking.openURL(response.payload.link);
+              // Открываем URL и только после этого вызываем setPart
+              Linking.openURL(response.payload.link)
+                .then(() => {
+                  setPart((prev) => prev + 1);
+                })
+                .catch((err) => {
+                  console.error("Ошибка при открытии ссылки:", err);
+                });
             } else {
-              const storeURL = Platform.OS !== 'android' ?  `https://apps.apple.com/us/app/payme/id1463062628` : 'https://play.google.com/store/apps/details?id=uz.dida.payme&hl=ru'; // URL для Google Play
-              return Linking.openURL(storeURL);
+              // Если ссылка не поддерживается, открываем URL магазина и вызываем setPart
+              const storeURL =
+                Platform.OS !== "android"
+                  ? `https://apps.apple.com/us/app/payme/id1463062628`
+                  : "https://play.google.com/store/apps/details?id=uz.dida.payme&hl=ru";
+
+              Linking.openURL(storeURL)
+                .then(() => {
+                  setPart((prev) => prev + 1);
+                })
+                .catch((err) => {
+                  console.error("Ошибка при открытии магазина:", err);
+                });
             }
           });
         }
@@ -107,7 +126,7 @@ const Wallet = () => {
               : "pt-[7vh] h-[95vh]"
           }`}
         >
-          <View className="flex-row items-center">
+          <View className="flex-row items-center ">
             <ImgButton
               containerStyles="p-0"
               imgStyles="w-[4vh] h-[4vh]"
@@ -206,7 +225,7 @@ const Wallet = () => {
         />
         {part === 2 ? (
           <View
-            className="absolute justify-center w-full h-[100%] z-20"
+            className="absolute bottom-0 justify-center w-full h-[100%] z-20"
             style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
           >
             <View className="bg-white w-[86vw] mx-[7vw] items-center px-[5vw] py-[10vw] rounded-xl">
