@@ -208,7 +208,7 @@ const SignIn = () => {
                     <Text
                       className="text-blue-100"
                       onPress={() =>
-                        Linking.openURL("https://mralex-neo.github.io/nurb/")
+                        Linking.openURL("https://s7energy.uz/policy")
                       }
                     >{`${t("regCheckBox2")}`}</Text>
                   </View>
@@ -256,7 +256,7 @@ const SignIn = () => {
           ) : (
             <>
               <View>
-                <Text className="text-center font-robotoBold tracking-wider text-2xl leading-8 py-[3vh]">
+                <Text className="text-center font-robotoBold w-[90vw] tracking-wider text-2xl leading-8 py-[3vh]">
                   {t("registration")}
                 </Text>
                 <PhoneInputFirst

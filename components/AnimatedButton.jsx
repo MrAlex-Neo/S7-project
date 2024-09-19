@@ -43,7 +43,7 @@ export default function AnimatedButton() {
     >
       <Animated.View // Изменяем TouchableOpacity на Animated.View
         className={`absolute z-[10] ${
-          Platform.OS === "android" ? "bottom-[13vh]" : "bottom-[10vh]"
+          Platform.OS === "android" ? "bottom-[13vh]" : "bottom-[8vh]"
         } left-[7vw] bg-secondary justify-center items-center rounded-lg w-[14vw] h-[9vw]`}
         style={{
           backgroundColor: backgroundColor, // Добавляем анимацию к фону

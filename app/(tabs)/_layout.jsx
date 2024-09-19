@@ -130,7 +130,7 @@ const TabsLayout = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-[100%] absolute w-[100vw] bottom-0">
+    <SafeAreaView className={`bg-white h-[100vh] absolute w-[100vw] ${Platform.OS === "android" ? 'bottom-0' : 'bottom-[-2vh]'}`}>
       {isMistake.badToken && <MistakeMap />}
       {isError.state && <ErrorBox />}
       <Tabs

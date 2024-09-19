@@ -273,7 +273,7 @@ const MapComponent = ({}) => {
     <View className="absolute b-0 w-[100vw] h-[100%] z-1">
       <TouchableOpacity
         className={`absolute right-[1vw] z-10 ${
-          Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"
+          Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[6vh]"
         }`}
         onPress={handlePress}
       >
@@ -293,7 +293,7 @@ const MapComponent = ({}) => {
       null}
       <TouchableOpacity
         className={`absolute z-[10] right-[17vw] ${
-          Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[8vh]"
+          Platform.OS === "android" ? "bottom-[10vh]" : "bottom-[6vh]"
         }`}
         onPress={() => router.push("/CameraPage")}
       >

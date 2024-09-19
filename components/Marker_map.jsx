@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     shadowColor: "#000", // Цвет тени для iOS
     shadowOffset: { width: 0, height: 0 }, // Смещение тени для iOS
-    shadowOpacity: 0.3, // Прозрачность тени для iOS
+    shadowOpacity: 0.1, // Прозрачность тени для iOS
     shadowRadius: 2.84, // Радиус размытия тени для iOS
     elevation: 5, // Высота тени для Android
   },

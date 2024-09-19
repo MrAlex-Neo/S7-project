@@ -22,8 +22,11 @@ import LangChangeBtn from "../components/langChangeButton";
 import { images } from "../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, CommonActions } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { fetchAuthMe } from "../redux/slices/auth";
 
 export default function App() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
   const [part, setPart] = useState(0);
@@ -38,12 +41,18 @@ export default function App() {
         const token = await AsyncStorage.getItem("token");
         console.log("token", token);
         if (token) {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: "(tabs)", params: { screen: "map" } }], // Сброс стека и переход на вкладку "profile"
-            })
-          );
+          let response = await dispatch(fetchAuthMe());
+          console.log("token_response", response);
+          if (response.error) {
+            AsyncStorage.removeItem("token");
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: "(tabs)", params: { screen: "map" } }], // Сброс стека и переход на вкладку "profile"
+              })
+            );
+          }
           setLoading(false);
         } else {
           setLoading(false);

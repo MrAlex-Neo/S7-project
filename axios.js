@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Создание экземпляра axios с базовым URL
 const instance = axios.create({
-    baseURL: 'http://s7energy.uz'
+    baseURL: 'https://s7energy.uz'
 });
 
 // Функция для получения токена из AsyncStorage

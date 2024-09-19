@@ -24,13 +24,17 @@ import {
 } from "react-native-gesture-handler";
 import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchDelete } from "../../redux/slices/auth";
+import { useDispatch } from "react-redux";
 
 const Settings = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
   const [isPressed, setIsPressed] = useState(false);
   const [exit, setExit] = useState(false);
   const translateY = useRef(new Animated.Value(0)).current;
+  const [exitState, setExitState] = useState("exit");
 
   const resetStack = () => {
     navigation.dispatch(
@@ -79,7 +83,12 @@ const Settings = () => {
   };
 
   const exitFromApp = async () => {
+    console.log(exitState);
     try {
+      if (exitState === "delete") {
+        let response = await dispatch(fetchDelete());
+        console.log("delete", response);
+      }
       await AsyncStorage.removeItem("token");
       console.log("Token removed");
       navigation.dispatch(
@@ -129,7 +138,7 @@ const Settings = () => {
               {exit ? (
                 <View>
                   <Text className="font-robotoRegular text-xl color-red text-center">
-                    {t("exit_1")}
+                    {exitState === "exit" ? t("exit_1") : t("delete_1")}
                   </Text>
                   <View
                     style={{
@@ -141,7 +150,7 @@ const Settings = () => {
                     className="my-[4vh]"
                   ></View>
                   <Text className="font-robotoBold text-lg text-center mb-[3vh] mx-[2vw]">
-                    {t("exit_2")}
+                    {exitState === "exit" ? t("exit_2") : t("delete_2")}
                   </Text>
                   <View className="w-full flex-row justify-between">
                     <PrimaryButton
@@ -155,7 +164,7 @@ const Settings = () => {
                       }}
                     />
                     <PrimaryButton
-                      title={t("exit")}
+                      title={exitState === "exit" ? t("exit") : t("delete")}
                       containerStyles="bg-secondary w-[42vw] mr-2"
                       textStyles="text-white"
                       handlePress={exitFromApp}
@@ -226,29 +235,45 @@ const Settings = () => {
                   : images.uz_flag
               }
             />
-            <TouchableOpacity
-              onPress={exitHandler}
-              activeOpacity={0.7}
-              className={`bg-grayColor-200 border-2 border-grayColor-600 flex-row rounded-xl min-h-[7vh] justify-between px-[3vw] py-[1vh] items-center mb-[2vh]`}
-            >
-              <View className="flex-row items-center gap-5">
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  setExitState("exit");
+                  exitHandler();
+                }}
+                activeOpacity={0.7}
+                className={`bg-grayColor-200 border-2 border-grayColor-600 flex-row rounded-xl min-h-[7vh] justify-between px-[3vw] py-[1vh] items-center mb-[2vh]`}
+              >
+                <View className="flex-row items-center gap-5">
+                  <Image
+                    source={icons.exit}
+                    className="h-[4vh] w-[4vh]"
+                    resizeMode="contain"
+                  />
+                  <Text
+                    className={`color-red-100 font-robotoMedium text-base tracking-wider`}
+                  >
+                    {t("exit")}
+                  </Text>
+                </View>
                 <Image
-                  source={icons.exit}
-                  className="h-[4vh] w-[4vh]"
+                  source={images.arrow}
+                  className="w-[3vw] h-[2vh]"
                   resizeMode="contain"
                 />
-                <Text
-                  className={`color-red-100 font-robotoMedium text-base tracking-wider`}
-                >
-                  {t("exit")}
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="items-center mt-[1vh] mb-[2vh]"
+                onPress={() => {
+                  setExitState("delete");
+                  exitHandler();
+                }}
+              >
+                <Text className="font-robotoMedium text-xs underline">
+                  {t("delete_1")}
                 </Text>
-              </View>
-              <Image
-                source={images.arrow}
-                className="w-[3vw] h-[2vh]"
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </GestureHandlerRootView>

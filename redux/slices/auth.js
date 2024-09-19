@@ -36,6 +36,14 @@ export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async () => {
         throw Error(error.response.data.message);
     }
 });
+export const fetchDelete = createAsyncThunk('auth/fetchDelete', async () => {
+    try {
+        const { data } = await axios.delete('/api/v1/users/delete/');
+        return data;
+    } catch (error) {
+        throw Error(error.response.data.message);
+    }
+});
 
 export const fetchRegister = createAsyncThunk('users/new/', async (payload) => {
     try {

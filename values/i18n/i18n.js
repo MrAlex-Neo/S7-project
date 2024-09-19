@@ -110,7 +110,9 @@ const resources = {
       error_1: 'Error',
       mistake_win: 'You are not registered!',
       mistake_win_1: 'Register or log in',
-
+      delete: 'Remove',
+      delete_1: 'Delete an account',
+      delete_2: 'Do you really want to delete your account?',
     },
   },
   ru: {
@@ -216,7 +218,9 @@ const resources = {
       error_1: 'Ошибка',
       mistake_win: 'Вы не зарегистрированны!',
       mistake_win_1: 'Зарегистрируйтесть или войдите в систему',
-
+      delete: 'Удалить',
+      delete_1: 'Удалить аккаунт',
+      delete_2: 'Вы действительно хотите удалить аккаунт?',
     },
   },
   uz: {
@@ -321,7 +325,9 @@ const resources = {
       error_1: 'Xato',
       mistake_win: "Siz ro'yxatdan o'tmagansiz!",
       mistake_win_1: "Ro'yxatdan o'ting yoki tizimga kiring",
-
+      delete: "O'chirish",
+      delete_1: "Hisobni o'chirish",
+      delete_2: "Siz haqiqatan ham hisobni o'chirishni xohlaysizmi?",
     },
   },
 };

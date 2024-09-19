@@ -49,12 +49,13 @@ const Wallet = () => {
     } else if (part === 1) {
       console.log(payCompany);
       if (payCompany === "payme") {
+        console.log('sum * 100', sum * 100)
         let obj = {
           amount: sum * 100,
         };
         const response = await dispatch(fetchPayme(obj));
         if (response.payload.link) {
-          console.log(response.payload.link);
+          console.log('response.payload.link', response.payload.link);
           Linking.canOpenURL(response.payload.link).then((supported) => {
             if (supported) {
               return Linking.openURL(response.payload.link);

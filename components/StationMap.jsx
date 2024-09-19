@@ -198,7 +198,7 @@ const StationMap = ({ latitude, longitude }) => {
   return (
     <GestureHandlerRootView
       className={`absolute z-20 ${
-        Platform.OS === "android" ? "bottom-[11vh]" : "bottom-[9vh]"
+        Platform.OS === "android" ? "bottom-[11vh]" : "bottom-[7vh]"
       } w-[100vw]`}
     >
       {stationInfo !== null && (
