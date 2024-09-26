@@ -5,6 +5,7 @@ import imageUploadSlice from "./slices/imageUploadSlice";
 import { favouriteReducer } from "./slices/favourites";
 import { faqReducer } from "./slices/faq";
 import { payReducer } from "./slices/pay";
+import { chargeReducer } from "./slices/charge";
 
 const store = configureStore({
     reducer: {
@@ -14,7 +15,7 @@ const store = configureStore({
         favourites: favouriteReducer,
         questions: faqReducer,
         pay: payReducer,
-
+        charge: chargeReducer,
     }
 });
 

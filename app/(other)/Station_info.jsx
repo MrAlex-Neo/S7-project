@@ -24,6 +24,10 @@ import { CommonActions } from "@react-navigation/native";
 import { fetchAuthMe } from "../../redux/slices/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { activeStation } from "../../values/atom/myAtoms";
+import { fetchGetPlans, fetchCheckPlan } from "../../redux/slices/charge";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ErrorBox from "../../components/ErrorBox";
+import { error } from "../../values/atom/myAtoms";
 
 const Station_info = () => {
   const dispatch = useDispatch();
@@ -31,9 +35,39 @@ const Station_info = () => {
   const { t, i18 } = useTranslation();
   const [, setToward] = useAtom(towardPage);
   const user = useSelector((state) => state.auth?.data);
+  const [plans, setPlans] = useState([]);
+  const [planInfo, setPlanInfo] = useState({ plan_type: "limitless" });
+  const [isError, setIsError] = useAtom(error);
 
   useEffect(() => {
     dispatch(fetchAuthMe());
+
+    async function getPlansFunction() {
+      let response = await dispatch(fetchGetPlans());
+
+      const lang = await AsyncStorage.getItem("lang");
+      let array = [];
+      if (lang === "en") {
+        for (let index = 0; index < response.payload.length; index++) {
+          array.push(response.payload[index].description_en);
+        }
+        console.log("array", array);
+      } else if (lang === "ru") {
+        for (let index = 0; index < response.payload.length; index++) {
+          array.push(response.payload[index].description_ru);
+        }
+        console.log("array", array);
+      } else if (lang === "uz") {
+        for (let index = 0; index < response.payload.length; index++) {
+          array.push(response.payload[index].description_uz);
+        }
+        console.log("array", array);
+      } else {
+        console.log("lang none");
+      }
+      setPlans(array);
+    }
+    getPlansFunction();
   }, []);
 
   const resetStack = () => {
@@ -44,9 +78,31 @@ const Station_info = () => {
       })
     );
   };
-
+  const checkPlanHandler = async () => {
+    try {
+      let data = await dispatch(fetchCheckPlan(planInfo));
+      if (data.error) {
+        console.log(data.error.message);
+        if (data.error.message === "Insufficient balance") {
+          router.push("/Wallet")
+        } else {
+          setIsError((prev) => ({
+            ...prev,
+            state: true,
+          }));
+        }
+      } else {
+        router.push("Charge_page");
+      }
+    } catch (error) {}
+  };
+  const planInfoHandler = (e) => {
+    console.log(e);
+    setPlanInfo(e);
+  };
   return (
     <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute bottom-0">
+      {isError.state && <ErrorBox />}
       <View className="w-full flex-1 pb-[1vh] px-[5vw]">
         <View className="flex-row items-center">
           <ImgButton
@@ -62,7 +118,7 @@ const Station_info = () => {
               {t("station_info_1")}
             </Text>
             <StationInfoItem />
-            <StationSlider />
+            <StationSlider plans={plans} planInfo={planInfoHandler} />
           </View>
           <View>
             <Text className="font-robotoMedium text-xl">
@@ -97,7 +153,7 @@ const Station_info = () => {
               containerStyles="bg-secondary w-full my-[2vh]"
               textStyles="text-white"
               isLoading={false}
-              handlePress={() => router.push("Charge_page")}
+              handlePress={checkPlanHandler}
             />
           </View>
         </View>

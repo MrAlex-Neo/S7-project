@@ -12,46 +12,62 @@ import { icons } from "../constants";
 import { useTranslation } from "react-i18next";
 import StationInputBox from "./StationInputBox";
 
-const StationSlider = () => {
+const StationSlider = ({ plans, planInfo }) => {
   const [path, setPath] = useState(0);
+  const [amount, setAmount] = useState("");
   const { t, i18 } = useTranslation();
   const opacityAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
+  useEffect(() => {
+    setAmount(myArray[path].cost);
+    let obj = {};
+    if (myArray[path].cost !== null) {
+      obj = {
+        plan_type: myArray[path].type,
+        amount: myArray[path].cost,
+      };
+    } else {
+      obj = {
+        plan_type: myArray[path].type,
+      };
+    }
+    planInfo(obj);
+  }, [path]);
   const myArray = [
     {
       title: t("stationSlider_3"),
       img: icons.battery,
-      size:
-        Platform.OS !== "android" ? "w-[5vw] h-[3.8vh]" : "w-[5vw] h-[4vh]",
+      cost: null,
+      type: "limitless",
     },
     {
       title: t("stationSlider_4"),
       img: icons.zip,
-      size: Platform.OS !== "android" ? "w-[4vw] h-[3.6vh]" : "w-[4vw] h-[4.1vh]",
       cost: "50",
-      const_1: t('kw')
+      const_1: t("kw"),
+      type: "kwh",
     },
     {
       title: t("stationSlider_5"),
       img: icons.som,
-      size: Platform.OS !== "android" ? "w-[10.58vw] h-[2vh]" : "w-[10.2vw] h-[2.1vh]",
       cost: "50 000",
-      const_1: t('sum')
+      const_1: t("sum"),
+      type: "money",
     },
     {
       title: t("stationSlider_6"),
       img: icons.stateClock,
-      size: Platform.OS !== "android" ? "w-[3.41vh] h-[3.4vh]" : "w-[3.42vh] h-[3.4vh]",
       cost: "90",
-      const_1: t('min')
+      const_1: t("min"),
+      type: "time",
     },
     {
       title: t("stationSlider_6"),
       img: icons.persent,
-      size: Platform.OS !== "android" ? "w-[3vh] h-[2.5vh]" : "w-[3.6vh] h-[3vh]",
       cost: "80",
-      const_1: '%'
+      const_1: "%",
+      type: "percentage",
     },
   ];
 
@@ -112,7 +128,9 @@ const StationSlider = () => {
       });
     });
   };
-
+  const amountHandler = (e) => {
+    setAmount(e);
+  };
   useEffect(() => {
     // console.log(path);
   }, [path]);
@@ -130,7 +148,7 @@ const StationSlider = () => {
             <View className="flex-row items-center h-[6vh]">
               <Image
                 source={myArray[path].img}
-                className={myArray[path].size}
+                // className={myArray[path].size}
               />
               <Text className="font-robotoMedium text-lg ml-[1vw]">
                 {myArray[path].title}
@@ -140,13 +158,17 @@ const StationSlider = () => {
           {path === 0 ? (
             ""
           ) : (
-            <StationInputBox text={myArray[path].cost} text_1={myArray[path].const_1}/>
-
-)}
+            <StationInputBox
+              text={myArray[path].cost}
+              text_1={myArray[path].const_1}
+              amountHandler={amountHandler}
+            />
+          )}
         </View>
         <View className="flex-row items-end justify-between w-full">
           <Text className="w-[60vw] font-robotoRegular text-xs color-grayColor-500">
-            {t("stationSlider_2")}
+            {/* {t("stationSlider_2")} */}
+            {plans[path]}
           </Text>
           <Pagination
             sum={myArray.length}
