@@ -1,133 +1,238 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { View, Text, SafeAreaView, Image, Platform } from "react-native";
-import { icons } from "../../constants";
+import { icons, images } from "../../constants";
 import CircleAnimation from "../../components/CircleAnimation";
 import PrimaryButton from "../../components/PrimaryButton";
-import { images } from "../../constants";
 import { useNavigation } from "expo-router";
 import { CommonActions } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { activeStation } from "../../values/atom/myAtoms";
 import { useAtom } from "jotai";
+import {
+  fetchStartTransaction,
+  fetchStopTransaction,
+  fetchGetTransactionState,
+} from "../../redux/slices/transactions";
+import { useDispatch } from "react-redux";
+import { error } from "../../values/atom/myAtoms";
+import ErrorBox from "../../components/ErrorBox";
 
-const Charge_page = () => {
-  const { t, i18n } = useTranslation();
+const ChargePage = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
-  const [step, setStep] = useState(2);
-  const [popup, setPopup] = useState(false);
-  const [active, setActive] = useAtom(activeStation);
-  // const websocketUrl = active.websocket_url.replace("localhost", "s7energy.uz");
-  const [webSocket, setWebSocket] = useState(null); // Состояние для хранения WebSocket
-  const [message, setMessage] = useState("");
-  const [socetActive, setSocetActive] = useState("");
-  console.log(active);
-  useEffect(() => {
-    if (!active || !active.websocket_url) {
-      console.error("WebSocket URL not found");
-      return;
-    }
-    console.log("active.websocket_url", active.websocket_url);
-    const websocketUrl = active.websocket_url.replace(
-      "localhost",
-      "s7energy.uz"
-    );
-    console.log("websocketUrl", websocketUrl);
-
-    if (webSocket) {
-      webSocket.close(); // Закрываем текущее WebSocket соединение перед созданием нового
-      setSocetActive(false);
-    }
-
-    const ws = new WebSocket(websocketUrl);
-    setWebSocket(ws);
-
-    ws.onopen = () => {
-      console.log("WebSocket соединение установлено");
-      // Можно отправить сообщение на сервер, если нужно
-      // ws.send(JSON.stringify({ type: "START_CHARGING" }));
-      // ws.send(JSON.stringify([{ id: 2 }]));
-      setSocetActive(true);
-      console.log("ws.readyState", ws.readyState === WebSocket.OPEN);
-    };
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("Получено сообщение от WebSocket:", data);
-
-      // Пример обработки сообщения
-      if (data.type === "CHARGE_STATUS") {
-        setStep(data.step); // Обновляем шаг процесса зарядки
-      }
-    };
-    ws.onclose = (event) => {
-      console.log(
-        "WebSocket закрыт, код:",
-        event.code,
-        "причина:",
-        event.reason
-      );
-    };
-
-    ws.onerror = (error) => {
-      console.error("Ошибка WebSocket:", error);
-    };
-
-    // Здесь мы не закрываем WebSocket автоматически при размонтировании компонента
-    // return () => {
-    //   ws.close();
-    // };
-  }, [active.websocket_url]);
+  const dispatch = useDispatch();
+  const [percent, setPercent] = useState(0);
+  const [time, setTime] = useState(0);
+  const [powerA, setPowerA] = useState(0);
+  const [powerKW, setPowerKW] = useState(0);
+  const [count, setCount] = useState(0);
+  const [volt, setVold] = useState(0);
+  const [step, setStep] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  const [activeStationData] = useAtom(activeStation);
+  const fetchUpdateTimer = useRef(null);
+  const [isError, setIsError] = useAtom(error);
 
   useEffect(() => {
-    if (socetActive) {
-      let message = [
-        2,
-        "05b7e2ba-0001-76c1-98eb-d24170053f9a",
-        "BootNotification",
-        {
-          chargePointVendor: active.manufacturer,
-          chargePointModel: active.model,
-          chargePointSerialNumber: active.id,
-          firmwareVersion: "V1.3@cbe040c+58,F0.gl,ws,ESP32",
-        },
-      ];
-      sendMessage(message);
-    }
-  }, [socetActive]);
+    handleStartTransaction();
+    return () => stopUpdateTimer(); // Очищаем таймер при размонтировании компонента
+  }, []);
 
-  const sendMessage = (messageToSend) => {
-    console.log("sendMessage");
-    if (webSocket && webSocket.readyState === WebSocket.OPEN) {
-      webSocket.send(JSON.stringify(messageToSend));
-      console.log("Сообщение отправлено:", messageToSend);
+  useEffect(() => {
+    if (percent < 33) {
+      setStep(0);
+    } else if (percent < 66) {
+      setStep(1);
     } else {
-      console.log("WebSocket не подключен или не готов к отправке сообщений");
+      setStep(2);
+    }
+  }, [percent]);
+
+  useEffect(() => {
+    if (isActive) {
+      // if (isActive && transactionId) {
+      startUpdateTimer();
+    } else {
+      stopUpdateTimer();
+    }
+    return () => stopUpdateTimer();
+  }, [isActive, transactionId]);
+
+  const handleStartTransaction = async () => {
+    try {
+      console.log("Отправка запроса с параметрами:", {
+        city: activeStationData.city,
+        vehicle: activeStationData.vehicle,
+        address: activeStationData.address,
+        charge_point: activeStationData.station_id,
+        connector_id: activeStationData.port_id,
+        external_id: activeStationData.port_id,
+      });
+
+      const response = await dispatch(
+        fetchStartTransaction({
+          city: activeStationData.city,
+          vehicle: activeStationData.vehicle,
+          address: activeStationData.address,
+          charge_point: activeStationData.station_id,
+          connector_id: activeStationData.port_id,
+          external_id: activeStationData.port_id,
+        })
+      );
+
+      console.log("Ответ от сервера:", response.payload.transaction_id);
+      if (response.payload.transaction_id) {
+        setTransactionId(response.payload.transaction_id);
+        setIsActive(true);
+        startUpdateTimer();
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.error("Ошибка при запуске транзакции:", error);
     }
   };
 
-  // Функция для закрытия WebSocket соединения
-  const closeWebSocketConnection = () => {
-    if (webSocket) {
-      webSocket.close();
-      console.log("WebSocket соединение закрыто вручную");
-      setWebSocket(null); // Сбрасываем состояние
+  const handleStopTransaction = async () => {
+    try {
+      const response = await dispatch(
+        fetchStopTransaction({
+          transaction_id: transactionId,
+          charge_point: activeStationData.station_id,
+        })
+      );
+      console.log(response);
+      setIsActive(false);
+    } catch (error) {
+      console.error("Error stopping transaction:", error);
     }
   };
 
-  const resetStack = () => {
-    console.log("resetStack");
-    closeWebSocketConnection();
+  const handleGetTransactionState = async () => {
+    try {
+      const response = await dispatch(fetchGetTransactionState(transactionId));
+      console.log("timer");
+      console.log(response.payload.meter_value_raw);
+      if (response.payload.meter_value_raw[0] !== undefined) {
+        if (response.payload.meter_value_raw[0].sampled_value[0].unit === "A") {
+          setPowerA(response.payload.meter_value_raw[0].sampled_value[0].value);
+        }
+        if (
+          response.payload.meter_value_raw[0].sampled_value[2].unit === "kW"
+        ) {
+          setPowerKW(
+            response.payload.meter_value_raw[0].sampled_value[2].value
+          );
+        }
+        if (
+          response.payload.meter_value_raw[0].sampled_value[3].unit ===
+          "Percent"
+        ) {
+          setPercent(
+            response.payload.meter_value_raw[0].sampled_value[3].value
+          );
+        }
+        if (response.payload.meter_value_raw[0].sampled_value[4].unit === "V") {
+          setVold(response.payload.meter_value_raw[0].sampled_value[4].value);
+        }
+        if (response.payload.meter_value_raw[0].timestamp) {
+          // setTime(response.payload.meter_value_raw[0].timestamp);
+          let date = response.payload.meter_value_raw[0].timestamp;
+          setTime(date.slice(11, 16));
+        }
+        setCount(0);
+      } else {
+        setIsError((prev) => ({
+          ...prev,
+          state: true,
+        }));
+        stopUpdateTimer();
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "(tabs)", params: { screen: "map" } }],
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching transaction state:", error);
+    }
+  };
+
+  const updateTimer = useCallback(() => {
+    if (isActive) {
+      handleGetTransactionState();
+      fetchUpdateTimer.current = setTimeout(updateTimer, 1000);
+    }
+  }, [isActive, transactionId]);
+
+  const startUpdateTimer = () => {
+    if (fetchUpdateTimer.current) clearTimeout(fetchUpdateTimer.current);
+    updateTimer();
+  };
+
+  const stopUpdateTimer = () => {
+    if (fetchUpdateTimer.current) clearTimeout(fetchUpdateTimer.current);
+  };
+
+  const handleResetStack = () => {
+    handleStopTransaction();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "(other)", params: { screen: "Charge_end" } }], // Сброс стека и переход на вкладку "map"
+        routes: [{ name: "(other)", params: { screen: "Charge_end" } }],
       })
     );
   };
-  // [] означает, что useEffect будет запущен только один раз при монтировании
+  const InfoBox = ({ title, value, bordered = false }) => (
+    <View
+      className={`items-center w-[50%] pt-[4vh] pb-[2vh] ${
+        bordered ? "border-l-2 border-grayColor-600" : ""
+      }`}
+    >
+      <Text className="font-robotoRegular text-sm">{title}</Text>
+      <Text className="font-robotoBold text-xl">{value}</Text>
+    </View>
+  );
 
+  const Popup = ({ title, progress, onClose, onReset }) => (
+    <View
+      className="absolute bottom-0 justify-center w-full h-[100vh] z-20"
+      style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
+    >
+      <View className="bg-white w-[90vw] mx-[5vw] items-center px-[5vw] py-[10vw] rounded-xl">
+        <Image
+          source={images.popupBatery}
+          className="h-[8.1vh] w-[8.1vh] mb-[2vh]"
+        />
+        <Text className="font-robotoRegular text-2xl text-center mb-[2vh]">
+          {title}
+        </Text>
+        <Text className="font-robotoRegular text-sm text-center mb-[4vh]">
+          {progress}
+        </Text>
+        <View className="w-full flex-row justify-between mx-4">
+          <PrimaryButton
+            title={t("cancel")}
+            containerStyles="bg-secondary w-[38vw] px-[0] py-[1.4vh] mr-[1vw]"
+            textStyles="text-white text-center font-robotoRegular text-sm"
+            handlePress={onClose}
+          />
+          <PrimaryButton
+            title={t("charge_page_3")}
+            containerStyles="bg-white border-red border-2 w-[38vw] px-[0] py-[1.4vh] ml-[1vw]"
+            textStyles="text-red text-center font-robotoRegular text-sm"
+            handlePress={onReset}
+          />
+        </View>
+      </View>
+    </View>
+  );
   return (
     <SafeAreaView className="bg-white absolute bottom-0 h-[100vh]">
+      {isError.state && <ErrorBox />}
       <View
         className={`justify-between w-full flex-1 pb-[2vh] px-[5vw] bg-white ${
           Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
@@ -139,79 +244,146 @@ const Charge_page = () => {
           </Text>
           <Image source={icons.chat} className="w-[6vw] h-[6vw]" />
         </View>
-        <CircleAnimation step={step} kw="30" />
+
+        <CircleAnimation
+          step={step}
+          kw={powerKW !== 0 ? powerKW.slice(0, 4) : 0}
+        />
+
         <View className="p-[5vw] border-2 border-grayColor-600 rounded-xl bg-grayColor-200">
           <View className="flex-row justify-between">
-            <View className="items-center w-[50%] pb-[4vh] pt-[2vh] border-b-2 border-grayColor-600">
-              <Text className="font-robotoRegular text-sm">
-                {t("charging_time")}
-              </Text>
-              <Text className="font-robotoBold text-xl">00:14:56</Text>
-            </View>
-            <View className="items-center w-[50%] pb-[4vh] pt-[2vh] border-b-2 border-l-2 border-grayColor-600">
-              <Text className="font-robotoRegular text-sm">{t("percent")}</Text>
-              <Text className="font-robotoBold text-xl">40%</Text>
-            </View>
+            <InfoBox title={t("charging_time")} value={time} />
+            <InfoBox title={t("percent")} value={percent + "%"} bordered />
           </View>
           <View className="flex-row">
-            <View className="items-center w-[50%] pt-[4vh] pb-[2vh] ">
-              <Text className="font-robotoRegular text-sm">
-                {t("stationSlider_4")}
-              </Text>
-              <Text className="font-robotoBold text-xl">12.24 Amp</Text>
-            </View>
-            <View className="items-center w-[50%] pt-[4vh] pb-[2vh] border-l-2 border-grayColor-600">
-              <Text className="font-robotoRegular text-sm">{t("amount")}</Text>
-              <Text className="font-robotoBold text-xl">$5.25</Text>
-            </View>
+            <InfoBox
+              title={t("stationSlider_4")}
+              value={powerA !== 0 ? powerA.slice(0, 3) + "Amp" : 0 + "Amp"}
+            />
+            <InfoBox
+              title={t("amount")}
+              value={count + " " + t("sum")}
+              bordered
+            />
           </View>
         </View>
+
         <PrimaryButton
           title={t("charge_page_4")}
           containerStyles="bg-secondary w-full mr-2"
           textStyles="text-white"
           isLoading={false}
-          handlePress={() => {
-            sendMessage(JSON.stringify({ id: 2 }));
-            setPopup(true);
-          }}
+          handlePress={() => setPopupVisible(true)}
         />
       </View>
-      {popup ? (
-        <View
-          className="absolute bottom-0 justify-center w-full h-[100vh] z-20"
-          style={{ backgroundColor: "rgba(108, 122, 137, 0.5)" }}
-        >
-          <View className="bg-white w-[90vw] mx-[5vw] items-center px-[5vw] py-[10vw] rounded-xl">
-            <Image
-              source={images.popupBatery}
-              className={`h-[8.1vh] w-[8.1vh] mb-[2vh] `}
-            />
-            <Text className="font-robotoRegular text-2xl text-center mb-[2vh]">
-              {t("charge_page_1")}
-            </Text>
-            <Text className="font-robotoRegular text-sm text-center mb-[4vh]">
-              {`${t("charge_page_2")} 50%`}
-            </Text>
-            <View className="w-full flex-row justify-between mx-4">
-              <PrimaryButton
-                title={t("cancel")}
-                containerStyles="bg-secondary w-[38vw] px-[0] py-[1.4vh] mr-[1vw]"
-                textStyles="text-white text-center font-robotoRegular text-sm"
-                handlePress={() => setPopup(false)}
-              />
-              <PrimaryButton
-                title={t("charge_page_3")}
-                containerStyles="bg-white border-red border-2 w-[38vw] px-[0] py-[1.4vh] ml-[1vw]"
-                textStyles="text-red text-center font-robotoRegular text-sm"
-                handlePress={resetStack}
-              />
-            </View>
-          </View>
-        </View>
-      ) : null}
+
+      {popupVisible && (
+        <Popup
+          onClose={() => setPopupVisible(false)}
+          onReset={handleResetStack}
+          progress={`${t("charge_page_2")} 50%`}
+          title={t("charge_page_1")}
+        />
+      )}
     </SafeAreaView>
   );
 };
 
-export default Charge_page;
+export default ChargePage;
+
+// const websocketUrl = active.websocket_url.replace("localhost", "s7energy.uz");
+// const [webSocket, setWebSocket] = useState(null);
+// const [message, setMessage] = useState("");
+// const [socetActive, setSocetActive] = useState("");
+// useEffect(() => {
+//   if (!active || !active.websocket_url) {
+//     console.error("WebSocket URL not found");
+//     return;
+//   }
+//   console.log("active.websocket_url", active.websocket_url);
+//   const websocketUrl = active.websocket_url.replace(
+//     "localhost",
+//     "s7energy.uz"
+//   );
+//   console.log("websocketUrl", websocketUrl);
+
+//   if (webSocket) {
+//     webSocket.close(); // Закрываем текущее WebSocket соединение перед созданием нового
+//     setSocetActive(false);
+//   }
+
+//   const ws = new WebSocket(websocketUrl);
+//   setWebSocket(ws);
+
+//   ws.onopen = () => {
+//     console.log("WebSocket соединение установлено");
+//     // Можно отправить сообщение на сервер, если нужно
+//     // ws.send(JSON.stringify({ type: "START_CHARGING" }));
+//     // ws.send(JSON.stringify([{ id: 2 }]));
+//     setSocetActive(true);
+//     console.log("ws.readyState", ws.readyState === WebSocket.OPEN);
+//   };
+
+//   ws.onmessage = (event) => {
+//     const data = JSON.parse(event.data);
+//     console.log("Получено сообщение от WebSocket:", data);
+
+//     // Пример обработки сообщения
+//     if (data.type === "CHARGE_STATUS") {
+//       setStep(data.step); // Обновляем шаг процесса зарядки
+//     }
+//   };
+//   ws.onclose = (event) => {
+//     console.log(
+//       "WebSocket закрыт, код:",
+//       event.code,
+//       "причина:",
+//       event.reason
+//     );
+//   };
+
+//   ws.onerror = (error) => {
+//     console.error("Ошибка WebSocket:", error);
+//   };
+
+//   // Здесь мы не закрываем WebSocket автоматически при размонтировании компонента
+//   // return () => {
+//   //   ws.close();
+//   // };
+// }, [active.websocket_url]);
+
+// useEffect(() => {
+//   if (socetActive) {
+//     let message = [
+//       2,
+//       "05b7e2ba-0001-76c1-98eb-d24170053f9a",
+//       "BootNotification",
+//       {
+//         chargePointVendor: active.manufacturer,
+//         chargePointModel: active.model,
+//         chargePointSerialNumber: active.id,
+//         firmwareVersion: "V1.3@cbe040c+58,F0.gl,ws,ESP32",
+//       },
+//     ];
+//     sendMessage(message);
+//   }
+// }, [socetActive]);
+
+// const sendMessage = (messageToSend) => {
+//   console.log("sendMessage");
+//   if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+//     webSocket.send(JSON.stringify(messageToSend));
+//     console.log("Сообщение отправлено:", messageToSend);
+//   } else {
+//     console.log("WebSocket не подключен или не готов к отправке сообщений");
+//   }
+// };
+
+// // Функция для закрытия WebSocket соединения
+// const closeWebSocketConnection = () => {
+//   if (webSocket) {
+//     webSocket.close();
+//     console.log("WebSocket соединение закрыто вручную");
+//     setWebSocket(null); // Сбрасываем состояние
+//   }
+// };

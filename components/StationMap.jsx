@@ -45,8 +45,7 @@ const StationMap = ({ latitude, longitude }) => {
   const [stationInfo, setStationInfo] = useState(null);
   const [, setIsError] = useAtom(error);
   const [active, setActive] = useAtom(activeStation);
-
-
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (active.id !== null) {
@@ -55,13 +54,60 @@ const StationMap = ({ latitude, longitude }) => {
     }
   }, [active.id]);
 
+
+
   async function getStation(id) {
     try {
       const response = await dispatch(fetchStation(id));
+      console.log(response.payload);
+      if (response.payload.location.address1) {
+        setActive((prev) => ({
+          ...prev,
+          address: response.payload.location.address1,
+        }));
+        setActive((prev) => ({
+          ...prev,
+          vehicle: "test",
+        }));
+      }
+      if (response.payload.location.city) {
+        setActive((prev) => ({
+          ...prev,
+          city: response.payload.location.city,
+        }));
+      }
       if (response.payload) {
         setStationInfo(response.payload);
         latitude(response.payload.latitude);
         longitude(response.payload.longitude);
+        if (response.payload.connectors_count > 0) {
+          let array = [];
+          for (
+            let index = 1;
+            index <= response.payload.connectors_count;
+            index++
+          ) {
+            // console.log(response.payload.connectors[`${index}`]["status"])
+            array.push({
+              id: index,
+              busy:
+                response.payload.connectors[`${index}`]["status"] !==
+                "Available",
+            });
+          }
+          setData(array);
+          // console.log('stationInfo',response.payload)
+        } else {
+          setIsError((prev) => ({
+            ...prev,
+            state: true,
+          }));
+          setIsFocused((prevUserState) => ({
+            ...prevUserState,
+            map: false,
+            station: false,
+          }));
+        }
       }
     } catch (error) {
       console.log(error);
@@ -115,7 +161,13 @@ const StationMap = ({ latitude, longitude }) => {
         map: false,
         station: false,
       }));
-      router.push("Station_info");
+      if (activeId !== null) {
+        setActive((prev) => ({
+          ...prev,
+          port_id: activeId,
+        }));
+        router.push("Station_info");
+      }
     }
   };
 
@@ -156,10 +208,10 @@ const StationMap = ({ latitude, longitude }) => {
     }
   }, [activeId]);
 
-  const data = [
-    { id: 1, busy: true },
-    { id: 2, busy: false },
-  ];
+  // const data = [
+  //   { id: 1, busy: true },
+  //   { id: 2, busy: false },
+  // ];
 
   const handleGesture = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],

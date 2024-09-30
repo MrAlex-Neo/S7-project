@@ -31,7 +31,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    console.log("profile", data?.data);
+    // console.log("profile", data?.data);
     if (data?.data?.first_name) {
       setUser((prev) => ({
         ...prev,

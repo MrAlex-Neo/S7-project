@@ -57,11 +57,16 @@ export const authAtom = atom({
 
 
 export const activeStation = atom({
+    city: "test",
+    vehicle: "test",
+    address: "Tashkent",
+    port_id: '',
     id: '',
     websocket_url: '',
     manufacturer: '',
     model: '',
 });
+
 export const focus = atom({
     search: false,
     map: false,

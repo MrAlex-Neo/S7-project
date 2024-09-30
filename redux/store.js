@@ -6,6 +6,7 @@ import { favouriteReducer } from "./slices/favourites";
 import { faqReducer } from "./slices/faq";
 import { payReducer } from "./slices/pay";
 import { chargeReducer } from "./slices/charge";
+import { transactionsReducer } from "./slices/transactions";
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         questions: faqReducer,
         pay: payReducer,
         charge: chargeReducer,
+        transaction: transactionsReducer,
     }
 });
 

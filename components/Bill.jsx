@@ -11,7 +11,7 @@ import { icons } from "../constants";
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
+const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime, date }) => {
   const { t, i18 } = useTranslation();
   const [showAnswer, setShowAnswer] = useState(false);
   const spinValue = useRef(new Animated.Value(0)).current;
@@ -97,7 +97,7 @@ const Bill = ({ spend, num, sum, title, tariff, gbT, chargTime }) => {
           {t("transaction_time")}
         </Text>
         <Text className="text-xs font-robotoRegular color-grayColor-300">
-          11.04.2024 11:45
+          {date.slice(8, 10) + '.' + date.slice(5, 7) + '.' + date.slice(0, 4) + ' ' + date.slice(11, 16)}
         </Text>
       </View>
       <Animated.View style={{ opacity: fadeIn }}>

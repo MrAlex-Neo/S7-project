@@ -23,6 +23,7 @@ const StationCard = ({ busy, station }) => {
     setActive((prev) => ({
       ...prev,
       id: station.charge_point_id,
+      station_id: station.id,
       websocket_url: station.websocket_url,
       manufacturer: station.manufacturer,
       model: station.model,

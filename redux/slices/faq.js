@@ -45,6 +45,5 @@ const FAQSlice = createSlice({
     },
 });
 
-export const selectIsAuth = (state) => Boolean(state.auth.data);
 
 export const { reducer: faqReducer, actions: { logout } } = FAQSlice;

@@ -79,9 +79,10 @@ const MapComponent = ({}) => {
         let array = [];
         for (let index = 0; index < data.results.length; index++) {
           const station = data.results[index];
-          // console.log("station", station);
+          console.log("station", station);
           array.push({
             charge_point_id: station.charge_point_id,
+            station_id: station.id,
             key: station.charge_point_id,
             title: station.location.name,
             websocket_url: station.websocket_url,
@@ -146,6 +147,7 @@ const MapComponent = ({}) => {
       // console.log('stations', stations)
       const formattedMarkers = stations.map((station) => ({
         charge_point_id: station.charge_point_id,
+        station_id: station.station_id,
         websocket_url: station.websocket_url,
         manufacturer: station.manufacturer,
         model: station.model,
@@ -203,9 +205,11 @@ const MapComponent = ({}) => {
             title={marker.title}
             tracksViewChanges={false}
             onPress={() => {
+              console.log(active)
               setActive((prev) => ({
                 ...prev,
                 id: marker.charge_point_id,
+                station_id: marker.station_id,
                 websocket_url: marker.websocket_url,
                 manufacturer: marker.manufacturer,
                 model: marker.model,

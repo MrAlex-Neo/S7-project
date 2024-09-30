@@ -41,27 +41,25 @@ const Station_info = () => {
 
   useEffect(() => {
     dispatch(fetchAuthMe());
-
     async function getPlansFunction() {
       let response = await dispatch(fetchGetPlans());
-
       const lang = await AsyncStorage.getItem("lang");
       let array = [];
       if (lang === "en") {
         for (let index = 0; index < response.payload.length; index++) {
           array.push(response.payload[index].description_en);
         }
-        console.log("array", array);
+        // console.log("array", array);
       } else if (lang === "ru") {
         for (let index = 0; index < response.payload.length; index++) {
           array.push(response.payload[index].description_ru);
         }
-        console.log("array", array);
+        // console.log("array", array);
       } else if (lang === "uz") {
         for (let index = 0; index < response.payload.length; index++) {
           array.push(response.payload[index].description_uz);
         }
-        console.log("array", array);
+        // console.log("array", array);
       } else {
         console.log("lang none");
       }
@@ -97,7 +95,7 @@ const Station_info = () => {
     } catch (error) {}
   };
   const planInfoHandler = (e) => {
-    console.log(e);
+    // console.log(e);
     setPlanInfo(e);
   };
   return (

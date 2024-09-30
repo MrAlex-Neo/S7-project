@@ -7,19 +7,36 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import ImgButton from "../../components/ImgButton";
-import { images } from "../../constants";
-import { icons } from "../../constants";
-import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Bill from "../../components/Bill";
 import { CommonActions } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAuthMe } from "../../redux/slices/auth.js";
 
 const History = () => {
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
+  const dispatch = useDispatch();
+  const [arrayBills, setArrayBills] = useState([]);
+
+  const getBills = async () => {
+    try {
+      let response = await dispatch(fetchAuthMe());
+      if (response.payload.data.transactions) {
+        // console.log("bills", response.payload.data.transactions);
+        setArrayBills(response.payload.data.transactions);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getBills();
+  }, []);
+
   const resetStack = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -28,8 +45,9 @@ const History = () => {
       })
     );
   };
+
   return (
-    <SafeAreaView className="bg-white h-[100vh] absolute bottom-0">
+    <SafeAreaView className="bg-white h-[100vh] w-[100vw] absolute bottom-0">
       <View
         className={`w-full flex-1 pb-[1vh] px-[5vw] bg-white ${
           Platform.OS !== "android" ? "pt-[2vh]" : "pt-[4vh]"
@@ -46,17 +64,24 @@ const History = () => {
             {t("history")}
           </Text>
         </View>
-        <View className="py-[2vh]">
+        <View className="py-[2vh] w-[100%]">
           <ScrollView vertical showsVerticalScrollIndicator={false}>
-            <Bill
-              spend={true}
-              title="Ташкент, ТЦ Ривьера"
-              sum={21600}
-              tariff={2000}
-              gbT={10.8}
-              chargTime={50}
-            />
-            <Bill spend={false} num={1000000} />
+            {arrayBills.map((elem, index) => {
+              {
+                console.log(elem);
+              }
+              if (elem.amount && elem.created_at && elem.status === 2) {
+                return (
+                  <Bill
+                    key={index}
+                    spend={elem.status === 2 ? false : true}
+                    num={elem.amount}
+                    date={elem.created_at}
+                  />
+                );
+              }
+            })}
+            {/* <Bill spend={false} num={1000000} />
             <Bill spend={false} num={1200} />
             <Bill spend={false} num={9999} />
             <Bill
@@ -74,8 +99,8 @@ const History = () => {
               tariff={2000}
               gbT={2.3}
               chargTime={10}
-            />
-            <Bill spend={false} num={10000000} />
+            /> */}
+            {/* <Bill spend={false} num={10000000} /> */}
           </ScrollView>
         </View>
       </View>

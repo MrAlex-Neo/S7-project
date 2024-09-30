@@ -6,12 +6,24 @@ import { images } from "../../constants";
 import PrimaryButton from "../../components/PrimaryButton";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
-import animation from '../../assets/s7/animation.json'
+import animation from "../../assets/s7/animation.json";
+import { activeStation } from "../../values/atom/myAtoms";
+import { useAtom } from "jotai";
 
 const Charge_end = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
+  const [active, setActive] = useAtom(activeStation);
   const resetStack = () => {
+    setActive({
+      city: "test",
+      vehicle: "test",
+      address: "Tashkent",
+      id: "",
+      websocket_url: "",
+      manufacturer: "",
+      model: "",
+    });
     navigation.dispatch(
       CommonActions.reset({
         index: 0,

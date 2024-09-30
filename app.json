@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "S7",
+    "name": "S7 Energy",
     "slug": "s7",
     "scheme": "s7",
     "platforms": [
@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.6",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/iconS7.png",
     "userInterfaceStyle": "light",
@@ -23,7 +23,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.myapp.s7",
-      "buildNumber": "1.0.6",
+      "buildNumber": "1.0.9",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes.",
         "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
@@ -48,7 +48,7 @@
         "android.permission.INTERNET"
       ],
       "package": "com.alex_neo_2024.s7",
-      "versionCode": 6
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -75,9 +75,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0558a2e4-192f-4b63-aafe-c8128ef86fbc"
+        "projectId": "f08d09dd-579e-44f2-97d3-09bfb4a98f63"
       }
     },
-    "owner": "alex_neo_2032"
+    "owner": "alex_neo_2033"
   }
 }
