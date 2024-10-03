@@ -14,14 +14,22 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { useTranslation } from "react-i18next";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { icons, images } from "../../constants";
+import { activeStation, focus } from "../../values/atom/myAtoms";
+import { useAtom } from "jotai";
+import { useDispatch } from "react-redux";
+import { fetchStation } from "../../redux/slices/stations";
 
 const CameraPage = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
+  const [scannedWrong, setScannedWrong] = useState(false);
   const [scannedData, setScannedData] = useState("");
   const [flashlightEnabled, setFlashlightEnabled] = useState(false);
   const navigation = useNavigation();
+  const [isFocused, setIsFocused] = useAtom(focus);
+  const [active, setActive] = useAtom(activeStation);
 
   if (!permission) {
     return <View />;
@@ -42,23 +50,49 @@ const CameraPage = () => {
       </View>
     );
   }
-
-  const handleBarCodeScanned = (event) => {
-    setScanned(true);
-    setScannedData(event.data);
-    console.log("QR code scanned:", event);
+  async function getStation(id) {
+    try {
+      const response = await dispatch(fetchStation(id));
+      // console.log(response);
+      if (
+        response.payload !== undefined &&
+        response.payload.charge_point_id !== undefined
+      ) {
+        setIsFocused((prevUserState) => ({
+          ...prevUserState,
+          map: false,
+          station: true,
+        }));
+        setActive((prev) => ({
+          ...prev,
+          id: response.payload.charge_point_id,
+        }));
+        navigation.navigate("map")
+      } else {
+        setScanned(false)
+        setScannedWrong(true);
+        setScannedData(event.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleBarCodeScanned = async (event) => {
+    if (!scanned) {
+      setScanned(true);
+      await getStation(event.data);
+      console.log("QR code scanned:", event.data);
+    }
   };
 
   const handleScanAgain = () => {
     setScanned(false);
+    setScannedWrong(false)
     setScannedData("");
   };
 
   const toggleFlashlight = () => {
     setFlashlightEnabled((prev) => !prev);
-  };
-  const toggleFlashMode = () => {
-    setFlashMode(flashMode === FLASH_MODE.on ? FLASH_MODE.off : FLASH_MODE.on);
   };
 
   return (
@@ -112,15 +146,20 @@ const CameraPage = () => {
           }`}
         />
       </TouchableOpacity>
-      {scanned && (
+      {scannedWrong && (
         <Modal transparent={true} animationType="slide" visible={scanned}>
           <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.scannedText}>QR код отсканирован!</Text>
-              <Text style={styles.scannedData}>Данные: {scannedData}</Text>
+            <View style={styles.modalContent} className="w-[90vw]">
+              <Text style={styles.scannedText} className="text-center">
+                Ошибка при получении данных о станции!
+              </Text>
+              <Text style={styles.scannedData} className="text-center">
+                Попробуйте отсканировать снова
+              </Text>
+              {/* <Text style={styles.scannedData} className="text-center">Данные: {scannedData}</Text> */}
               <PrimaryButton
-                title={t("next")}
-                containerStyles="bg-secondary text-sm"
+                title={t("try")}
+                containerStyles="bg-secondary text-sm w-[100%]"
                 textStyles="text-white"
                 handlePress={handleScanAgain}
               />

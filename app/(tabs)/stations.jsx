@@ -6,7 +6,11 @@ import StationCard from "../../components/StationCard.jsx";
 import { useAtom } from "jotai";
 import { focus } from "../../values/atom/myAtoms.js";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchStations, fetchStationSearch } from "../../redux/slices/stations.js";
+import {
+  fetchStations,
+  fetchStationSearch,
+} from "../../redux/slices/stations.js";
+import StationCardSkeleton from "../../components/skeleton/StationCardSkeleton.jsx";
 
 import { error } from "../../values/atom/myAtoms.js";
 
@@ -17,25 +21,27 @@ const Stations = () => {
   const stations = useSelector((state) => state.stations.items); // Assuming stations.items is where the stations list is stored
   const [list, setList] = useState([]);
   const [isError, setIsError] = useAtom(error);
-  const [value, setValue] = useState('')
+  const [isDataLoading, setIsDataLoading] = useState(true);
+  const [value, setValue] = useState("");
   const valueHandler = (e) => {
-    setValue(e)
-  }
-
+    setValue(e);
+  };
 
   useEffect(() => {
+    setList([])
+    setIsDataLoading(true)
     getAllStations();
   }, [value]);
-
 
   async function getAllStations() {
     try {
       const response = await dispatch(fetchStationSearch(value));
-      console.log(response)
-      console.log(response.payload.results)
+      console.log(response);
+      console.log(response.payload.results);
       setList(response.payload.results); // Assuming response.payload contains the stations list
+      setIsDataLoading(false)
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setIsError((prev) => ({
         ...prev,
         state: true,
@@ -50,10 +56,17 @@ const Stations = () => {
           {t("stations")}
         </Text>
         <View className="py-[2vh]">
-          <SearchInput valueHandler={valueHandler} placeholder={t("searchText")} />
+          <SearchInput
+            valueHandler={valueHandler}
+            placeholder={t("searchText")}
+          />
         </View>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
-          {list.length > 0 ? (
+          {isDataLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <StationCardSkeleton key={index} />
+            ))
+          ) : list.length > 0 ? (
             <View
               className={`flex-col ${
                 Platform.OS === "android" ? "pb-[10vh]" : "pb-[8vh]"
@@ -64,14 +77,16 @@ const Stations = () => {
                   key={id}
                   station={elem}
                   busy={elem.is_enabled === "true"}
-                /> 
+                />
               ))}
             </View>
           ) : (
-            null
-            // <Text className="p-[1vh] font-robotoRegular text-xl">
-            //   Ошибка в получении списка
-            // </Text>
+            <Text className="mx-[1vh] my-[2vh] text-center font-robotoLight text-base">
+              {t('stations_2')}{t('stations_3')}{" "}
+              <Text className="color-secondary font-robotoBold">
+                @s7support
+              </Text>
+            </Text>
           )}
         </ScrollView>
       </View>

@@ -5,15 +5,19 @@ import { useTranslation } from "react-i18next";
 import StationCard from "../../components/StationCard.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuthMe } from "../../redux/slices/auth.js";
+import StationCardSkeleton from "../../components/skeleton/StationCardSkeleton.jsx";
 
 const Favourites = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const data = useSelector((state) => state.auth.data);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
+    setFilteredData([]);
+    setIsDataLoading(true);
     dispatch(fetchAuthMe());
   }, []);
 
@@ -32,6 +36,7 @@ const Favourites = () => {
         );
       });
       setFilteredData(filtered);
+      setIsDataLoading(false)
     }
   }, [value, data]);
 
@@ -46,10 +51,17 @@ const Favourites = () => {
           {t("favourites")}
         </Text>
         <View className="py-[2vh]">
-          <SearchInput valueHandler={valueHandler} placeholder={t("searchText")} />
+          <SearchInput
+            valueHandler={valueHandler}
+            placeholder={t("searchText")}
+          />
         </View>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
-          {filteredData.length > 0 ? (
+          {isDataLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <StationCardSkeleton key={index} />
+            ))
+          ) : filteredData.length > 0 ? (
             <View
               className={`flex-col ${
                 Platform.OS === "android" ? "pb-[10vh]" : "pb-[8vh]"
@@ -64,8 +76,8 @@ const Favourites = () => {
               ))}
             </View>
           ) : (
-            <Text className="p-[1vh] font-robotoRegular text-xl">
-              ...
+            <Text className="mx-[1vh] my-[2vh] text-center font-robotoLight text-base">
+              {t('stations_2')}{" "}
             </Text>
           )}
         </ScrollView>

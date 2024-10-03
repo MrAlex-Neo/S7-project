@@ -15,11 +15,13 @@ import Bill from "../../components/Bill";
 import { CommonActions } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuthMe } from "../../redux/slices/auth.js";
+import BillSkeleton from "../../components/skeleton/BillSkeleton.jsx";
 
 const History = () => {
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
   const dispatch = useDispatch();
+  const [isDataLoading, setIsDataLoading] = useState(true);
   const [arrayBills, setArrayBills] = useState([]);
 
   const getBills = async () => {
@@ -28,12 +30,15 @@ const History = () => {
       if (response.payload.data.transactions) {
         // console.log("bills", response.payload.data.transactions);
         setArrayBills(response.payload.data.transactions);
+        setIsDataLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
+    setArrayBills([]);
+    setIsDataLoading(true);
     getBills();
   }, []);
 
@@ -66,22 +71,48 @@ const History = () => {
         </View>
         <View className="py-[2vh] w-[100%]">
           <ScrollView vertical showsVerticalScrollIndicator={false}>
-            {arrayBills.map((elem, index) => {
-              {
-                console.log(elem);
-              }
-              if (elem.amount && elem.created_at && elem.status === 2) {
-                return (
-                  <Bill
-                    key={index}
-                    spend={elem.status === 2 ? false : true}
-                    num={elem.amount}
-                    date={elem.created_at}
-                  />
-                );
-              }
-            })}
-            {/* <Bill spend={false} num={1000000} />
+            {isDataLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <BillSkeleton key={index} />
+              ))
+            ) : arrayBills.length > 0 ? (
+              <View
+                className={`flex-col ${
+                  Platform.OS === "android" ? "pb-[10vh]" : "pb-[8vh]"
+                }`}
+              >
+                {arrayBills.map((elem, index) => {
+                  {
+                    console.log(elem);
+                  }
+                  if (elem.amount && elem.created_at && elem.status === 2) {
+                    return (
+                      <Bill
+                        key={index}
+                        spend={elem.status === 2 ? false : true}
+                        num={elem.amount}
+                        date={elem.created_at}
+                      />
+                    );
+                  }
+                })}
+              </View>
+            ) : (
+              <Text className="mx-[1vh] my-[2vh] text-center font-robotoLight text-base">
+                {t('history_1')}
+              </Text>
+            )}
+          </ScrollView>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default History;
+
+{
+  /* <Bill spend={false} num={1000000} />
             <Bill spend={false} num={1200} />
             <Bill spend={false} num={9999} />
             <Bill
@@ -99,13 +130,8 @@ const History = () => {
               tariff={2000}
               gbT={2.3}
               chargTime={10}
-            /> */}
-            {/* <Bill spend={false} num={10000000} /> */}
-          </ScrollView>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-export default History;
+            /> */
+}
+{
+  /* <Bill spend={false} num={10000000} /> */
+}

@@ -44,7 +44,7 @@ const FaqItem = ({ question, answer }) => {
   });
 
   return (
-    <View className="w-full px-[4vw] py-[3vh] border-2 border-grayColor-400 rounded-2xl mb-[2vh]">
+    <View className="w-full px-[4vw] py-[2vh] border-2 border-grayColor-400 rounded-2xl mb-[2vh]">
       <View className="flex-row justify-between items-center">
         <Text className="w-[90%] font-robotoBold text-lg">{question}</Text>
         <TouchableOpacity onPress={toggleAnswer} className="p-[4vw]">
@@ -65,7 +65,7 @@ const FaqItem = ({ question, answer }) => {
                 width: "90%",
                 margin: "auto",
               }}
-              className="my-[3vh]"
+              className="mb-[3vh] mt-[2vh]"
             ></View>
             <Text className="font-robotoRegular text-base color-grayColor-300">{answer}</Text>
           </View>

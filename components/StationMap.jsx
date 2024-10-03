@@ -31,30 +31,30 @@ import {
 import { useDispatch } from "react-redux";
 import { error } from "../values/atom/myAtoms";
 import { activeStation } from "../values/atom/myAtoms";
+import StationPortSkeleton from "./skeleton/StationPortSkeleton";
 
 const StationMap = ({ latitude, longitude }) => {
   const dispatch = useDispatch();
   const { t, i18 } = useTranslation();
-  const [isFocused, setIsFocused] = useAtom(focus);
-  const [isMistake, setIsMistake] = useAtom(mistake);
+  const [, setIsFocused] = useAtom(focus);
+  const [, setIsMistake] = useAtom(mistake);
   const translateY = useRef(new Animated.Value(0)).current;
   const [activeId, setActiveId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(true);
   const [like, setLike] = useState(false);
   const [hasToken, setHasToken] = useState(false);
   const [stationInfo, setStationInfo] = useState(null);
   const [, setIsError] = useAtom(error);
   const [active, setActive] = useAtom(activeStation);
   const [data, setData] = useState([]);
-
   useEffect(() => {
     if (active.id !== null) {
       getStation(active.id);
       myFavouritesStations();
     }
+    setData([]);
   }, [active.id]);
-
-
 
   async function getStation(id) {
     try {
@@ -96,17 +96,20 @@ const StationMap = ({ latitude, longitude }) => {
             });
           }
           setData(array);
+          setIsDataLoading(false);
           // console.log('stationInfo',response.payload)
         } else {
-          setIsError((prev) => ({
-            ...prev,
-            state: true,
-          }));
-          setIsFocused((prevUserState) => ({
-            ...prevUserState,
-            map: false,
-            station: false,
-          }));
+          setIsDataLoading(false);
+
+          // setIsError((prev) => ({
+          //   ...prev,
+          //   state: true,
+          // }));
+          // setIsFocused((prevUserState) => ({
+          //   ...prevUserState,
+          //   map: false,
+          //   station: false,
+          // }));
         }
       }
     } catch (error) {
@@ -208,11 +211,6 @@ const StationMap = ({ latitude, longitude }) => {
     }
   }, [activeId]);
 
-  // const data = [
-  //   { id: 1, busy: true },
-  //   { id: 2, busy: false },
-  // ];
-
   const handleGesture = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
     { useNativeDriver: false }
@@ -271,13 +269,17 @@ const StationMap = ({ latitude, longitude }) => {
             </View>
           </PanGestureHandler>
           <View className="flex-row items-center justify-between w-[100%]">
-            <Text
-              className="font-robotoMedium text-xl w-[60vw]"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {stationInfo.location.name}
-            </Text>
+            {isDataLoading ? (
+              <Text className="ml-[2vw] text-base font-robotoMedium">...</Text>
+            ) : (
+              <Text
+                className="font-robotoMedium text-xl w-[60vw]"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {stationInfo.location.name}
+              </Text>
+            )}
             <View className="flex-row items-center justify-between">
               <View>
                 <Image source={icons.clock} className="w-[5vw] h-[5vw]" />
@@ -293,14 +295,27 @@ const StationMap = ({ latitude, longitude }) => {
           </View>
           <View>
             <ScrollView vertical showsVerticalScrollIndicator={false}>
-              {data.map((item) => (
-                <StationPort
-                  key={item.id}
-                  busy={item.busy}
-                  isActive={activeId === item.id}
-                  onPress={() => handlePress(item.id)}
-                />
-              ))}
+              {isDataLoading ? ( // Отображаем Skeleton, пока идет загрузка
+                Array.from({ length: 2 }).map((_, index) => (
+                  <StationPortSkeleton key={index} />
+                ))
+              ) : data.length !== 0 ? (
+                data.map((item) => (
+                  <StationPort
+                    key={item.id}
+                    busy={item.busy}
+                    isActive={activeId === item.id}
+                    onPress={() => handlePress(item.id)}
+                  />
+                ))
+              ) : (
+                <Text className="mx-[1vh] my-[2vh] text-center font-robotoLight text-base">
+                  {t('stations_1')}{" "}
+                  <Text className="color-secondary font-robotoBold">
+                    @s7support
+                  </Text>
+                </Text>
+              )}
               <View className="w-full flex-row justify-between mt-[2vh] pb-[2vh]">
                 <PrimaryButton
                   title={t("route")}

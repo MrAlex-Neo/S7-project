@@ -131,16 +131,6 @@ const MapComponent = ({}) => {
     requestLocationPermission();
   }, []);
 
-  // useEffect(() => {
-  //   if (!locationPermissionGranted) {
-  //     mapRef.current.animateToRegion({
-  //       latitude: initialRegion.latitude,
-  //       longitude: initialRegion.longitude,
-  //       latitudeDelta: initialRegion.latitudeDelta,
-  //       longitudeDelta: initialRegion.longitudeDelta,
-  //     });
-  //   }
-  // }, [locationPermissionGranted]);
 
   useEffect(() => {
     if (stations.length > 0) {
@@ -386,6 +376,19 @@ const styles = StyleSheet.create({
     height: Platform.OS === "android" ? 35 : 40,
   },
 });
+
+
+
+  // useEffect(() => {
+  //   if (!locationPermissionGranted) {
+  //     mapRef.current.animateToRegion({
+  //       latitude: initialRegion.latitude,
+  //       longitude: initialRegion.longitude,
+  //       latitudeDelta: initialRegion.latitudeDelta,
+  //       longitudeDelta: initialRegion.longitudeDelta,
+  //     });
+  //   }
+  // }, [locationPermissionGranted]);
 
 // const handleLocationButtonPress = () => {
 //   if (locationPermissionGranted) {
