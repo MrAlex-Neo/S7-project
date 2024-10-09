@@ -25,7 +25,7 @@ const CameraPage = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [scannedWrong, setScannedWrong] = useState(false);
-  const [scannedData, setScannedData] = useState("");
+  // const [scannedData, setScannedData] = useState("");
   const [flashlightEnabled, setFlashlightEnabled] = useState(false);
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useAtom(focus);
@@ -53,7 +53,7 @@ const CameraPage = () => {
   async function getStation(id) {
     try {
       const response = await dispatch(fetchStation(id));
-      // console.log(response);
+      console.log(response);
       if (
         response.payload !== undefined &&
         response.payload.charge_point_id !== undefined
@@ -71,24 +71,32 @@ const CameraPage = () => {
       } else {
         setScanned(false)
         setScannedWrong(true);
-        setScannedData(event.data);
+        console.log('mistake')
+        // setScannedData(event.data);
       }
     } catch (error) {
       console.log(error);
     }
   }
-  const handleBarCodeScanned = async (event) => {
-    if (!scanned) {
-      setScanned(true);
-      await getStation(event.data);
-      console.log("QR code scanned:", event.data);
+  const handleBarCodeScanned = (event) => {
+    try {
+      if (!scanned) {
+        setScanned(true);
+        if (event !== null) {
+          console.log('event', event)
+          getStation(event.data);
+          console.log("QR code scanned:", event.data);
+        }
+      }
+    } catch (error) {
+      console.log(error)
     }
   };
 
   const handleScanAgain = () => {
     setScanned(false);
     setScannedWrong(false)
-    setScannedData("");
+    // setScannedData("");
   };
 
   const toggleFlashlight = () => {
@@ -147,7 +155,7 @@ const CameraPage = () => {
         />
       </TouchableOpacity>
       {scannedWrong && (
-        <Modal transparent={true} animationType="slide" visible={scanned}>
+        <Modal transparent={true} animationType="slide" visible={scannedWrong}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent} className="w-[90vw]">
               <Text style={styles.scannedText} className="text-center">
@@ -156,7 +164,6 @@ const CameraPage = () => {
               <Text style={styles.scannedData} className="text-center">
                 Попробуйте отсканировать снова
               </Text>
-              {/* <Text style={styles.scannedData} className="text-center">Данные: {scannedData}</Text> */}
               <PrimaryButton
                 title={t("try")}
                 containerStyles="bg-secondary text-sm w-[100%]"

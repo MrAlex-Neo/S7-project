@@ -24,8 +24,8 @@ const StationSlider = ({ plans, planInfo }) => {
     let obj = {};
     if (myArray[path].cost !== null) {
       obj = {
+        amount: parseInt(myArray[path].cost),
         plan_type: myArray[path].type,
-        amount: myArray[path].cost,
       };
     } else {
       obj = {

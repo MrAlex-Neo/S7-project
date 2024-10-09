@@ -79,22 +79,25 @@ const MapComponent = ({}) => {
         let array = [];
         for (let index = 0; index < data.results.length; index++) {
           const station = data.results[index];
-          console.log("station", station);
-          array.push({
-            charge_point_id: station.charge_point_id,
-            station_id: station.id,
-            key: station.charge_point_id,
-            title: station.location.name,
-            websocket_url: station.websocket_url,
-            manufacturer: station.manufacturer,
-            model: station.model,
-            coordinate: {
-              latitude: parseFloat(station.latitude), // Преобразуем в float, если это строки
-              longitude: parseFloat(station.longitude),
-            },
-            state: [true, "not_working"],
-          });
-        }
+          // console.log("station", station.connectors[1]);
+          if (station.connectors[1] !== undefined && station.connectors[2] !== undefined) {
+            array.push({
+              charge_point_id: station.charge_point_id,
+              station_id: station.id,
+              key: station.charge_point_id,
+              title: station.location.name,
+              websocket_url: station.websocket_url,
+              manufacturer: station.manufacturer,
+              model: station.model,
+              connectors: station.connectors,
+              coordinate: {
+                latitude: parseFloat(station.latitude), // Преобразуем в float, если это строки
+                longitude: parseFloat(station.longitude),
+              },
+              state: [true, "not_working"],
+            });
+          }
+          }
         setStations(array);
       }
     } catch (error) {
@@ -131,7 +134,6 @@ const MapComponent = ({}) => {
     requestLocationPermission();
   }, []);
 
-
   useEffect(() => {
     if (stations.length > 0) {
       // console.log('stations', stations)
@@ -143,6 +145,7 @@ const MapComponent = ({}) => {
         model: station.model,
         key: station.key,
         title: station.title,
+        connectors: station.connectors,
         coordinate: {
           latitude: station.coordinate.latitude,
           longitude: station.coordinate.longitude,
@@ -154,17 +157,46 @@ const MapComponent = ({}) => {
   }, [stations]);
 
   const getMarkerImageSource = (state) => {
-    let obj = {
-      one: state[0],
-      two: state[1],
-    };
+    let obj = {}
+    if (state[1] !== undefined) {
+      // console.log(state[1].status)
+      if (state[2] !== undefined) {
+        obj = {
+          one: state[1].status === 'Available' ? true : state[1].status === 'Preparing' ? false : 'not_working',
+          two: state[2].status === 'Available' ? true : state[2].status === 'Preparing' ? false : 'not_working',
+        };
+      }else{
+        obj = {
+          one: 'not_working',
+          two: 'not_working',
+        };
+      }
+    }else{
+      obj = {
+        one: 'not_working',
+        two: 'not_working',
+      };
+    }
+    // if (state[1] && state[1].status) {
+    //   console.log("Status:", state[1].status);
+    // } else {
+    //   console.error("state[1] не определен или не содержит статус");
+    // }
+
+    // if (state.length === 2) {
+    //   for (let index = 0; index < state.length; index++) {
+    //     const element = array[index];
+    //   }
+    // } else {
+    // }
     return obj;
   };
 
-  const CustomMarker = ({ marker, getMarkerImageSource }) => {
+  const CustomMarker = ({ marker }) => {
     const isFocused = useIsFocused();
-    const obj = getMarkerImageSource(marker.state);
-    // console.log("marker", marker);
+    const obj = getMarkerImageSource(marker.connectors);
+    // console.log(obj)
+    // console.log("marker", marker.state);
 
     return (
       <>
@@ -195,7 +227,7 @@ const MapComponent = ({}) => {
             title={marker.title}
             tracksViewChanges={false}
             onPress={() => {
-              console.log(active)
+              // console.log(active);
               setActive((prev) => ({
                 ...prev,
                 id: marker.charge_point_id,
@@ -337,7 +369,6 @@ const MapComponent = ({}) => {
           <CustomMarker
             key={marker.key} // и здесь
             marker={marker}
-            getMarkerImageSource={getMarkerImageSource}
           />
         ))}
       </MapView>
@@ -377,18 +408,16 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-  // useEffect(() => {
-  //   if (!locationPermissionGranted) {
-  //     mapRef.current.animateToRegion({
-  //       latitude: initialRegion.latitude,
-  //       longitude: initialRegion.longitude,
-  //       latitudeDelta: initialRegion.latitudeDelta,
-  //       longitudeDelta: initialRegion.longitudeDelta,
-  //     });
-  //   }
-  // }, [locationPermissionGranted]);
+// useEffect(() => {
+//   if (!locationPermissionGranted) {
+//     mapRef.current.animateToRegion({
+//       latitude: initialRegion.latitude,
+//       longitude: initialRegion.longitude,
+//       latitudeDelta: initialRegion.latitudeDelta,
+//       longitudeDelta: initialRegion.longitudeDelta,
+//     });
+//   }
+// }, [locationPermissionGranted]);
 
 // const handleLocationButtonPress = () => {
 //   if (locationPermissionGranted) {

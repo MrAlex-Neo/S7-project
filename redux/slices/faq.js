@@ -10,6 +10,14 @@ export const fetchFaq = createAsyncThunk('other/faq', async () => {
         throw Error(error.response.data.message);
     }
 });
+export const fetchContact = createAsyncThunk('other/contact', async () => {
+    try {
+        const { data } = await axios.get('/api/v1/users/contact/');
+        return data;
+    } catch (error) {
+        throw Error(error.response.data.message);
+    }
+});
 
 
 
@@ -39,6 +47,17 @@ const FAQSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(fetchFaq.rejected, (state) => {
+                state.status = 'error';
+                state.data = null;
+            })
+            .addCase(fetchContact.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchContact.fulfilled, (state, action) => {
+                state.status = 'loaded';
+                state.data = action.payload;
+            })
+            .addCase(fetchContact.rejected, (state) => {
                 state.status = 'error';
                 state.data = null;
             })

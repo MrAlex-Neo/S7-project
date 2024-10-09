@@ -60,7 +60,7 @@ const StationMap = ({ latitude, longitude }) => {
     try {
       const response = await dispatch(fetchStation(id));
       console.log(response.payload);
-      if (response.payload.location.address1) {
+      if (response.payload && response.payload.location.address1) {
         setActive((prev) => ({
           ...prev,
           address: response.payload.location.address1,
@@ -70,7 +70,7 @@ const StationMap = ({ latitude, longitude }) => {
           vehicle: "test",
         }));
       }
-      if (response.payload.location.city) {
+      if (response.payload && response.payload.location.city) {
         setActive((prev) => ({
           ...prev,
           city: response.payload.location.city,
@@ -87,13 +87,15 @@ const StationMap = ({ latitude, longitude }) => {
             index <= response.payload.connectors_count;
             index++
           ) {
-            // console.log(response.payload.connectors[`${index}`]["status"])
-            array.push({
-              id: index,
-              busy:
-                response.payload.connectors[`${index}`]["status"] !==
-                "Available",
-            });
+            console.log(response.payload.connectors[`${index}`]["status"])
+            if (index <= 2) {
+              array.push({
+                id: index,
+                busy:
+                  response.payload.connectors[`${index}`]["status"] !==
+                  "Available",
+              });
+            }
           }
           setData(array);
           setIsDataLoading(false);

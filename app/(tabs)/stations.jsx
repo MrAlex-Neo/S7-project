@@ -28,18 +28,29 @@ const Stations = () => {
   };
 
   useEffect(() => {
-    setList([])
-    setIsDataLoading(true)
+    setList([]);
+    setIsDataLoading(true);
     getAllStations();
   }, [value]);
 
   async function getAllStations() {
     try {
       const response = await dispatch(fetchStationSearch(value));
-      console.log(response);
-      console.log(response.payload.results);
-      setList(response.payload.results); // Assuming response.payload contains the stations list
-      setIsDataLoading(false)
+      // console.log(response);
+      // console.log(response.payload.results);
+      let array = [];
+      for (let index = 0; index < response.payload.results.length; index++) {
+        const element = response.payload.results[index];
+        console.log(element.connectors);
+        if (
+          element.connectors[1] !== undefined &&
+          element.connectors[2] !== undefined
+        ) {
+          array.push(element);
+        }
+      }
+      setList(array); // Assuming response.payload contains the stations list
+      setIsDataLoading(false);
     } catch (error) {
       console.log(error);
       setIsError((prev) => ({
@@ -82,7 +93,8 @@ const Stations = () => {
             </View>
           ) : (
             <Text className="mx-[1vh] my-[2vh] text-center font-robotoLight text-base">
-              {t('stations_2')}{t('stations_3')}{" "}
+              {t("stations_2")}
+              {t("stations_3")}{" "}
               <Text className="color-secondary font-robotoBold">
                 @s7support
               </Text>

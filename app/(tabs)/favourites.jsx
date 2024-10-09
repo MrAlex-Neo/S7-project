@@ -23,7 +23,7 @@ const Favourites = () => {
 
   useEffect(() => {
     if (data?.data?.saved) {
-      const filtered = data.data.saved.filter((elem) => {
+      let filtered = data.data.saved.filter((elem) => {
         const address1 = elem.location.address1.toLowerCase();
         const description = elem.description.toLowerCase();
         const name = elem.location.name.toLowerCase();
@@ -35,7 +35,19 @@ const Favourites = () => {
           name.includes(searchValue)
         );
       });
-      setFilteredData(filtered);
+
+
+      let array = [];
+      for (let index = 0; index < filtered.length; index++) {
+        const element = filtered[index];
+        if (
+          element.connectors[1] !== undefined &&
+          element.connectors[2] !== undefined
+        ) {
+          array.push(element);
+        }
+      }
+      setFilteredData(array);
       setIsDataLoading(false)
     }
   }, [value, data]);

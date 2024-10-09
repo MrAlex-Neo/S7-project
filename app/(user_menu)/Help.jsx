@@ -7,17 +7,21 @@ import {
   Platform,
   Linking,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ImgButton from "../../components/ImgButton";
 import { images } from "../../constants";
 import { icons } from "../../constants";
-import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useNavigation, CommonActions } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { fetchContact } from "../../redux/slices/faq";
 
 const Help = () => {
   const navigation = useNavigation();
   const { t, i18 } = useTranslation();
+  const dispatch = useDispatch();
+  const [tgName, setTGname] = useState(null);
+  const [number, setNumber] = useState(null);
 
   const resetStack = () => {
     navigation.dispatch(
@@ -28,12 +32,30 @@ const Help = () => {
     );
   };
 
+  useEffect(() => {
+    async function getHelpData() {
+      const response = await dispatch(fetchContact());
+      console.log(response);
+      try {
+        if (response.payload.phone) {
+          setNumber(response.payload.phone)
+        }
+        if (response.payload.tg) {
+          setTGname(response.payload.tg);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getHelpData();
+  }, []);
+
   // Функция для открытия профиля в Telegram
 
   const openTelegramProfile = () => {
     const telegramUrl = Platform.select({
-      ios: `https://t.me/s7support`,
-      android: `tg://resolve?domain=s7support`,
+      ios: `https://t.me/${tgName}`,
+      android: `tg://resolve?domain=${tgName}`,
     });
     const telegramApp = Platform.select({
       ios: `https://apps.apple.com/ru/app/telegram-messenger/id686449807`,
@@ -50,12 +72,10 @@ const Help = () => {
       .catch((err) => console.error("Ошибка открытия Telegram: ", err));
   };
   const openNumber = () => {
-    let phoneUrl = "";
-
     if (Platform.OS === "android") {
-      phoneUrl = `tel:${936734004}`; // Схема для Android
+      phoneUrl = `tel:${number}`; // Схема для Android
     } else {
-      phoneUrl = `telprompt:${936734004}`; // Специальная схема для iOS
+      phoneUrl = `telprompt:${number}`; // Специальная схема для iOS
     }
 
     Linking.canOpenURL(phoneUrl)
@@ -90,7 +110,7 @@ const Help = () => {
           </Text>
         </View>
         <View>
-          <TouchableOpacity onPress={openNumber}>
+          <TouchableOpacity onPress={number !== null && openNumber}>
             <View className="flex-row items-center p-[3vh] border-2 border-grayColor-400 rounded-2xl mt-[4vh]">
               <Image source={icons.callUs} className="w-[5vh] h-[5vh]" />
               <Text className="ml-[5vw] text-lg font-robotoMedium">
@@ -98,7 +118,7 @@ const Help = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={openTelegramProfile}>
+          <TouchableOpacity onPress={tgName !== null && openTelegramProfile}>
             <View className="flex-row items-center p-[3vh] border-2 border-grayColor-400 rounded-2xl mt-[2vh]">
               <Image source={icons.tg} className="w-[5vh] h-[5vh]" />
               <Text className="ml-[5vw] text-lg font-robotoMedium">

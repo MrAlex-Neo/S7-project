@@ -37,11 +37,11 @@ const Map = () => {
 
     // Выведите количество страниц в истории
     const routeCount = state.routes.length;
-    console.log("Number of pages in history:", routeCount);
+    // console.log("Number of pages in history:", routeCount);
 
     // Или для более детализированного вывода
-    console.log("Navigation state:", state);
-    console.log("Routes:", state.routes);
+    // console.log("Navigation state:", state);
+    // console.log("Routes:", state.routes);
   }, [navigation]);
 
   useEffect(() => {

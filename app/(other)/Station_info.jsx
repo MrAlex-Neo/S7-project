@@ -78,6 +78,7 @@ const Station_info = () => {
   };
   const checkPlanHandler = async () => {
     try {
+      console.log('planInfo', planInfo)
       let data = await dispatch(fetchCheckPlan(planInfo));
       if (data.error) {
         console.log(data.error.message);
