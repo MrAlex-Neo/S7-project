@@ -157,13 +157,14 @@ const MapComponent = ({}) => {
   }, [stations]);
 
   const getMarkerImageSource = (state) => {
+    console.log(state)
     let obj = {}
     if (state[1] !== undefined) {
       // console.log(state[1].status)
       if (state[2] !== undefined) {
         obj = {
-          one: state[1].status === 'Available' ? true : state[1].status === 'Preparing' ? false : 'not_working',
-          two: state[2].status === 'Available' ? true : state[2].status === 'Preparing' ? false : 'not_working',
+          one: state[1].status === 'Available' ? true : state[1].status === 'Unavailable' ? false : 'not_working',
+          two: state[2].status === 'Available' ? true : state[2].status === 'Unavailable' ? false : 'not_working',
         };
       }else{
         obj = {
