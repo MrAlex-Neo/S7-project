@@ -119,6 +119,9 @@ const resources = {
       delete: 'Remove',
       delete_1: 'Delete an account',
       delete_2: 'Do you really want to delete your account?',
+      port_state_1: 'free',
+      port_state_2: 'busy',
+      port_state_3: 'error',
     },
   },
   ru: {
@@ -233,6 +236,9 @@ const resources = {
       delete: 'Удалить',
       delete_1: 'Удалить аккаунт',
       delete_2: 'Вы действительно хотите удалить аккаунт?',
+      port_state_1: 'свободен',
+      port_state_2: 'занят',
+      port_state_3: 'ошибка',
     },
   },
   uz: {
@@ -346,6 +352,9 @@ const resources = {
       delete: "O'chirish",
       delete_1: "Hisobni o'chirish",
       delete_2: "Siz haqiqatan ham hisobni o'chirishni xohlaysizmi?",
+      port_state_1: 'ozod',
+      port_state_2: 'band',
+      port_state_3: 'xato',
     },
   },
 };

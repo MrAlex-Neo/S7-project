@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "1.1.2",
+    "version": "1.1.4",
     "orientation": "portrait",
     "icon": "./assets/iconS7.png",
     "userInterfaceStyle": "light",
@@ -23,7 +23,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.myapp.s7",
-      "buildNumber": "1.1.2",
+      "buildNumber": "1.1.4",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes.",
         "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
@@ -48,7 +48,7 @@
         "android.permission.INTERNET"
       ],
       "package": "com.alex_neo_2024.s7",
-      "versionCode": 12
+      "versionCode": 14
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -75,9 +75,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0c486449-07a2-44a8-a799-8dcef729cc59"
+        "projectId": "2fd58b29-ce3c-4af0-9fc8-84a621f104a8"
       }
     },
-    "owner": "alex_neo_2034"
+    "owner": "alex_neo_2035"
   }
 }

@@ -22,6 +22,7 @@ import { activeStation } from "../values/atom/myAtoms";
 import AnimatedButton from "./AnimatedButton";
 import { router } from "expo-router";
 import Marker_map from "./Marker_map";
+import { activeLocation } from "../values/atom/myAtoms";
 
 const initialRegion = {
   latitude: 41.2995,
@@ -44,8 +45,20 @@ const MapComponent = ({}) => {
   const [charging, setCharging] = useAtom(charge);
   const [isError, setIsError] = useAtom(error);
   const [active, setActive] = useAtom(activeStation);
+  const [activeLoc,] = useAtom(activeLocation);
 
   const memoizedMarkers = useMemo(() => markers, [markers]);
+
+  useEffect(() => {
+    if (activeLoc.latitude !== '' && activeLoc && mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: activeLoc.latitude,
+        longitude: activeLoc.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }, 1000); // Анимация перехода на новое местоположение
+    }
+  }, [activeLocation, isFocused.station]);
 
   // const areStationsEqual = (oldStations, newStations) => {
   //   if (oldStations.length !== newStations.length) {

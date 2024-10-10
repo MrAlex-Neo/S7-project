@@ -70,11 +70,11 @@ const SignUp = () => {
         return console.log("ответ", response);
       }
       if (response) {
-        console.log(response.payload.code);
-        setAuthData((prevUserState) => ({
-          ...prevUserState,
-          response_code: response.payload.code,
-        }));
+        // console.log(response.payload.code);
+        // setAuthData((prevUserState) => ({
+        //   ...prevUserState,
+        //   response_code: response.payload.code,
+        // }));
         setBadResponse(false);
         setPart(1);
       }
@@ -164,7 +164,7 @@ const SignUp = () => {
               <Text className="font-robotoRegular color-grayColor-300 text-lg mt-[4vh] mb-[4vh]">
                 {`${t("checkCode")} --- --- --- -${number[10]}${number[11]} ${t(
                   "checkCode1"
-                )} ${authData.response_code}`}
+                )}`}
               </Text>
               <CodeInput state="auth" startTimer={btnFirst} />
               {authData.badCode && (

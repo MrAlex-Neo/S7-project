@@ -85,11 +85,11 @@ const SignIn = () => {
         return console.log("ответ", response);
       }
       if (response) {
-        console.log(response.payload.code);
-        setRegData((prevUserState) => ({
-          ...prevUserState,
-          response_code: response.payload.code,
-        }));
+        // console.log(response.payload.code);
+        // setRegData((prevUserState) => ({
+        //   ...prevUserState,
+        //   response_code: response.payload.code,
+        // }));
         setPart(1);
         setBadResponseOne(false);
       }
@@ -232,7 +232,7 @@ const SignIn = () => {
                   {`${t("checkCode")} --- --- --- -${number[10]}${
                     number[11]
                   // } ${t("checkCode1")}`}
-                  } ${t("checkCode1")} ${regData.response_code}`}
+                  } ${t("checkCode1")}`}
                 </Text>
                 <CodeInput
                   state="reg"

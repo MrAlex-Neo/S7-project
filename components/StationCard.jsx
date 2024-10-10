@@ -7,19 +7,22 @@ import { useTranslation } from "react-i18next";
 
 import { icons } from "../constants";
 import { focus } from "../values/atom/myAtoms";
-import { activeStation } from "../values/atom/myAtoms";
+import { activeStation, activeLocation } from "../values/atom/myAtoms";
 
 const StationCard = ({ busy, station }) => {
   const { t, i18 } = useTranslation();
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useAtom(focus);
   const [active, setActive] = useAtom(activeStation);
+  const [, setActiveLoc] = useAtom(activeLocation);
 
   useEffect(() => {
-    // console.log("station", station);
+    console.log("station", station.latitude, station.longitude);
+    
   }, [station]);
 
   const clickHandler = () => {
+    
     setActive((prev) => ({
       ...prev,
       id: station.charge_point_id,
@@ -32,6 +35,11 @@ const StationCard = ({ busy, station }) => {
       ...prevUserState,
       map: false,
       station: true,
+    }));
+    setActiveLoc((prev) => ({
+      ...prev,
+      latitude: station.latitude,
+      longitude: station.longitude,
     }));
     router.push("/map");
     // navigation.navigate("map")

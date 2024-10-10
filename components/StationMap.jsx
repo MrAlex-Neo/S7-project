@@ -92,8 +92,7 @@ const StationMap = ({ latitude, longitude }) => {
               array.push({
                 id: index,
                 busy:
-                  response.payload.connectors[`${index}`]["status"] !==
-                  "Available",
+                  response.payload.connectors[`${index}`]["status"],
               });
             }
           }
@@ -306,7 +305,7 @@ const StationMap = ({ latitude, longitude }) => {
                   <StationPort
                     key={item.id}
                     busy={item.busy}
-                    isActive={activeId === item.id}
+                    isActive={item.id}
                     onPress={() => handlePress(item.id)}
                   />
                 ))

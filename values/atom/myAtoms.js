@@ -96,6 +96,10 @@ export const mistake = atom({
 export const error = atom({
     state: false,
 });
+export const activeLocation = atom({
+    latitude: '',
+    longitude: '',
+});
 
 
 
