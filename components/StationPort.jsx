@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 const StationPort = ({ busy, isActive, onPress }) => {
   const { t, i18n } = useTranslation();
   const [disabled, setDisabled] = useState(false);
-  console.log("busy", busy);
+  // console.log("busy", busy);
   useEffect(() => {
-    setDisabled(busy !== "Available" ? true : false)
+    setDisabled(busy === "Available" ? false : true)
   }, [busy])
 
   return (

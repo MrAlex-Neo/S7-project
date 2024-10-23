@@ -6,7 +6,7 @@ export const fetchStartTransaction = createAsyncThunk('transaction/fetchStartTra
         const { data } = await axios.post('/api/v1/manager/Transaction', payload);
         return data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || "Нурбек виноват");
+        throw new Error(error.response?.data?.message || error);
     }
 });
 
@@ -15,7 +15,7 @@ export const fetchStopTransaction = createAsyncThunk('transaction/fetchStopTrans
         const { data } = await axios.post(`/api/v1/manager/Transaction/${payload.transaction_id}/stop`, { charge_point: payload.charge_point });
         return data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || "Нурбек виноват");
+        throw new Error(error.response?.data?.message || error);
     }
 });
 

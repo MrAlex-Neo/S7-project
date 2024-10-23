@@ -86,7 +86,7 @@ export const towardPage = atom({
     profile: false,
 });
 export const charge = atom({
-    state: true,
+    state: false,
     sum: 20
 });
 export const mistake = atom({
@@ -99,6 +99,9 @@ export const error = atom({
 export const activeLocation = atom({
     latitude: '',
     longitude: '',
+});
+export const chargeData = atom({
+    persent: 0,
 });
 
 

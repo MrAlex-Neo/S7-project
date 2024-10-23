@@ -45,41 +45,23 @@ const MapComponent = ({}) => {
   const [charging, setCharging] = useAtom(charge);
   const [isError, setIsError] = useAtom(error);
   const [active, setActive] = useAtom(activeStation);
-  const [activeLoc,] = useAtom(activeLocation);
+  const [activeLoc] = useAtom(activeLocation);
 
   const memoizedMarkers = useMemo(() => markers, [markers]);
 
   useEffect(() => {
-    if (activeLoc.latitude !== '' && activeLoc && mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: activeLoc.latitude,
-        longitude: activeLoc.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      }, 1000); // Анимация перехода на новое местоположение
+    if (activeLoc.latitude !== "" && activeLoc && mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: activeLoc.latitude,
+          longitude: activeLoc.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      ); // Анимация перехода на новое местоположение
     }
   }, [activeLocation, isFocused.station]);
-
-  // const areStationsEqual = (oldStations, newStations) => {
-  //   if (oldStations.length !== newStations.length) {
-  //     return false;
-  //   }
-  //   for (let i = 0; i < oldStations.length; i++) {
-  //     if (
-  //       oldStations[i].key !== newStations[i].key ||
-  //       oldStations[i].title !== newStations[i].title ||
-  //       oldStations[i].coordinate.latitude !==
-  //         newStations[i].coordinate.latitude ||
-  //       oldStations[i].coordinate.longitude !==
-  //         newStations[i].coordinate.longitude ||
-  //       oldStations[i].state[0] !== newStations[i].state[0] ||
-  //       oldStations[i].state[1] !== newStations[i].state[1]
-  //     ) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // };
 
   useEffect(() => {
     dispatch(fetchStations());
@@ -93,7 +75,10 @@ const MapComponent = ({}) => {
         for (let index = 0; index < data.results.length; index++) {
           const station = data.results[index];
           // console.log("station", station.connectors[1]);
-          if (station.connectors[1] !== undefined && station.connectors[2] !== undefined) {
+          if (
+            station.connectors[1] !== undefined &&
+            station.connectors[2] !== undefined
+          ) {
             array.push({
               charge_point_id: station.charge_point_id,
               station_id: station.id,
@@ -110,7 +95,7 @@ const MapComponent = ({}) => {
               state: [true, "not_working"],
             });
           }
-          }
+        }
         setStations(array);
       }
     } catch (error) {
@@ -170,70 +155,39 @@ const MapComponent = ({}) => {
   }, [stations]);
 
   const getMarkerImageSource = (state) => {
-    console.log(state)
-    let obj = {}
-    if (state[1] !== undefined) {
-      // console.log(state[1].status)
-      if (state[2] !== undefined) {
-        obj = {
-          one: state[1].status === 'Available' ? true : state[1].status === 'Unavailable' ? false : 'not_working',
-          two: state[2].status === 'Available' ? true : state[2].status === 'Unavailable' ? false : 'not_working',
-        };
-      }else{
-        obj = {
-          one: 'not_working',
-          two: 'not_working',
-        };
-      }
-    }else{
-      obj = {
-        one: 'not_working',
-        two: 'not_working',
-      };
+    console.log(state);
+    
+    // Инициализируем объект с состоянием по умолчанию
+    let obj = {
+      one: "not_working",
+      two: "not_working",
+    };
+  
+    if (state[0]) {
+      obj.one = state[0].status === "Available"
+        ? true
+        : state[0].status === "Unavailable"
+        ? false
+        : "not_working";
     }
-    // if (state[1] && state[1].status) {
-    //   console.log("Status:", state[1].status);
-    // } else {
-    //   console.error("state[1] не определен или не содержит статус");
-    // }
-
-    // if (state.length === 2) {
-    //   for (let index = 0; index < state.length; index++) {
-    //     const element = array[index];
-    //   }
-    // } else {
-    // }
+  
+    if (state[1]) {
+      obj.two = state[1].status === "Available"
+        ? true
+        : state[1].status === "Unavailable"
+        ? false
+        : "not_working";
+    }
     return obj;
   };
+  
 
   const CustomMarker = ({ marker }) => {
     const isFocused = useIsFocused();
     const obj = getMarkerImageSource(marker.connectors);
-    // console.log(obj)
-    // console.log("marker", marker.state);
 
     return (
       <>
-        {/* {Platform.OS === "android" && isFocused ? (
-          <Marker
-            key={marker.key}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            image={markerImage}
-            className="bg-black"
-            onPress={() => {
-              setActive((prev) => ({
-                ...prev,
-                id: marker.charge_point_id,
-              }));
-              setIsFocused((prevUserState) => ({
-                ...prevUserState,
-                map: false,
-                station: true,
-              }));
-            }}
-          />
-        ) : ( */}
         {isFocused && (
           <Marker
             key={marker.key}
@@ -263,20 +217,6 @@ const MapComponent = ({}) => {
         )}
         {/* )} */}
       </>
-      // <Marker
-      //   key={marker.key}
-      //   coordinate={marker.coordinate}
-      //   title={marker.title}
-      //   image={markerImage}
-      //   className="bg-black"
-      //   onPress={() => {
-      //     setIsFocused((prevUserState) => ({
-      //       ...prevUserState,
-      //       map: false,
-      //       station: true,
-      //     }));
-      //   }}
-      // />
     );
   };
 
@@ -421,70 +361,3 @@ const styles = StyleSheet.create({
     height: Platform.OS === "android" ? 35 : 40,
   },
 });
-
-// useEffect(() => {
-//   if (!locationPermissionGranted) {
-//     mapRef.current.animateToRegion({
-//       latitude: initialRegion.latitude,
-//       longitude: initialRegion.longitude,
-//       latitudeDelta: initialRegion.latitudeDelta,
-//       longitudeDelta: initialRegion.longitudeDelta,
-//     });
-//   }
-// }, [locationPermissionGranted]);
-
-// const handleLocationButtonPress = () => {
-//   if (locationPermissionGranted) {
-//     getCurrentLocation();
-//   } else {
-//     requestLocationPermission().then(() => {
-//       if (locationPermissionGranted) {
-//         getCurrentLocation();
-//       }
-//     });
-//   }
-// };
-
-// try {
-//   if (Platform.OS === "android") {
-//     const agree = await PermissionsAndroid.request(
-//       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-//       {
-//         title: "Разрешение на доступ к местоположению",
-//         message:
-//           "Нам необходимо разрешение для определения вашего текущего местоположения.",
-//         buttonNeutral: "Спросить позже",
-//         buttonNegative: "Отмена",
-//         buttonPositive: "OK",
-//       }
-//     );
-
-//     if (agree === PermissionsAndroid.RESULTS.GRANTED) {
-//       console.log(LocationServicesDialogBox)
-//       console.log("Разрешение получено");
-//       setLocationPermissionGranted(true);
-//       // Включение службы геолокации на Android
-//       LocationServicesDialogBox.checkLocationServicesIsEnabled({
-//         message: "<h2>Требуется включение геолокации</h2>Приложению необходимо включить службы геолокации для определения вашего текущего местоположения.",
-//         ok: "OK",
-//         cancel: "Отмена",
-//       }).then(() => {
-//         console.log("Геолокация включена");
-//       }).catch((error) => {
-//         console.log("Ошибка включения геолокации:", error.message);
-//       });
-//     } else {
-//       console.log("Разрешение отклонено");
-//     }
-//   } else {
-//     const { status } = await Location.requestForegroundPermissionsAsync();
-//     if (status === "granted") {
-//       console.log("Разрешение получено");
-//       setLocationPermissionGranted(true);
-//     } else {
-//       console.log("Разрешение отклонено");
-//     }
-//   }
-// } catch (error) {
-//   console.warn("Ошибка запроса разрешений:", error);
-// }

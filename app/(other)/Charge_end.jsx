@@ -7,13 +7,15 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
 import animation from "../../assets/s7/animation.json";
-import { activeStation } from "../../values/atom/myAtoms";
+import { activeStation, chargeData } from "../../values/atom/myAtoms";
 import { useAtom } from "jotai";
 
 const Charge_end = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
   const [active, setActive] = useAtom(activeStation);
+  const [chargeDataEnd] = useAtom(chargeData);
+
   const resetStack = () => {
     setActive({
       city: "test",
@@ -42,11 +44,11 @@ const Charge_end = () => {
             className="h-[80vw] w-[80vw] mb-[2vh]"
           />
           <Text className="font-semibold text-2xl text-center color-secondary mb-[3vh]">
-            {`${t("charge_end_1")} 50%`}
+            {`${t("charge_end_1")} ${chargeDataEnd.persent}`}
           </Text>
-          <Text className="font-robotoRegular text-sm color-grayColor-300 mx-[12vw] text-center">
+          {/* <Text className="font-robotoRegular text-sm color-grayColor-300 mx-[12vw] text-center">
             {`${t("charge_end_2")} 45 000 ${t("sum")}`}
-          </Text>
+          </Text> */}
         </View>
       </View>
       <PrimaryButton

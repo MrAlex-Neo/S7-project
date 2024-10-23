@@ -59,7 +59,7 @@ const StationMap = ({ latitude, longitude }) => {
   async function getStation(id) {
     try {
       const response = await dispatch(fetchStation(id));
-      console.log(response.payload);
+      // console.log(response.payload);
       if (response.payload && response.payload.location.address1) {
         setActive((prev) => ({
           ...prev,
@@ -83,11 +83,11 @@ const StationMap = ({ latitude, longitude }) => {
         if (response.payload.connectors_count > 0) {
           let array = [];
           for (
-            let index = 1;
-            index <= response.payload.connectors_count;
+            let index = 0;
+            index < response.payload.connectors_count;
             index++
           ) {
-            console.log(response.payload.connectors[`${index}`]["status"])
+            // console.log(response.payload.connectors[`${index}`]["status"])
             if (index <= 2) {
               array.push({
                 id: index,

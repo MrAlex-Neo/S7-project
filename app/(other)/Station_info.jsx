@@ -99,6 +99,7 @@ const Station_info = () => {
     // console.log(e);
     setPlanInfo(e);
   };
+  
   return (
     <SafeAreaView className="bg-white h-[100vh] pt-[4vh] absolute bottom-0">
       {isError.state && <ErrorBox />}

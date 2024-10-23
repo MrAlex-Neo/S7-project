@@ -6,7 +6,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { useNavigation } from "expo-router";
 import { CommonActions } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { activeStation } from "../../values/atom/myAtoms";
+import { activeStation, chargeData } from "../../values/atom/myAtoms";
 import { useAtom } from "jotai";
 import {
   fetchStartTransaction,
@@ -16,6 +16,7 @@ import {
 import { useDispatch } from "react-redux";
 import { error } from "../../values/atom/myAtoms";
 import ErrorBox from "../../components/ErrorBox";
+import LoaderComponent from "../../components/LoaderComponent";
 
 const ChargePage = () => {
   const { t } = useTranslation();
@@ -32,8 +33,10 @@ const ChargePage = () => {
   const [transactionId, setTransactionId] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [activeStationData] = useAtom(activeStation);
+  const [chargeState, setChargeState] = useAtom(chargeData);
   const fetchUpdateTimer = useRef(null);
   const [isError, setIsError] = useAtom(error);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     handleStartTransaction();
@@ -53,6 +56,8 @@ const ChargePage = () => {
   useEffect(() => {
     if (isActive) {
       // if (isActive && transactionId) {
+      // startUpdateTimer();
+      // setTimeout(startUpdateTimer, 5000)
       startUpdateTimer();
     } else {
       stopUpdateTimer();
@@ -81,17 +86,32 @@ const ChargePage = () => {
           external_id: activeStationData.port_id,
         })
       );
-
+      console.log(response);
       console.log("Ответ от сервера:", response.payload.transaction_id);
       if (response.payload.transaction_id) {
         setTransactionId(response.payload.transaction_id);
         setIsActive(true);
-        startUpdateTimer();
+        setLoading(true);
       } else {
+        setLoading(false);
         console.log("error");
       }
+      // setTransactionId(245);
+      // setIsActive(true);
     } catch (error) {
+      setLoading(false);
       console.error("Ошибка при запуске транзакции:", error);
+      stopUpdateTimer();
+      setIsError((prev) => ({
+        ...prev,
+        state: true,
+      }));
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "(tabs)", params: { screen: "map" } }],
+        })
+      );
     }
   };
 
@@ -114,47 +134,49 @@ const ChargePage = () => {
     try {
       const response = await dispatch(fetchGetTransactionState(transactionId));
       console.log("timer");
-      console.log(response.payload.meter_value_raw);
+      console.log("meter_value_raw", response.payload.meter_value_raw);
+      console.log("response", response.payload);
       if (response.payload.meter_value_raw[0] !== undefined) {
-        if (response.payload.meter_value_raw[0].sampled_value[0].unit === "A") {
-          setPowerA(response.payload.meter_value_raw[0].sampled_value[0].value);
+        if (response.payload.meter_value_raw[0].sampled_value[1].unit === "A") {
+          setPowerA(response.payload.meter_value_raw[0].sampled_value[1].value);
         }
-        if (
-          response.payload.meter_value_raw[0].sampled_value[2].unit === "kW"
-        ) {
+        if (response.payload.meter_value_raw[0].sampled_value[3].unit === "W") {
           setPowerKW(
-            response.payload.meter_value_raw[0].sampled_value[2].value
-          );
-        }
-        if (
-          response.payload.meter_value_raw[0].sampled_value[3].unit ===
-          "Percent"
-        ) {
-          setPercent(
             response.payload.meter_value_raw[0].sampled_value[3].value
           );
         }
-        if (response.payload.meter_value_raw[0].sampled_value[4].unit === "V") {
-          setVold(response.payload.meter_value_raw[0].sampled_value[4].value);
+        if (
+          response.payload.meter_value_raw[0].sampled_value[4].unit ===
+          "Percent"
+        ) {
+          setPercent(
+            response.payload.meter_value_raw[0].sampled_value[4].value
+          );
+          setChargeState((prev) => ({
+            ...prev,
+            persent: response.payload.meter_value_raw[0].sampled_value[4].value,
+          }));
+        }
+        if (response.payload.meter_value_raw[0].sampled_value[2].unit === "V") {
+          setVold(response.payload.meter_value_raw[0].sampled_value[2].value);
         }
         if (response.payload.meter_value_raw[0].timestamp) {
-          // setTime(response.payload.meter_value_raw[0].timestamp);
-          let date = response.payload.meter_value_raw[0].timestamp;
-          setTime(date.slice(11, 16));
+          let date = response.payload.meter_value_raw[0].timestamp; // Например, "2024-06-19 17:43:11"
+          // let date = "2024-06-19 17:43:11"; // Пример времени
+          let startTime = new Date(date); // Преобразование строки в объект Date
+          let currentTime = new Date(); // Текущая дата и время
+          let timeDifference = currentTime - startTime;
+          let minutes = Math.floor(timeDifference / (1000 * 60));
+          let seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+          let formattedTime = `${String(minutes).padStart(2, "0")}:${String(
+            seconds
+          ).padStart(2, "0")}`;
+          setTime(formattedTime);
         }
         setCount(0);
+        setLoading(false);
       } else {
-        setIsError((prev) => ({
-          ...prev,
-          state: true,
-        }));
-        stopUpdateTimer();
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: "(tabs)", params: { screen: "map" } }],
-          })
-        );
+        setLoading(true);
       }
     } catch (error) {
       console.error("Error fetching transaction state:", error);
@@ -232,6 +254,7 @@ const ChargePage = () => {
   );
   return (
     <SafeAreaView className="bg-white absolute bottom-0 h-[100vh]">
+      {loading && <LoaderComponent />}
       {isError.state && <ErrorBox />}
       <View
         className={`justify-between w-full flex-1 pb-[2vh] px-[5vw] bg-white ${
