@@ -1,5 +1,8 @@
 {
   "expo": {
+    "localization": {
+      "defaultLocale": "ru"
+    },
     "name": "S7Energy",
     "slug": "s7",
     "scheme": "s7",
@@ -8,7 +11,7 @@
       "android",
       "web"
     ],
-    "version": "1.1.7",
+    "version": "1.1.9",
     "orientation": "portrait",
     "icon": "./assets/iconS7.png",
     "userInterfaceStyle": "light",
@@ -23,13 +26,13 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.myapp.s7",
-      "buildNumber": "1.1.7",
+      "buildNumber": "1.1.9",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to scan barcodes.",
-        "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
-        "NSLocationWhenInUseUsageDescription": "This app uses your location to provide location-based services.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location even when the app is not in use.",
-        "NSLocationAlwaysUsageDescription": "This app requires access to your location at all times.",
+        "NSCameraUsageDescription": "Это приложение требует доступ к вашей камере для сканирования штрих-кодов для быстрого и удобного идентификации продуктов.",
+        "NSMicrophoneUsageDescription": "Это приложение нуждается в доступе к вашему микрофону для записи аудио сообщений и заметок.",
+        "NSLocationWhenInUseUsageDescription": "Это приложение использует ваше местоположение для предоставления персонализированных услуг, таких как поиск ближайших мест и событий.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Это приложение нуждается в доступе к вашему местоположению даже когда оно не используется, чтобы улучшить пользовательский опыт с отслеживанием местоположения.",
+        "NSLocationAlwaysUsageDescription": "Это приложение требует доступ к вашему местоположению в любое время для предоставления непрерывных функций на основе местоположения.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         }
@@ -48,7 +51,7 @@
         "android.permission.INTERNET"
       ],
       "package": "com.alex_neo_2024.s7",
-      "versionCode": 17
+      "versionCode": 19
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -58,15 +61,15 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "cameraPermission": "Разрешите $(PRODUCT_NAME) доступ к вашей камере",
+          "microphonePermission": "Разрешите $(PRODUCT_NAME) доступ к вашему микрофону",
           "recordAudioAndroid": true
         }
       ],
       [
         "expo-barcode-scanner",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
+          "cameraPermission": "Разрешите $(PRODUCT_NAME) доступ к камере."
         }
       ]
     ],
@@ -75,9 +78,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "2fd58b29-ce3c-4af0-9fc8-84a621f104a8"
+        "projectId": "1b185be0-aca8-4846-aad7-d5ccf89740b5"
       }
     },
-    "owner": "alex_neo_2035"
+    "owner": "aleksandr_khokhrin"
   }
 }

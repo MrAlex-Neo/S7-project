@@ -88,8 +88,8 @@ android {
         applicationId 'com.alex_neo_2024.s7'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.2"
     }
     signingConfigs {
         debug {

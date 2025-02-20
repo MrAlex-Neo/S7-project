@@ -44,7 +44,7 @@ const Charge_end = () => {
             className="h-[80vw] w-[80vw] mb-[2vh]"
           />
           <Text className="font-semibold text-2xl text-center color-secondary mb-[3vh]">
-            {`${t("charge_end_1")} ${chargeDataEnd.persent}`}
+            {`${t("charge_end_1")} ${chargeDataEnd.persent}`}%
           </Text>
           {/* <Text className="font-robotoRegular text-sm color-grayColor-300 mx-[12vw] text-center">
             {`${t("charge_end_2")} 45 000 ${t("sum")}`}

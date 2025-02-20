@@ -40,10 +40,10 @@ const StationPort = ({ busy, isActive, onPress }) => {
           style={{ alignSelf: "flex-start" }}
         >
           {busy === "Preparing"
-          ? `${isActive} ${t('port_state_3')}`
+          ? `${isActive + 1} ${t('port_state_3')}`
           : busy === "Available"
-          ? `${isActive} ${t('port_state_1')}`
-          : `${isActive} ${t('port_state_2')}`}
+          ? `${isActive + 1} ${t('port_state_1')}`
+          : `${isActive + 1} ${t('port_state_2')}`}
         </Text>
       </View>
       <View>

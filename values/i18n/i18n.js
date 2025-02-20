@@ -359,7 +359,7 @@ const resources = {
   },
 };
 
-let language = 'en'
+let language = 'ru'
 const checkLang = async () => {
   try {
     const lang = await AsyncStorage.getItem("lang");
@@ -367,7 +367,7 @@ const checkLang = async () => {
     if (lang) {
       language = lang
     } else {
-      language = 'en'
+      language = 'ru'
     }
   } catch (error) {
     console.log(error);

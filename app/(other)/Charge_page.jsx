@@ -86,7 +86,25 @@ const ChargePage = () => {
           external_id: activeStationData.port_id,
         })
       );
-      console.log(response);
+      console.log("response", response);
+      if (response.error) {
+        setLoading(false);
+        stopUpdateTimer();
+        setIsError((prev) => ({
+          ...prev,
+          state: true,
+        }));
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "(tabs)", params: { screen: "map" } }],
+          })
+        );
+        return;
+      }
+      // setTransactionId(254);
+      // setIsActive(true);
+      // setLoading(true);
       console.log("Ответ от сервера:", response.payload.transaction_id);
       if (response.payload.transaction_id) {
         setTransactionId(response.payload.transaction_id);
@@ -96,6 +114,12 @@ const ChargePage = () => {
         setLoading(false);
         console.log("error");
       }
+      // console.log("Ответ от сервера:", response.payload.transaction_id);
+      // if (response.payload.transaction_id) {
+      // } else {
+      //   setLoading(false);
+      //   console.log("error");
+      // }
       // setTransactionId(245);
       // setIsActive(true);
     } catch (error) {
@@ -136,6 +160,16 @@ const ChargePage = () => {
       console.log("timer");
       console.log("meter_value_raw", response.payload.meter_value_raw);
       console.log("response", response.payload);
+      if (response.payload.status === "stopped") {
+        stopUpdateTimer();
+        setIsActive(false);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "(other)", params: { screen: "Charge_end" } }],
+          })
+        );
+      }
       if (response.payload.meter_value_raw[0] !== undefined) {
         if (response.payload.meter_value_raw[0].sampled_value[1].unit === "A") {
           setPowerA(response.payload.meter_value_raw[0].sampled_value[1].value);
@@ -201,12 +235,12 @@ const ChargePage = () => {
 
   const handleResetStack = () => {
     handleStopTransaction();
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "(other)", params: { screen: "Charge_end" } }],
-      })
-    );
+    // navigation.dispatch(
+    //   CommonActions.reset({
+    //     index: 0,
+    //     routes: [{ name: "(other)", params: { screen: "Charge_end" } }],
+    //   })
+    // );
   };
   const InfoBox = ({ title, value, bordered = false }) => (
     <View
